@@ -68,66 +68,101 @@ require_once __DIR__ . '/../../includes/navbar.php';
                 </p>
             </div>
             
-            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="btn-forest-primary text-xs py-2.5 px-4">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i> Alta Rápida
+            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="btn-forest-primary text-sm min-h-[48px] py-3 px-5 shadow-sm inline-flex items-center gap-2">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> Alta Rápida
             </a>
         </div>
 
-        <!-- Buscador -->
+        <!-- Buscador Ergonómico para Campo -->
         <div class="forest-card p-4">
             <form method="GET" action="index.php" class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-1">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <i data-lucide="search" class="w-4 h-4"></i>
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                        <i data-lucide="search" class="w-5 h-5"></i>
                     </div>
-                    <input type="text" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Buscar por placa o especie..." class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-600">
+                    <input type="text" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Buscar por placa o especie..." 
+                           class="w-full pl-11 pr-4 min-h-[48px] border border-gray-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-600">
                 </div>
-                <select name="zona" class="py-2 px-3 border border-gray-300 rounded-xl text-xs outline-none">
+                <select name="zona" class="min-h-[48px] py-2 px-3 border border-gray-300 rounded-xl text-sm outline-none bg-white">
                     <option value="">Todas las zonas</option>
                     <?php foreach ($zonas as $z): ?>
                         <option value="<?= $z['id_zona'] ?>" <?= ($filtro_zona === $z['id_zona']) ? 'selected' : '' ?>><?= htmlspecialchars($z['nombre_zona']) ?></option>
                     <?php endforeach; ?>
                 </select>
-                <button type="submit" class="btn-forest-primary text-xs py-2 px-4">Buscar</button>
+                <div class="flex gap-2">
+                    <button type="submit" class="btn-forest-primary text-sm font-semibold min-h-[48px] px-6 flex-1 sm:flex-none justify-center">
+                        <i data-lucide="filter" class="w-4 h-4"></i> Buscar
+                    </button>
+                    <?php if (!empty($q) || !empty($filtro_zona)): ?>
+                        <a href="<?= BASE_URL ?>operario/individuos/index.php" class="p-3 min-h-[48px] min-w-[48px] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl flex items-center justify-center transition-colors" title="Limpiar">
+                            <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </form>
         </div>
 
         <!-- Grilla de Individuos para Operario -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <?php foreach ($individuos as $arbol): 
-                $foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
-            ?>
-                <div class="forest-card overflow-hidden flex flex-col justify-between">
-                    <div>
-                        <div class="h-40 bg-gray-100 relative">
-                            <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover">
-                            <div class="absolute top-2 left-2">
-                                <span class="bg-white/95 px-2 py-0.5 rounded text-[11px] font-mono font-bold shadow-xs">
-                                    <?= htmlspecialchars($arbol['codigo_placa']) ?>
+        <?php if (empty($individuos)): ?>
+            <div class="forest-card p-12 text-center max-w-md mx-auto space-y-4">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-100">
+                    <i data-lucide="trees" class="w-8 h-8"></i>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-gray-800">Sin especímenes encontrados</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">
+                    No se encontraron individuos que coincidan con la búsqueda. Puedes registrar un nuevo árbol en campo o restablecer los filtros.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-2 pt-2">
+                    <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="btn-forest-primary text-sm min-h-[48px] py-3 px-5">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Alta Rápida de Individuo
+                    </a>
+                    <?php if (!empty($q) || !empty($filtro_zona)): ?>
+                        <a href="<?= BASE_URL ?>operario/individuos/index.php" class="btn-forest-secondary text-sm min-h-[48px] py-3 px-5">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Limpiar Filtros
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($individuos as $arbol): 
+                    $foto = obtener_url_foto($arbol['foto_principal_url'] ?? null);
+                ?>
+                    <div class="forest-card overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div>
+                            <div class="h-44 bg-gray-100 relative">
+                                <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='<?= BASE_URL ?>assets/img/tree-placeholder.svg';">
+                                <div class="absolute top-2.5 left-2.5">
+                                    <span class="bg-white/95 px-2.5 py-1 rounded-md text-xs font-mono font-bold shadow-xs">
+                                        <?= htmlspecialchars($arbol['codigo_placa']) ?>
+                                    </span>
+                                </div>
+                                <div class="absolute top-2.5 right-2.5">
+                                    <?= obtener_badge_estado($arbol['estado_salud'] ?? 'Sano') ?>
+                                </div>
+                            </div>
+
+                            <div class="p-4 space-y-2">
+                                <h3 class="font-heading font-bold text-base text-gray-900 leading-tight">
+                                    <?= htmlspecialchars($arbol['nombre_comun']) ?>
+                                </h3>
+                                <p class="text-xs text-gray-500 italic"><?= htmlspecialchars($arbol['nombre_cientifico']) ?></p>
+                                <span class="flex items-center gap-1.5 text-xs text-gray-600">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i> <?= htmlspecialchars($arbol['nombre_zona']) ?>
                                 </span>
                             </div>
-                            <div class="absolute top-2 right-2">
-                                <?= obtener_badge_estado($arbol['estado_salud'] ?? 'Sano') ?>
-                            </div>
                         </div>
 
-                        <div class="p-4 space-y-1.5">
-                            <h3 class="font-heading font-bold text-sm text-gray-900 leading-tight">
-                                <?= htmlspecialchars($arbol['nombre_comun']) ?>
-                            </h3>
-                            <p class="text-xs text-gray-500 italic"><?= htmlspecialchars($arbol['nombre_cientifico']) ?></p>
-                            <span class="block text-[11px] text-gray-500">📍 <?= htmlspecialchars($arbol['nombre_zona']) ?></span>
+                        <div class="p-4 pt-0">
+                            <a href="<?= BASE_URL ?>operario/individuos/detalle.php?id=<?= $arbol['id_individuo'] ?>" 
+                               class="btn-forest-primary text-sm font-semibold min-h-[48px] py-3 w-full justify-center shadow-xs">
+                                <i data-lucide="clipboard-check" class="w-4 h-4"></i> Gestionar en Campo
+                            </a>
                         </div>
                     </div>
-
-                    <div class="p-4 pt-0">
-                        <a href="<?= BASE_URL ?>operario/individuos/detalle.php?id=<?= $arbol['id_individuo'] ?>" class="btn-forest-primary text-xs py-2 w-full justify-center">
-                            <i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i> Gestionar en Campo
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
     </main>
 </div>

@@ -1,0 +1,171 @@
+- generic [active] [ref=f18e1]:
+  - banner [ref=f18e2]:
+    - generic [ref=f18e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f18e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f18e11]:
+          - generic [ref=f18e12]: ForestID
+          - generic [ref=f18e13]: Emincut • El Bagre
+      - generic [ref=f18e14]:
+        - link "Cerrar Sesión" [ref=f18e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button "Abrir Menú de Navegación" [ref=f18e19] [cursor=pointer]
+  - generic [ref=f18e21]:
+    - generic [ref=f18e22]:
+      - generic [ref=f18e24]:
+        - generic [ref=f18e25]:
+          - generic [ref=f18e26]:
+            - generic [ref=f18e27]: EBG-PARQ-001
+            - generic [ref=f18e28]: Árbol
+          - heading "Guayacán Rosado" [level=1] [ref=f18e29]
+          - paragraph [ref=f18e30]: Handroanthus chrysanthus
+        - generic [ref=f18e31]:
+          - generic [ref=f18e32]: Sano
+          - generic [ref=f18e35]:
+            - text: "Familia:"
+            - strong [ref=f18e36]: Bignoniaceae
+      - generic [ref=f18e37]:
+        - generic [ref=f18e38]:
+          - img "Guayacán Rosado" [ref=f18e40]
+          - generic [ref=f18e41]:
+            - generic [ref=f18e42]:
+              - img "QR" [ref=f18e44]
+              - generic [ref=f18e45]:
+                - generic [ref=f18e46]: Placa QR Oficial
+                - text: Fijada en el fuste
+            - link "Descargar código QR" [ref=f18e47] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/assets/qr/qr_EBG-PARQ-001.svg
+        - generic [ref=f18e51]:
+          - generic [ref=f18e52]:
+            - heading "Mediciones Dasométricas" [level=3] [ref=f18e53]
+            - generic [ref=f18e54]:
+              - generic [ref=f18e55]:
+                - generic [ref=f18e56]: DAP (1.30 m)
+                - text: 38.5 cm
+              - generic [ref=f18e61]:
+                - generic [ref=f18e62]: Altura Total
+                - text: 14.2 m
+              - generic [ref=f18e66]:
+                - generic [ref=f18e67]: Diám. Copa
+                - text: 9.5 m
+              - generic [ref=f18e74]:
+                - generic [ref=f18e75]: Fecha de Siembra / Edad Estimada
+                - text: 22 de Abril, 2018
+          - generic [ref=f18e79]:
+            - generic [ref=f18e80]:
+              - heading "Diagnóstico de Salud Fitosanitaria" [level=3] [ref=f18e81]
+              - generic [ref=f18e86]: 15 de Octubre, 2026
+            - paragraph [ref=f18e87]: Follaje verde vigoroso, sin signos de ataque de barrenadores ni necrosis en tronco. Estructura balanceada.
+            - generic [ref=f18e88]:
+              - strong [ref=f18e89]: "Recomendación Técnica:"
+              - text: Continuar con monitoreo semestral regular y fertilización orgánica al inicio del periodo de lluvias.
+          - generic [ref=f18e90]:
+            - heading "Observaciones Dendrológicas" [level=3] [ref=f18e91]
+            - paragraph [ref=f18e92]: Espécimen maduro ubicado en el costado noroccidental del parque principal. Floración abundante y fuste recto con buen desarrollo de dosel.
+          - button "Reportar Novedad sobre este Árbol" [ref=f18e94] [cursor=pointer]
+    - generic [ref=f18e97]:
+      - generic [ref=f18e98]:
+        - generic [ref=f18e99]:
+          - generic [ref=f18e100]:
+            - text: Ubicación Geográfica
+            - heading "Parque Principal El Bagre" [level=3] [ref=f18e101]
+          - generic [ref=f18e102]: El Bagre, Antioquia
+        - generic [ref=f18e103]:
+          - generic:
+            - button "Marker" [ref=f18e104] [cursor=pointer]
+            - generic [ref=f18e105]:
+              - generic [ref=f18e107]:
+                - strong [ref=f18e108]: Guayacán Rosado
+                - text: EBG-PARQ-001
+              - button "Close popup" [ref=f18e110] [cursor=pointer]: ×
+          - generic:
+            - generic [ref=f18e111]:
+              - button "Zoom in" [ref=f18e112] [cursor=pointer]: +
+              - button "Zoom out" [ref=f18e113] [cursor=pointer]: −
+            - generic [ref=f18e114]:
+              - link "Leaflet" [ref=f18e115] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| © OpenStreetMap"
+        - generic [ref=f18e120]:
+          - generic [ref=f18e121]: "Lat: 7.6044500 | Lng: -74.8092100"
+          - link "Abrir en Google Maps" [ref=f18e122] [cursor=pointer]:
+            - /url: https://www.google.com/maps/search/?api=1&query=7.6044500,-74.8092100
+      - generic [ref=f18e127]:
+        - text: Entidad Administradora
+        - heading "Emincut S.A.S. — Soluciones Ambientales y Forestales" [level=3] [ref=f18e128]
+        - paragraph [ref=f18e129]: Institución responsable del cuidado, poda técnica, fertilización y protección legal de este individuo forestal en el municipio de El Bagre.
+        - generic [ref=f18e130]:
+          - generic [ref=f18e131]: El Bagre, Antioquia — Colombia
+          - generic [ref=f18e136]: +57 312 856 9421
+    - generic [ref=f18e140]:
+      - generic [ref=f18e141]:
+        - generic [ref=f18e142]:
+          - text: Historial de Cuidados
+          - heading "Intervenciones y Mantenimiento" [level=3] [ref=f18e143]
+        - generic [ref=f18e144]: 1 eventos registrados
+      - generic [ref=f18e148]:
+        - generic [ref=f18e149]:
+          - generic [ref=f18e150]: Fertilización
+          - generic [ref=f18e151]: 31 de Agosto, 2026 (02:45 PM)
+        - paragraph [ref=f18e152]: Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+        - generic [ref=f18e153]: "Registrado por: Gabriel Jaime Correa Correa"
+  - contentinfo [ref=f18e154]:
+    - generic [ref=f18e155]:
+      - generic [ref=f18e156]:
+        - generic [ref=f18e157]:
+          - generic [ref=f18e158]: ForestID
+          - paragraph [ref=f18e164]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f18e165]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f18e166]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f18e171]:
+          - heading "Marco Institucional" [level=4] [ref=f18e172]
+          - paragraph [ref=f18e173]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f18e174]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f18e175]: Semillero iRed SENA
+        - generic [ref=f18e180]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f18e181]
+          - list [ref=f18e182]:
+            - listitem [ref=f18e183]:
+              - text: •
+              - strong [ref=f18e184]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f18e185]:
+              - text: •
+              - strong [ref=f18e186]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f18e187]:
+              - text: •
+              - strong [ref=f18e188]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f18e189]:
+              - text: •
+              - strong [ref=f18e190]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f18e191]:
+        - generic [ref=f18e192]:
+          - text: © 2026
+          - strong [ref=f18e193]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f18e194]:
+          - link "Inicio Público" [ref=f18e195] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f18e196]: •
+          - link "Buscador" [ref=f18e197] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f18e198]: •
+          - link "Acceso Restringido" [ref=f18e199] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php
+  - navigation "Navegación Móvil Rápida" [ref=f18e200]:
+    - link "Inicio" [ref=f18e201] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/dashboard.php
+    - link "Árboles" [ref=f18e208] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+    - link "Zonas" [ref=f18e213] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+    - link "QR" [ref=f18e218] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/qr/index.php
+    - button "Menú" [ref=f18e226] [cursor=pointer]

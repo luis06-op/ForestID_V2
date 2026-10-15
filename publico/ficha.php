@@ -91,7 +91,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
         </div>
     <?php else: 
-        $foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+        $foto = obtener_url_foto($arbol['foto_principal_url'] ?? null);
         $qr_img = !empty($arbol['qr_url']) ? BASE_URL . $arbol['qr_url'] : BASE_URL . 'assets/qr/qr_' . $arbol['codigo_placa'] . '.svg';
     ?>
 
@@ -135,7 +135,9 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <!-- Columna Izquierda: Fotografía del Espécimen -->
                 <div class="md:col-span-5 space-y-4">
                     <div class="h-64 sm:h-80 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 relative group shadow-sm">
-                        <img src="<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($arbol['nombre_comun']) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <img src="<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($arbol['nombre_comun']) ?>" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.onerror=null; this.src='<?= BASE_URL ?>assets/img/tree-placeholder.svg';">
                     </div>
 
                     <!-- Código QR físico asociado -->
@@ -365,7 +367,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             </button>
         </div>
 
-        <form action="<?= BASE_URL ?>publico/reportar_novedad.php" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form action="<?= BASE_URL ?>publico/reportar_novedad.php" method="POST" enctype="multipart/form-data" class="space-y-4" onsubmit="const b=this.querySelector('button[type=submit]'); if(b && this.checkValidity()){ b.disabled=true; b.innerHTML='<span class=\'inline-block animate-spin mr-2\'>⏳</span> Enviando...'; }">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(crear_token_csrf()) ?>">
             <input type="hidden" name="id_individuo" value="<?= htmlspecialchars($arbol['id_individuo']) ?>">
             <input type="hidden" name="codigo_placa" value="<?= htmlspecialchars($arbol['codigo_placa']) ?>">
@@ -404,11 +406,11 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
 
             <div class="flex justify-end gap-2 pt-3 border-t border-gray-100">
-                <button type="button" onclick="cerrarModal('modal-reporte-novedad')" class="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-xl">
+                <button type="button" onclick="cerrarModal('modal-reporte-novedad')" class="px-4 py-2.5 min-h-[44px] text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-xl">
                     Cancelar
                 </button>
-                <button type="submit" class="btn-forest-primary text-xs py-2 px-4">
-                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar Reporte
+                <button type="submit" class="btn-forest-primary text-xs min-h-[44px] py-2.5 px-5 shadow-sm">
+                    <i data-lucide="send" class="w-4 h-4"></i> Enviar Reporte
                 </button>
             </div>
         </form>

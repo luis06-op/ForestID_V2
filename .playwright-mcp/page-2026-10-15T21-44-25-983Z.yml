@@ -1,0 +1,169 @@
+- generic [active] [ref=f19e1]:
+  - banner [ref=f19e2]:
+    - generic [ref=f19e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f19e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f19e11]:
+          - generic [ref=f19e12]: ForestID
+          - generic [ref=f19e13]: Emincut • El Bagre
+      - generic [ref=f19e14]:
+        - link "Cerrar Sesión" [ref=f19e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button "Abrir Menú de Navegación" [ref=f19e19] [cursor=pointer]
+  - main [ref=f19e22]:
+    - generic [ref=f19e23]:
+      - generic [ref=f19e24]:
+        - text: Censo y Alta Botánica
+        - heading "Registrar Individuo Forestal" [level=1] [ref=f19e25]
+      - link "Volver al Listado" [ref=f19e26] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+    - generic [ref=f19e29]:
+      - generic [ref=f19e30]:
+        - heading "1. Identificación y Ubicación Territorial" [level=3] [ref=f19e31]
+        - generic [ref=f19e38]:
+          - generic [ref=f19e39]:
+            - generic [ref=f19e40]: Código de Placa QR *
+            - textbox "Código de Placa QR *" [ref=f19e41]: EBG-3667
+          - generic [ref=f19e42]:
+            - generic [ref=f19e43]: Zona Territorial *
+            - combobox "Zona Territorial *" [ref=f19e44]:
+              - option "Seleccione una zona..." [selected]
+              - option "Parque Principal El Bagre"
+              - option "Ronda Hídrica Río Nechí / Malecón"
+              - option "SENA Complejo Minero Bajo Cauca"
+          - generic [ref=f19e45]:
+            - generic [ref=f19e46]: Institución / Cliente *
+            - combobox "Institución / Cliente *" [ref=f19e47]:
+              - option "Emincut S.A.S. — Soluciones Ambientales y Forestales" [selected]
+        - generic [ref=f19e48]:
+          - generic [ref=f19e49]:
+            - generic [ref=f19e50]: Latitud GPS *
+            - spinbutton "Latitud GPS *" [ref=f19e51]: "7.6043200"
+          - generic [ref=f19e52]:
+            - generic [ref=f19e53]: Longitud GPS *
+            - spinbutton "Longitud GPS *" [ref=f19e54]: "-74.8091500"
+      - generic [ref=f19e55]:
+        - heading "2. Datos Botánicos y Mediciones Dasométricas" [level=3] [ref=f19e56]
+        - generic [ref=f19e60]:
+          - generic [ref=f19e61]:
+            - generic [ref=f19e62]: Nombre Común *
+            - textbox "Nombre Común *" [ref=f19e63]:
+              - /placeholder: ej. Guayacán Amarillo
+          - generic [ref=f19e64]:
+            - generic [ref=f19e65]: Nombre Científico *
+            - textbox "Nombre Científico *" [ref=f19e66]:
+              - /placeholder: ej. Handroanthus chrysanthus
+          - generic [ref=f19e67]:
+            - generic [ref=f19e68]: Familia Botánica *
+            - textbox "Familia Botánica *" [ref=f19e69]:
+              - /placeholder: ej. Bignoniaceae
+        - generic [ref=f19e70]:
+          - generic [ref=f19e71]:
+            - generic [ref=f19e72]: Tipo *
+            - combobox "Tipo *" [ref=f19e73]:
+              - option "Árbol" [selected]
+              - option "Palma"
+              - option "Arbusto"
+              - option "Planta ornamental"
+          - generic [ref=f19e74]:
+            - generic [ref=f19e75]: DAP (cm) *
+            - spinbutton "DAP (cm) *" [ref=f19e76]
+          - generic [ref=f19e77]:
+            - generic [ref=f19e78]: Altura Total (m) *
+            - spinbutton "Altura Total (m) *" [ref=f19e79]
+          - generic [ref=f19e80]:
+            - generic [ref=f19e81]: Diám. Copa (m) *
+            - spinbutton "Diám. Copa (m) *" [ref=f19e82]
+        - generic [ref=f19e83]:
+          - generic [ref=f19e84]:
+            - generic [ref=f19e85]: Fecha de Siembra (Opcional)
+            - textbox "Fecha de Siembra (Opcional)" [ref=f19e86]
+          - generic [ref=f19e87]:
+            - generic [ref=f19e88]: Fotografía Principal del Espécimen
+            - button "Fotografía Principal del Espécimen" [ref=f19e89]
+        - generic [ref=f19e90]:
+          - generic [ref=f19e91]: Descripción General / Entorno
+          - textbox "Descripción General / Entorno" [ref=f19e92]:
+            - /placeholder: Observaciones de desarrollo, cercanía a redes o andenes...
+      - generic [ref=f19e93]:
+        - heading "3. Estado Fitosanitario Inicial" [level=3] [ref=f19e94]
+        - generic [ref=f19e99]:
+          - generic [ref=f19e100]: Condición de Salud *
+          - combobox "Condición de Salud *" [ref=f19e101]:
+            - option "Sano" [selected]
+            - option "En observación"
+            - option "Enfermo"
+            - option "Plagado"
+            - option "En riesgo"
+            - option "Muerto en pie"
+        - generic [ref=f19e102]:
+          - generic [ref=f19e103]:
+            - generic [ref=f19e104]: Diagnóstico Inicial
+            - textbox "Diagnóstico Inicial" [ref=f19e105]: Follaje y fuste en óptimas condiciones fitosanitarias.
+          - generic [ref=f19e106]:
+            - generic [ref=f19e107]: Recomendación Técnica
+            - textbox "Recomendación Técnica" [ref=f19e108]: Monitoreo rutinario y riego en temporada seca.
+      - generic [ref=f19e109]:
+        - link "Cancelar" [ref=f19e110] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+        - button "Guardar y Generar Placa QR" [ref=f19e111] [cursor=pointer]
+  - contentinfo [ref=f19e114]:
+    - generic [ref=f19e115]:
+      - generic [ref=f19e116]:
+        - generic [ref=f19e117]:
+          - generic [ref=f19e118]: ForestID
+          - paragraph [ref=f19e124]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f19e125]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f19e126]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f19e131]:
+          - heading "Marco Institucional" [level=4] [ref=f19e132]
+          - paragraph [ref=f19e133]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f19e134]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f19e135]: Semillero iRed SENA
+        - generic [ref=f19e140]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f19e141]
+          - list [ref=f19e142]:
+            - listitem [ref=f19e143]:
+              - text: •
+              - strong [ref=f19e144]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f19e145]:
+              - text: •
+              - strong [ref=f19e146]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f19e147]:
+              - text: •
+              - strong [ref=f19e148]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f19e149]:
+              - text: •
+              - strong [ref=f19e150]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f19e151]:
+        - generic [ref=f19e152]:
+          - text: © 2026
+          - strong [ref=f19e153]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f19e154]:
+          - link "Inicio Público" [ref=f19e155] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f19e156]: •
+          - link "Buscador" [ref=f19e157] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f19e158]: •
+          - link "Acceso Restringido" [ref=f19e159] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php
+  - navigation "Navegación Móvil Rápida" [ref=f19e160]:
+    - link "Inicio" [ref=f19e161] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/dashboard.php
+    - link "Árboles" [ref=f19e168] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+    - link "Zonas" [ref=f19e173] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+    - link "QR" [ref=f19e178] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/qr/index.php
+    - button "Menú" [ref=f19e186] [cursor=pointer]

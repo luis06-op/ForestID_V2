@@ -1,0 +1,211 @@
+- generic [active] [ref=f17e1]:
+  - banner [ref=f17e2]:
+    - generic [ref=f17e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f17e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f17e11]:
+          - generic [ref=f17e12]: ForestID
+          - generic [ref=f17e13]: Emincut • El Bagre
+      - generic [ref=f17e14]:
+        - link "Cerrar Sesión" [ref=f17e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button "Abrir Menú de Navegación" [ref=f17e19] [cursor=pointer]
+  - generic [ref=f17e21]:
+    - generic [ref=f17e22]:
+      - text: Inventario Abierto
+      - heading "Explorador del Patrimonio Forestal" [level=1] [ref=f17e23]
+      - paragraph [ref=f17e24]: Consulta el censo de árboles, palmas y plantas ornamentales del municipio de El Bagre, Antioquia gestionados por Emincut.
+    - generic [ref=f17e26]:
+      - generic [ref=f17e27]:
+        - generic [ref=f17e28]: Buscar por Nombre o Placa
+        - textbox "Buscar por Nombre o Placa" [ref=f17e30]:
+          - /placeholder: Guayacán, Ceiba, EBG-...
+      - generic [ref=f17e31]:
+        - generic [ref=f17e32]: Zona / Sector
+        - combobox "Zona / Sector" [ref=f17e33]:
+          - option "Todas las zonas" [selected]
+          - option "Parque Principal El Bagre"
+          - option "Ronda Hídrica Río Nechí / Malecón"
+          - option "SENA Complejo Minero Bajo Cauca"
+      - generic [ref=f17e34]:
+        - generic [ref=f17e35]: Tipo de Planta
+        - combobox "Tipo de Planta" [ref=f17e36]:
+          - option "Todos los tipos" [selected]
+          - option "Árbol"
+          - option "Palma"
+          - option "Arbusto"
+          - option "Planta ornamental"
+      - generic [ref=f17e37]:
+        - generic [ref=f17e38]: Estado de Salud
+        - combobox "Estado de Salud" [ref=f17e39]:
+          - option "Todos los estados" [selected]
+          - option "Sano"
+          - option "En observación"
+          - option "Enfermo"
+          - option "Plagado"
+          - option "En riesgo"
+      - generic [ref=f17e40]:
+        - button "Aplicar Filtros" [ref=f17e41] [cursor=pointer]
+        - link "Limpiar Filtros" [ref=f17e44] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/publico/buscar.php
+    - generic [ref=f17e49]:
+      - text: Se encontraron
+      - strong [ref=f17e50]: "4"
+      - text: individuos registrados
+    - generic [ref=f17e51]:
+      - generic [ref=f17e52]:
+        - generic [ref=f17e53]:
+          - img "Caracolí" [ref=f17e54]
+          - generic [ref=f17e55]: EBG-NECH-003
+          - generic [ref=f17e56]: Sano
+        - generic [ref=f17e59]:
+          - generic [ref=f17e60]:
+            - text: Anacardiaceae • Árbol
+            - heading "Caracolí" [level=3] [ref=f17e61]
+            - paragraph [ref=f17e62]: Anacardium excelsum
+          - generic [ref=f17e63]:
+            - generic [ref=f17e64]:
+              - generic [ref=f17e65]: DAP
+              - text: 85.4 cm
+            - generic [ref=f17e66]:
+              - generic [ref=f17e67]: Altura
+              - text: 24.0 m
+            - generic [ref=f17e68]:
+              - generic [ref=f17e69]: Copa
+              - text: 18.2 m
+          - generic [ref=f17e70]:
+            - generic [ref=f17e71]: Ronda Hídrica Río Nechí / Malecón
+            - link "Ficha QR" [ref=f17e75] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-NECH-003
+      - generic [ref=f17e78]:
+        - generic [ref=f17e79]:
+          - img "Ceiba Bruja / Bonga" [ref=f17e80]
+          - generic [ref=f17e81]: EBG-SENA-002
+          - generic [ref=f17e82]: En observación
+        - generic [ref=f17e85]:
+          - generic [ref=f17e86]:
+            - text: Malvaceae • Árbol
+            - heading "Ceiba Bruja / Bonga" [level=3] [ref=f17e87]
+            - paragraph [ref=f17e88]: Ceiba pentandra
+          - generic [ref=f17e89]:
+            - generic [ref=f17e90]:
+              - generic [ref=f17e91]: DAP
+              - text: 72.0 cm
+            - generic [ref=f17e92]:
+              - generic [ref=f17e93]: Altura
+              - text: 21.5 m
+            - generic [ref=f17e94]:
+              - generic [ref=f17e95]: Copa
+              - text: 16.8 m
+          - generic [ref=f17e96]:
+            - generic [ref=f17e97]: SENA Complejo Minero Bajo Cauca
+            - link "Ficha QR" [ref=f17e101] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-SENA-002
+      - generic [ref=f17e104]:
+        - generic [ref=f17e105]:
+          - img "Guayacán Rosado" [ref=f17e106]
+          - generic [ref=f17e107]: EBG-PARQ-001
+          - generic [ref=f17e108]: Sano
+        - generic [ref=f17e111]:
+          - generic [ref=f17e112]:
+            - text: Bignoniaceae • Árbol
+            - heading "Guayacán Rosado" [level=3] [ref=f17e113]
+            - paragraph [ref=f17e114]: Handroanthus chrysanthus
+          - generic [ref=f17e115]:
+            - generic [ref=f17e116]:
+              - generic [ref=f17e117]: DAP
+              - text: 38.5 cm
+            - generic [ref=f17e118]:
+              - generic [ref=f17e119]: Altura
+              - text: 14.2 m
+            - generic [ref=f17e120]:
+              - generic [ref=f17e121]: Copa
+              - text: 9.5 m
+          - generic [ref=f17e122]:
+            - generic [ref=f17e123]: Parque Principal El Bagre
+            - link "Ficha QR" [ref=f17e127] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-001
+      - generic [ref=f17e130]:
+        - generic [ref=f17e131]:
+          - img "Palma Real / Palma de Cera" [ref=f17e132]
+          - generic [ref=f17e133]: EBG-PARQ-004
+          - generic [ref=f17e134]: Sano
+        - generic [ref=f17e137]:
+          - generic [ref=f17e138]:
+            - text: Arecaceae • Palma
+            - heading "Palma Real / Palma de Cera" [level=3] [ref=f17e139]
+            - paragraph [ref=f17e140]: Roystonea regia
+          - generic [ref=f17e141]:
+            - generic [ref=f17e142]:
+              - generic [ref=f17e143]: DAP
+              - text: 32.0 cm
+            - generic [ref=f17e144]:
+              - generic [ref=f17e145]: Altura
+              - text: 11.8 m
+            - generic [ref=f17e146]:
+              - generic [ref=f17e147]: Copa
+              - text: 4.2 m
+          - generic [ref=f17e148]:
+            - generic [ref=f17e149]: Parque Principal El Bagre
+            - link "Ficha QR" [ref=f17e153] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-004
+  - contentinfo [ref=f17e156]:
+    - generic [ref=f17e157]:
+      - generic [ref=f17e158]:
+        - generic [ref=f17e159]:
+          - generic [ref=f17e160]: ForestID
+          - paragraph [ref=f17e166]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f17e167]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f17e168]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f17e173]:
+          - heading "Marco Institucional" [level=4] [ref=f17e174]
+          - paragraph [ref=f17e175]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f17e176]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f17e177]: Semillero iRed SENA
+        - generic [ref=f17e182]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f17e183]
+          - list [ref=f17e184]:
+            - listitem [ref=f17e185]:
+              - text: •
+              - strong [ref=f17e186]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f17e187]:
+              - text: •
+              - strong [ref=f17e188]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f17e189]:
+              - text: •
+              - strong [ref=f17e190]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f17e191]:
+              - text: •
+              - strong [ref=f17e192]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f17e193]:
+        - generic [ref=f17e194]:
+          - text: © 2026
+          - strong [ref=f17e195]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f17e196]:
+          - link "Inicio Público" [ref=f17e197] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f17e198]: •
+          - link "Buscador" [ref=f17e199] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f17e200]: •
+          - link "Acceso Restringido" [ref=f17e201] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php
+  - navigation "Navegación Móvil Rápida" [ref=f17e202]:
+    - link "Inicio" [ref=f17e203] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/dashboard.php
+    - link "Árboles" [ref=f17e210] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+    - link "Zonas" [ref=f17e215] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+    - link "QR" [ref=f17e220] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/qr/index.php
+    - button "Menú" [ref=f17e228] [cursor=pointer]

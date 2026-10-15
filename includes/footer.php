@@ -4,8 +4,8 @@
  * Empresa: Emincut S.A.S. | El Bagre, Antioquia
  */
 ?>
-    <!-- Pie de página Institucional -->
-    <footer class="mt-auto bg-gradient-to-b from-[#FAFAF7] to-emerald-950/90 text-gray-200 border-t border-emerald-900/40">
+    <!-- Pie de página Institucional con margen inferior para Bottom Bar en móviles -->
+    <footer class="mt-auto pb-20 md:pb-0 bg-gradient-to-b from-[#FAFAF7] to-emerald-950/90 text-gray-200 border-t border-emerald-900/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Columna 1: Marca y Propósito -->
@@ -65,6 +65,70 @@
             </div>
         </div>
     </footer>
+
+    <!-- Barra de Navegación Inferior Fija para Móviles (Bottom Tab Bar) -->
+    <?php
+    $actual_uri = $_SERVER['REQUEST_URI'] ?? '';
+    ?>
+    <nav aria-label="Navegación Móvil Rápida" class="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-t border-emerald-100 md:hidden flex justify-around items-center h-16 px-1 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+        <?php if (esta_autenticado() && es_admin()): ?>
+            <a href="<?= BASE_URL ?>admin/dashboard.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'dashboard') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 mb-0.5"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/individuos/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'individuos') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="trees" class="w-5 h-5 mb-0.5"></i>
+                <span>Árboles</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/zonas/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'zonas') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="map-pin" class="w-5 h-5 mb-0.5"></i>
+                <span>Zonas</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/qr/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'qr') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="qr-code" class="w-5 h-5 mb-0.5"></i>
+                <span>QR</span>
+            </a>
+            <button type="button" onclick="const m=document.getElementById('mobile-menu'); if(m){ m.classList.toggle('hidden'); window.scrollTo({top:0, behavior:'smooth'}); }" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold text-gray-500 hover:text-emerald-700">
+                <i data-lucide="menu" class="w-5 h-5 mb-0.5"></i>
+                <span>Menú</span>
+            </button>
+        <?php elseif (esta_autenticado() && es_operario()): ?>
+            <a href="<?= BASE_URL ?>operario/dashboard.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'dashboard') !== false) ? 'text-teal-700 font-extrabold' : 'text-gray-500 hover:text-teal-700' ?>">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 mb-0.5"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="<?= BASE_URL ?>operario/individuos/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'individuos') !== false) ? 'text-teal-700 font-extrabold' : 'text-gray-500 hover:text-teal-700' ?>">
+                <i data-lucide="trees" class="w-5 h-5 mb-0.5"></i>
+                <span>Mi Zona</span>
+            </a>
+            <div class="flex-1 flex justify-center -mt-5">
+                <a href="<?= BASE_URL ?>operario/escanear.php" aria-label="Escanear Placa QR" class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex flex-col items-center justify-center shadow-lg border-4 border-white active:scale-95 transition-transform">
+                    <i data-lucide="camera" class="w-6 h-6"></i>
+                </a>
+            </div>
+            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'registrar_individuo') !== false) ? 'text-teal-700 font-extrabold' : 'text-gray-500 hover:text-teal-700' ?>">
+                <i data-lucide="plus-circle" class="w-5 h-5 mb-0.5"></i>
+                <span>Alta GPS</span>
+            </a>
+            <a href="<?= BASE_URL ?>operario/actividades/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'actividades') !== false) ? 'text-teal-700 font-extrabold' : 'text-gray-500 hover:text-teal-700' ?>">
+                <i data-lucide="clipboard-check" class="w-5 h-5 mb-0.5"></i>
+                <span>Labores</span>
+            </a>
+        <?php else: ?>
+            <a href="<?= BASE_URL ?>publico/index.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'publico/index.php') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="home" class="w-5 h-5 mb-0.5"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="<?= BASE_URL ?>publico/buscar.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'buscar') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="search" class="w-5 h-5 mb-0.5"></i>
+                <span>Explorar</span>
+            </a>
+            <a href="<?= BASE_URL ?>auth/login.php" class="flex-1 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center text-[10px] font-bold <?= (strpos($actual_uri, 'login') !== false) ? 'text-emerald-700 font-extrabold' : 'text-gray-500 hover:text-emerald-700' ?>">
+                <i data-lucide="lock" class="w-5 h-5 mb-0.5"></i>
+                <span>Acceso</span>
+            </a>
+        <?php endif; ?>
+    </nav>
 
     <!-- Scripts globales -->
     <script src="<?= BASE_URL ?>assets/js/app.js"></script>

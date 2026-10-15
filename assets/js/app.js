@@ -39,6 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Prevención de doble envío y feedback visual "Guardando..." en formularios
+    const forms = document.querySelectorAll('form:not([data-no-protect])');
+    forms.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            if (!form.checkValidity()) {
+                return;
+            }
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn && !submitBtn.disabled) {
+                const width = submitBtn.offsetWidth;
+                if (width > 0) {
+                    submitBtn.style.minWidth = `${width}px`;
+                }
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline text-current" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Guardando...</span>
+                `;
+            }
+        });
+    });
 });
 
 // Función para abrir modales

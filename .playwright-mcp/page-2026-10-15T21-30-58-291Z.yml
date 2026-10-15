@@ -1,0 +1,170 @@
+- generic [active] [ref=f14e1]:
+  - banner [ref=f14e2]:
+    - generic [ref=f14e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f14e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f14e11]:
+          - generic [ref=f14e12]: ForestID
+          - generic [ref=f14e13]: Emincut • El Bagre
+      - generic [ref=f14e14]:
+        - link "Cerrar Sesión" [ref=f14e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button "Abrir Menú de Navegación" [ref=f14e19] [cursor=pointer]
+  - main [ref=f14e22]:
+    - generic [ref=f14e23]:
+      - generic [ref=f14e24]:
+        - text: Emincut • El Bagre, Antioquia
+        - heading "Panel de Administración General" [level=1] [ref=f14e25]
+        - paragraph [ref=f14e26]: Resumen del inventario dendrológico, salud fitosanitaria y registro de intervenciones en campo.
+      - generic [ref=f14e27]:
+        - link "Nuevo Individuo" [ref=f14e28] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/individuos/crear.php
+        - link "Imprimir Placas" [ref=f14e31] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php
+    - generic [ref=f14e36]:
+      - generic [ref=f14e37]:
+        - generic [ref=f14e38]: Individuos Forestales
+        - text: "4"
+        - generic [ref=f14e43]: Censo activo
+      - generic [ref=f14e44]:
+        - generic [ref=f14e45]: Zonas Territoriales
+        - text: "3"
+        - generic [ref=f14e50]: Sectores en El Bagre
+      - generic [ref=f14e51]:
+        - generic [ref=f14e52]: Intervenciones
+        - text: "3"
+        - generic [ref=f14e58]: Mantenimientos y podas
+      - generic [ref=f14e59]:
+        - generic [ref=f14e60]: Personal y Usuarios
+        - text: "3"
+        - generic [ref=f14e67]: Cuentas activas
+    - generic [ref=f14e68]:
+      - generic [ref=f14e69]:
+        - generic [ref=f14e70]:
+          - heading "Distribución Fitosanitaria" [level=3] [ref=f14e71]
+          - generic [ref=f14e72]: Salud actual
+        - generic [ref=f14e75]:
+          - generic [ref=f14e76]:
+            - generic [ref=f14e77]: "Sano:"
+            - generic [ref=f14e78]: "3"
+          - generic [ref=f14e79]:
+            - generic [ref=f14e80]: "En observación:"
+            - generic [ref=f14e81]: "1"
+      - generic [ref=f14e82]:
+        - generic [ref=f14e83]:
+          - heading "Cobertura Arbórea por Zona" [level=3] [ref=f14e84]
+          - generic [ref=f14e85]: El Bagre
+        - generic [ref=f14e88]:
+          - generic [ref=f14e89]:
+            - text: "Zona con mayor censo:"
+            - strong [ref=f14e90]: Parque Principal El Bagre
+          - link "Ver Zonas" [ref=f14e91] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+    - generic [ref=f14e92]:
+      - generic [ref=f14e93]:
+        - generic [ref=f14e94]:
+          - heading "Atención Fitosanitaria Prioritaria" [level=3] [ref=f14e98]
+          - generic [ref=f14e99]: 1 alertas
+        - generic [ref=f14e101]:
+          - generic [ref=f14e102]:
+            - generic [ref=f14e103]:
+              - generic [ref=f14e104]: EBG-SENA-002
+              - generic [ref=f14e105]: En observación
+            - heading "Ceiba Bruja / Bonga" [level=4] [ref=f14e107]
+            - paragraph [ref=f14e108]: Presencia leve de epífitas y ramas secas en el tercio superior de la copa debido a estrés hídrico estacional.
+            - generic [ref=f14e109]: 📍 SENA Complejo Minero Bajo Cauca
+          - link "Inspeccionar" [ref=f14e110] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/individuos/detalle.php?id=55555555-5555-5555-5555-555555555502
+      - generic [ref=f14e111]:
+        - generic [ref=f14e112]:
+          - heading "Últimas Intervenciones Registradas" [level=3] [ref=f14e118]
+          - link "Ver todas" [ref=f14e119] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/reportes/index.php
+        - generic [ref=f14e120]:
+          - generic [ref=f14e121]:
+            - generic [ref=f14e122]:
+              - generic [ref=f14e123]:
+                - generic [ref=f14e124]: Riego
+                - generic [ref=f14e125]: • EBG-PARQ-004 (Palma Real / Palma de Cera)
+              - paragraph [ref=f14e126]: Jornada de hidratación intensiva y aplicación de acolchado vegetal (mulch) alrededor del plato de la palma.
+              - generic [ref=f14e127]: 12 de Octubre, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+            - link [ref=f14e128] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-004
+          - generic [ref=f14e133]:
+            - generic [ref=f14e134]:
+              - generic [ref=f14e135]:
+                - generic [ref=f14e136]: Poda
+                - generic [ref=f14e137]: • EBG-SENA-002 (Ceiba Bruja / Bonga)
+              - paragraph [ref=f14e138]: Poda sanitaria de elevación y eliminación de ramas bajeras con riesgo de desprendimiento sobre sendero peatonal.
+              - generic [ref=f14e139]: 3 de Octubre, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+            - link [ref=f14e140] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-SENA-002
+          - generic [ref=f14e145]:
+            - generic [ref=f14e146]:
+              - generic [ref=f14e147]:
+                - generic [ref=f14e148]: Fertilización
+                - generic [ref=f14e149]: • EBG-PARQ-001 (Guayacán Rosado)
+              - paragraph [ref=f14e150]: Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+              - generic [ref=f14e151]: 31 de Agosto, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+            - link [ref=f14e152] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-001
+  - contentinfo [ref=f14e157]:
+    - generic [ref=f14e158]:
+      - generic [ref=f14e159]:
+        - generic [ref=f14e160]:
+          - generic [ref=f14e161]: ForestID
+          - paragraph [ref=f14e167]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f14e168]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f14e169]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f14e174]:
+          - heading "Marco Institucional" [level=4] [ref=f14e175]
+          - paragraph [ref=f14e176]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f14e177]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f14e178]: Semillero iRed SENA
+        - generic [ref=f14e183]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f14e184]
+          - list [ref=f14e185]:
+            - listitem [ref=f14e186]:
+              - text: •
+              - strong [ref=f14e187]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f14e188]:
+              - text: •
+              - strong [ref=f14e189]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f14e190]:
+              - text: •
+              - strong [ref=f14e191]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f14e192]:
+              - text: •
+              - strong [ref=f14e193]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f14e194]:
+        - generic [ref=f14e195]:
+          - text: © 2026
+          - strong [ref=f14e196]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f14e197]:
+          - link "Inicio Público" [ref=f14e198] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f14e199]: •
+          - link "Buscador" [ref=f14e200] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f14e201]: •
+          - link "Acceso Restringido" [ref=f14e202] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php
+  - navigation "Navegación Móvil Rápida" [ref=f14e203]:
+    - link "Inicio" [ref=f14e204] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/dashboard.php
+    - link "Árboles" [ref=f14e211] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+    - link "Zonas" [ref=f14e216] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+    - link "QR" [ref=f14e221] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/admin/qr/index.php
+    - button "Menú" [ref=f14e229] [cursor=pointer]

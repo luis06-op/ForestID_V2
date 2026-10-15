@@ -129,7 +129,7 @@ $stmtActs = $pdo->prepare("
 $stmtActs->execute([':id' => $id]);
 $actividades = $stmtActs->fetchAll();
 
-$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+$foto = obtener_url_foto($arbol['foto_principal_url'] ?? null);
 $csrf_token = crear_token_csrf();
 $titulo_pagina = "Gestión: {$arbol['codigo_placa']} — " . APP_NAME;
 require_once __DIR__ . '/../../includes/header.php';
@@ -153,11 +153,11 @@ require_once __DIR__ . '/../../includes/navbar.php';
                 <h1 class="font-heading font-extrabold text-2xl text-gray-900">
                     <?= htmlspecialchars($arbol['nombre_comun']) ?>
                 </h1>
-                <span class="font-mono text-xs font-bold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">
+                <span class="font-mono text-xs font-bold text-gray-700 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">
                     <?= htmlspecialchars($arbol['codigo_placa']) ?>
                 </span>
             </div>
-            <a href="<?= BASE_URL ?>operario/individuos/index.php" class="btn-forest-secondary text-xs py-2 px-3">
+            <a href="<?= BASE_URL ?>operario/individuos/index.php" class="btn-forest-secondary text-xs min-h-[44px] py-2.5 px-4">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver
             </a>
         </div>
@@ -170,18 +170,18 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <div class="mt-1"><?= obtener_badge_estado($arbol['estado_salud'] ?? 'Sano') ?></div>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="abrirModal('modal-eval')" class="btn-forest-primary text-xs py-2 px-3">
-                        <i data-lucide="stethoscope" class="w-3.5 h-3.5"></i> Actualizar Salud
+                    <button onclick="abrirModal('modal-eval')" class="btn-forest-primary text-xs min-h-[44px] py-2.5 px-3.5">
+                        <i data-lucide="stethoscope" class="w-4 h-4"></i> Actualizar Salud
                     </button>
-                    <button onclick="abrirModal('modal-mant')" class="btn-forest-secondary text-xs py-2 px-3">
-                        <i data-lucide="wrench" class="w-3.5 h-3.5"></i> Registrar Trabajo
+                    <button onclick="abrirModal('modal-mant')" class="btn-forest-secondary text-xs min-h-[44px] py-2.5 px-3.5">
+                        <i data-lucide="wrench" class="w-4 h-4"></i> Registrar Trabajo
                     </button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-1 h-36 bg-gray-100 rounded-xl overflow-hidden">
-                    <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover">
+                    <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='<?= BASE_URL ?>assets/img/tree-placeholder.svg';">
                 </div>
                 <div class="sm:col-span-2 space-y-2 text-xs">
                     <div class="grid grid-cols-3 gap-2 text-center">

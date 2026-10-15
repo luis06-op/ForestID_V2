@@ -228,6 +228,36 @@ function subir_imagen_segura(array $archivo, string $subdirectorio = 'individuos
 }
 
 /**
+ * Obtiene la URL de la foto del espécimen forestal con fallback automático a SVG y placeholder
+ */
+function obtener_url_foto(?string $url): string {
+    $placeholder = BASE_URL . 'assets/img/tree-placeholder.svg';
+    if (empty($url)) {
+        return $placeholder;
+    }
+
+    $ruta_limpia = ltrim((string)parse_url($url, PHP_URL_PATH), '/');
+    if (str_starts_with($ruta_limpia, 'ForestID_V2/')) {
+        $ruta_limpia = substr($ruta_limpia, strlen('ForestID_V2/'));
+    }
+
+    $archivo_fisico = dirname(__DIR__) . '/' . $ruta_limpia;
+
+    if (file_exists($archivo_fisico)) {
+        return BASE_URL . $ruta_limpia;
+    }
+
+    // Comprobar si existe equivalente en .svg (los mockups botánicos de Emincut son SVG)
+    $svg_version = preg_replace('/\.(jpg|jpeg|png)$/i', '.svg', $archivo_fisico);
+    if ($svg_version !== $archivo_fisico && file_exists($svg_version)) {
+        $ruta_svg = preg_replace('/\.(jpg|jpeg|png)$/i', '.svg', $ruta_limpia);
+        return BASE_URL . $ruta_svg;
+    }
+
+    return $placeholder;
+}
+
+/**
  * Mensajes Flash (toasts)
  */
 function set_flash(string $tipo, string $mensaje): void {

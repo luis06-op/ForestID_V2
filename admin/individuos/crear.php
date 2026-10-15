@@ -174,7 +174,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="crear.php" enctype="multipart/form-data" class="space-y-6 max-w-4xl">
+        <form method="POST" action="crear.php" enctype="multipart/form-data" class="space-y-6 max-w-4xl" onsubmit="const b=this.querySelector('button[type=submit]'); if(b && this.checkValidity()){ b.disabled=true; b.innerHTML='<span class=\'inline-block animate-spin mr-2\'>⏳</span> Guardando...'; }">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
             <!-- 1. Identificación y Ubicación -->
@@ -315,9 +315,9 @@ require_once __DIR__ . '/../../includes/navbar.php';
             </div>
 
             <!-- Botones de Acción -->
-            <div class="flex justify-end gap-2 pt-2">
-                <a href="<?= BASE_URL ?>admin/individuos/index.php" class="btn-forest-secondary text-xs py-2.5 px-4">Cancelar</a>
-                <button type="submit" class="btn-forest-primary text-xs py-2.5 px-6 shadow-md">
+            <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                <a href="<?= BASE_URL ?>admin/individuos/index.php" class="btn-forest-secondary text-sm min-h-[48px] py-3 px-5 justify-center">Cancelar</a>
+                <button type="submit" class="btn-forest-primary text-sm min-h-[48px] py-3 px-6 shadow-md justify-center">
                     <i data-lucide="check" class="w-4 h-4"></i> Guardar y Generar Placa QR
                 </button>
             </div>

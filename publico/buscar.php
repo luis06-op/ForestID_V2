@@ -143,12 +143,12 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
 
             <!-- Botones Filtrar y Limpiar -->
-            <div class="lg:col-span-1 flex gap-1">
-                <button type="submit" class="w-full btn-forest-primary text-xs py-2 px-2" title="Aplicar Filtros">
-                    <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+            <div class="lg:col-span-1 flex gap-1.5">
+                <button type="submit" class="w-full btn-forest-primary text-xs min-h-[44px] py-2.5 px-3" title="Aplicar Filtros">
+                    <i data-lucide="filter" class="w-4 h-4"></i>
                 </button>
-                <a href="<?= BASE_URL ?>publico/buscar.php" class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-xs flex items-center justify-center" title="Limpiar Filtros">
-                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <a href="<?= BASE_URL ?>publico/buscar.php" class="p-2.5 min-h-[44px] min-w-[44px] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-xs flex items-center justify-center transition-colors" title="Limpiar Filtros">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </a>
             </div>
 
@@ -180,11 +180,13 @@ require_once __DIR__ . '/../includes/navbar.php';
     <?php else: ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($individuos as $arbol): 
-                $foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+                $foto = obtener_url_foto($arbol['foto_principal_url'] ?? null);
             ?>
-                <div class="forest-card overflow-hidden flex flex-col group">
+                <div class="forest-card overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
                     <div class="h-44 overflow-hidden relative bg-gray-100">
-                        <img src="<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($arbol['nombre_comun']) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <img src="<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($arbol['nombre_comun']) ?>" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.onerror=null; this.src='<?= BASE_URL ?>assets/img/tree-placeholder.svg';">
                         <div class="absolute top-2.5 left-2.5">
                             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-white/95 text-gray-900 shadow-sm backdrop-blur">
                                 <?= htmlspecialchars($arbol['codigo_placa']) ?>
@@ -227,8 +229,8 @@ require_once __DIR__ . '/../includes/navbar.php';
                             <span class="text-xs text-gray-500 flex items-center gap-1">
                                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600"></i> <?= htmlspecialchars($arbol['nombre_zona']) ?>
                             </span>
-                            <a href="<?= BASE_URL ?>publico/ficha.php?codigo=<?= urlencode($arbol['codigo_placa']) ?>" class="btn-forest-primary text-xs py-1.5 px-3">
-                                Ficha QR <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            <a href="<?= BASE_URL ?>publico/ficha.php?codigo=<?= urlencode($arbol['codigo_placa']) ?>" class="btn-forest-primary text-xs min-h-[44px] py-2 px-3.5 inline-flex items-center gap-1.5 shadow-xs">
+                                Ficha QR <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                             </a>
                         </div>
                     </div>

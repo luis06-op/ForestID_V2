@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+    <linearGradient id="treeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0F172A" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="600" height="400" fill="url(#bgGrad)" />
+
+  <!-- Subtle Soil / Horizon Line -->
+  <path d="M 0 320 Q 300 310 600 320 L 600 400 L 0 400 Z" fill="#CBD5E1" opacity="0.4" />
+
+  <!-- Central Botanical Shield / Emblem -->
+  <g transform="translate(300, 175)" filter="url(#softShadow)">
+    <circle cx="0" cy="0" r="70" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2" />
+    
+    <!-- Tree Trunk -->
+    <path d="M -4 42 L -2 15 L 2 15 L 4 42 Z" fill="#78350F" />
+    <path d="M -2 22 L -14 12" stroke="#78350F" stroke-width="3" stroke-linecap="round" />
+    <path d="M 2 20 L 14 10" stroke="#78350F" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Stylized Tree Foliage -->
+    <path d="M 0 -38 C -32 -38, -44 -12, -30 10 C -22 24, -4 24, 0 24 C 4 24, 22 24, 30 10 C 44 -12, 32 -38, 0 -38 Z" fill="url(#treeGrad)" />
+    <!-- Leaf highlight overlay -->
+    <path d="M 0 -30 C -20 -30, -25 -10, -12 6 C -4 14, 0 10, 0 -30 Z" fill="#34D399" opacity="0.45" />
+  </g>
+
+  <!-- Badge Pill -->
+  <g transform="translate(300, 290)">
+    <rect x="-105" y="-16" width="210" height="32" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" />
+    <text x="0" y="5" font-family="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" font-weight="700" font-size="12" fill="#047857" text-anchor="middle" letter-spacing="0.5">
+      REGISTRO BOTÁNICO
+    </text>
+  </g>
+
+  <!-- Secondary Hint -->
+  <text x="300" y="340" font-family="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" font-weight="500" font-size="11" fill="#64748B" text-anchor="middle">
+    Fotografía en proceso de captura de campo
+  </text>
+</svg>

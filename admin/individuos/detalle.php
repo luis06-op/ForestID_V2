@@ -140,7 +140,7 @@ $stmtActs = $pdo->prepare("
 $stmtActs->execute([':id' => $id]);
 $actividades = $stmtActs->fetchAll();
 
-$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+$foto = obtener_url_foto($arbol['foto_principal_url'] ?? null);
 $qr_img = !empty($arbol['qr_url']) ? BASE_URL . $arbol['qr_url'] : BASE_URL . 'assets/qr/qr_' . $arbol['codigo_placa'] . '.svg';
 
 $csrf_token = crear_token_csrf();
@@ -191,7 +191,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
             <div class="lg:col-span-4 space-y-4">
                 <div class="forest-card overflow-hidden">
                     <div class="h-60 bg-gray-100">
-                        <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover">
+                        <img src="<?= htmlspecialchars($foto) ?>" alt="Foto" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='<?= BASE_URL ?>assets/img/tree-placeholder.svg';">
                     </div>
                     <div class="p-4 bg-emerald-50/60 border-t border-emerald-100 flex items-center justify-between">
                         <div class="flex items-center gap-3">

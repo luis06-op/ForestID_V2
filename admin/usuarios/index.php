@@ -124,8 +124,26 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <tbody class="divide-y divide-gray-100">
                         <?php if (empty($usuarios)): ?>
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-gray-400 italic">
-                                    No se encontraron usuarios registrados con los criterios indicados.
+                                <td colspan="7" class="p-12 text-center">
+                                    <div class="max-w-sm mx-auto space-y-3">
+                                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-100">
+                                            <i data-lucide="users" class="w-7 h-7"></i>
+                                        </div>
+                                        <h3 class="font-heading font-bold text-base text-gray-800">No se encontraron usuarios</h3>
+                                        <p class="text-xs text-gray-500 leading-relaxed">
+                                            No hay cuentas de usuario que coincidan con los criterios indicados. Puedes registrar un nuevo usuario o limpiar el filtro.
+                                        </p>
+                                        <div class="flex justify-center gap-2 pt-2">
+                                            <a href="<?= BASE_URL ?>admin/usuarios/crear.php" class="btn-forest-primary text-xs min-h-[44px] py-2.5 px-4">
+                                                <i data-lucide="user-plus" class="w-4 h-4"></i> Crear Usuario
+                                            </a>
+                                            <?php if (!empty($q)): ?>
+                                                <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="btn-forest-secondary text-xs min-h-[44px] py-2.5 px-4">
+                                                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Limpiar Filtro
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         <?php else: ?>
@@ -133,7 +151,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="p-4 font-semibold text-gray-900">
                                         <div class="flex items-center gap-2.5">
-                                            <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[11px]">
+                                            <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs shrink-0">
                                                 <?= strtoupper(substr($u['nombres'], 0, 1) . substr($u['apellidos'], 0, 1)) ?>
                                             </div>
                                             <span><?= htmlspecialchars($u['nombres'] . ' ' . $u['apellidos']) ?></span>
@@ -146,14 +164,14 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                             <?= htmlspecialchars($u['nombre_rol']) ?>
                                         </span>
                                     </td>
-                                    <td class="p-4"><?= htmlspecialchars($u['nombre_institucion'] ?? 'Emincut S.A.S.') ?></td>
+                                    <td class="p-4 text-gray-500"><?= htmlspecialchars($u['nombre_institucion'] ?? 'Emincut S.A.S.') ?></td>
                                     <td class="p-4">
                                         <?php if ($u['estado'] == 1): ?>
-                                            <span class="inline-flex items-center gap-1 text-emerald-700 font-semibold">
+                                            <span class="inline-flex items-center gap-1.5 text-emerald-700 font-semibold">
                                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Activo
                                             </span>
                                         <?php else: ?>
-                                            <span class="inline-flex items-center gap-1 text-rose-700 font-semibold">
+                                            <span class="inline-flex items-center gap-1.5 text-rose-700 font-semibold">
                                                 <span class="w-2 h-2 rounded-full bg-rose-500"></span> Inactivo
                                             </span>
                                         <?php endif; ?>
@@ -161,21 +179,25 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                     <td class="p-4 text-gray-400">
                                         <?= !empty($u['ultimo_acceso']) ? formatear_fecha($u['ultimo_acceso'], true) : 'Nunca' ?>
                                     </td>
-                                    <td class="p-4 text-right space-x-1">
-                                        <a href="<?= BASE_URL ?>admin/usuarios/editar.php?id=<?= $u['id_usuario'] ?>" class="p-1.5 rounded-lg bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 inline-flex" title="Editar">
-                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                        </a>
-                                        <?php if ($u['id_usuario'] !== $_SESSION['usuario']['id_usuario']): ?>
-                                            <form method="POST" action="<?= BASE_URL ?>admin/usuarios/index.php" class="inline">
-                                                <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
-                                                <input type="hidden" name="toggle_id" value="<?= $u['id_usuario'] ?>">
-                                                <button type="submit" data-confirm="¿Está seguro de cambiar el estado de este usuario?"
-                                                        class="p-1.5 rounded-lg <?= ($u['estado'] == 1) ? 'bg-rose-50 text-rose-600 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' ?> inline-flex items-center justify-center" 
-                                                        title="<?= ($u['estado'] == 1) ? 'Desactivar' : 'Activar' ?>">
-                                                    <i data-lucide="<?= ($u['estado'] == 1) ? 'user-x' : 'user-check' ?>" class="w-4 h-4"></i>
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
+                                    <td class="p-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="<?= BASE_URL ?>admin/usuarios/editar.php?id=<?= $u['id_usuario'] ?>" 
+                                               class="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 inline-flex items-center justify-center transition-colors shadow-xs" 
+                                               title="Editar Usuario">
+                                                <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                            </a>
+                                            <?php if ($u['id_usuario'] !== $_SESSION['usuario']['id_usuario']): ?>
+                                                <form method="POST" action="<?= BASE_URL ?>admin/usuarios/index.php" class="inline m-0 p-0">
+                                                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+                                                    <input type="hidden" name="toggle_id" value="<?= $u['id_usuario'] ?>">
+                                                    <button type="submit" data-confirm="¿Está seguro de cambiar el estado de este usuario?"
+                                                            class="w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl <?= ($u['estado'] == 1) ? 'bg-rose-50 text-rose-600 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' ?> inline-flex items-center justify-center transition-colors shadow-xs" 
+                                                            title="<?= ($u['estado'] == 1) ? 'Desactivar' : 'Activar' ?>">
+                                                        <i data-lucide="<?= ($u['estado'] == 1) ? 'user-x' : 'user-check' ?>" class="w-5 h-5"></i>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

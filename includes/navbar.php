@@ -79,42 +79,97 @@ $es_autenticado = esta_autenticado();
                     </a>
                 <?php endif; ?>
 
-                <!-- Toggle Móvil -->
-                <button id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100">
+                <!-- Toggle Móvil (Área táctil >= 48px) -->
+                <button id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" 
+                        aria-label="Abrir Menú de Navegación"
+                        class="md:hidden w-12 h-12 flex items-center justify-center rounded-xl text-gray-700 hover:bg-emerald-50 active:bg-emerald-100 transition-colors">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Menú Móvil Desplegable -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 pt-3 pb-4 space-y-2">
-        <a href="<?= BASE_URL ?>publico/index.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-emerald-50">
-            Inicio Público
+    <!-- Menú Móvil Desplegable (Drawer Accesible) -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-emerald-100 bg-white/98 backdrop-blur-md px-4 pt-3 pb-6 space-y-2 shadow-xl max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3 pt-1">Navegación General</div>
+        <a href="<?= BASE_URL ?>publico/index.php" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-emerald-50 active:bg-emerald-100">
+            <i data-lucide="home" class="w-5 h-5 text-emerald-600"></i>
+            <span>Inicio Público</span>
         </a>
-        <a href="<?= BASE_URL ?>publico/buscar.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-emerald-50">
-            Inventario Forestal
+        <a href="<?= BASE_URL ?>publico/buscar.php" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-emerald-50 active:bg-emerald-100">
+            <i data-lucide="search" class="w-5 h-5 text-emerald-600"></i>
+            <span>Explorador del Inventario</span>
         </a>
+
         <?php if ($es_autenticado && es_admin()): ?>
-            <a href="<?= BASE_URL ?>admin/dashboard.php" class="block px-3 py-2 rounded-lg text-sm font-semibold text-emerald-800 bg-emerald-50">
-                Panel Administrador
+            <div class="pt-3 pb-1 border-t border-gray-100 text-[11px] font-bold text-emerald-800 uppercase tracking-wider px-3">
+                Administración General
+            </div>
+            <a href="<?= BASE_URL ?>admin/dashboard.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-emerald-900 bg-emerald-50">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-emerald-700"></i>
+                <span>Dashboard Principal</span>
             </a>
-            <a href="<?= BASE_URL ?>admin/individuos/index.php" class="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-emerald-50 pl-6">
-                Gestión de Individuos
+            <a href="<?= BASE_URL ?>admin/individuos/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="trees" class="w-5 h-5 text-emerald-600"></i>
+                <span>Individuos Forestales</span>
             </a>
-            <a href="<?= BASE_URL ?>admin/qr/index.php" class="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-emerald-50 pl-6">
-                Gestor e Impresión QR
+            <a href="<?= BASE_URL ?>admin/zonas/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="map-pin" class="w-5 h-5 text-emerald-600"></i>
+                <span>Zonas Territoriales</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/qr/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="qr-code" class="w-5 h-5 text-emerald-600"></i>
+                <span>Códigos QR & Placas</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/instituciones/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="building-2" class="w-5 h-5 text-emerald-600"></i>
+                <span>Instituciones</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="users" class="w-5 h-5 text-emerald-600"></i>
+                <span>Usuarios & Roles</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/reportes/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-600"></i>
+                <span>Reportes & Métricas</span>
+            </a>
+            <a href="<?= BASE_URL ?>admin/logs/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-emerald-50">
+                <i data-lucide="activity" class="w-5 h-5 text-emerald-600"></i>
+                <span>Auditoría & Logs</span>
             </a>
         <?php elseif ($es_autenticado && es_operario()): ?>
-            <a href="<?= BASE_URL ?>operario/dashboard.php" class="block px-3 py-2 rounded-lg text-sm font-semibold text-emerald-800 bg-emerald-50">
-                Panel Operario
+            <div class="pt-3 pb-1 border-t border-gray-100 text-[11px] font-bold text-teal-800 uppercase tracking-wider px-3">
+                Operaciones en Campo
+            </div>
+            <a href="<?= BASE_URL ?>operario/dashboard.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-teal-900 bg-teal-50">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-teal-700"></i>
+                <span>Dashboard Operario</span>
             </a>
-            <a href="<?= BASE_URL ?>operario/escanear.php" class="block px-3 py-2 rounded-lg text-sm text-emerald-700 hover:bg-emerald-50 pl-6">
-                Escanear Placa QR (Cámara)
+            <a href="<?= BASE_URL ?>operario/escanear.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-emerald-800 bg-emerald-100/70">
+                <i data-lucide="camera" class="w-5 h-5 text-emerald-700"></i>
+                <span>Escanear Placa QR (Cámara)</span>
             </a>
-            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-emerald-50 pl-6">
-                Registrar en Campo
+            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-teal-50">
+                <i data-lucide="plus-circle" class="w-5 h-5 text-teal-600"></i>
+                <span>Alta Rápida en Campo</span>
             </a>
+            <a href="<?= BASE_URL ?>operario/individuos/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-teal-50">
+                <i data-lucide="trees" class="w-5 h-5 text-teal-600"></i>
+                <span>Individuos de Mi Zona</span>
+            </a>
+            <a href="<?= BASE_URL ?>operario/actividades/index.php" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-teal-50">
+                <i data-lucide="clipboard-check" class="w-5 h-5 text-teal-600"></i>
+                <span>Registro de Mantenimiento</span>
+            </a>
+        <?php endif; ?>
+
+        <?php if ($es_autenticado): ?>
+            <div class="pt-3 border-t border-gray-100">
+                <a href="<?= BASE_URL ?>auth/logout.php" class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
         <?php endif; ?>
     </div>
 </header>
