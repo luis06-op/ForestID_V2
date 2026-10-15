@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="100%" stop-color="#DCFCE7" />
+    </linearGradient>
+    <linearGradient id="greenCanopy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ADE80" />
+      <stop offset="50%" stop-color="#16A34A" />
+      <stop offset="100%" stop-color="#14532D" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#skyGrad2)"/>
+  <path d="M0 330 Q 300 310, 600 330 L 600 400 L 0 400 Z" fill="#15803D"/>
+  <!-- Buttress Trunk (Bambas) -->
+  <path d="M220 370 Q 280 300, 285 160 L 315 160 Q 320 300, 380 370 Z" fill="#4E342E"/>
+  <!-- Spreading horizontal canopy -->
+  <ellipse cx="300" cy="110" rx="190" ry="60" fill="url(#greenCanopy)" opacity="0.95"/>
+  <ellipse cx="230" cy="130" rx="100" ry="45" fill="#166534"/>
+  <ellipse cx="370" cy="130" rx="100" ry="45" fill="#15803D"/>
+  <rect x="20" y="20" width="220" height="38" rx="8" fill="#FFFFFF" fill-opacity="0.9" stroke="#15803D" stroke-width="1.5"/>
+  <text x="35" y="44" font-family="'Poppins', sans-serif" font-weight="700" font-size="14" fill="#14532D">Ceiba Bruja / Bonga</text>
+</svg>
