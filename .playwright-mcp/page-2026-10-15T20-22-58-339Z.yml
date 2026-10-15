@@ -1,0 +1,204 @@
+- generic [active] [ref=f6e1]:
+  - generic [ref=f6e2]:
+    - generic [ref=f6e4]:
+      - generic [ref=f6e5]: Éxito
+      - paragraph [ref=f6e6]: ¡Bienvenido(a), Luis Angel!
+    - button [ref=f6e7] [cursor=pointer]
+  - banner [ref=f6e10]:
+    - generic [ref=f6e12]:
+      - generic [ref=f6e13]:
+        - link "ForestID Emincut • El Bagre" [ref=f6e14] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/index.php
+          - generic [ref=f6e19]:
+            - generic [ref=f6e20]: ForestID
+            - generic [ref=f6e21]: Emincut • El Bagre
+        - navigation [ref=f6e22]:
+          - link "Inicio" [ref=f6e23] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - link "Inventario Forestal" [ref=f6e24] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - link "Panel Administrador" [ref=f6e25] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/dashboard.php
+      - generic [ref=f6e26]:
+        - generic [ref=f6e27]:
+          - generic [ref=f6e28]:
+            - generic [ref=f6e29]: Luis Angel Muñoz Márquez
+            - generic [ref=f6e30]: AdminEmincut
+          - generic [ref=f6e31]: LM
+        - link "Cerrar Sesión" [ref=f6e32] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+  - generic [ref=f6e36]:
+    - complementary [ref=f6e37]:
+      - generic [ref=f6e44]:
+        - heading "Panel de Control" [level=3] [ref=f6e45]
+        - generic [ref=f6e46]: Admin Emincut
+      - navigation [ref=f6e47]:
+        - link "Dashboard" [ref=f6e48] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/dashboard.php
+        - generic [ref=f6e55]: Inventario & Territorio
+        - link "Individuos Forestales" [ref=f6e56] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+        - link "Zonas Territoriales" [ref=f6e61] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+        - link "Códigos QR & Placas" [ref=f6e66] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/qr/index.php
+        - generic [ref=f6e74]: Gestión Institucional
+        - link "Instituciones" [ref=f6e75] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/instituciones/index.php
+        - link "Usuarios & Roles" [ref=f6e81] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/usuarios/index.php
+        - generic [ref=f6e88]: Inteligencia & Auditoría
+        - link "Reportes & Métricas" [ref=f6e89] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/reportes/index.php
+        - link "Auditoría & Logs" [ref=f6e93] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/logs/index.php
+      - link "Ver Portal Público" [ref=f6e98] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/publico/index.php
+    - main [ref=f6e108]:
+      - generic [ref=f6e109]:
+        - generic [ref=f6e110]:
+          - text: Emincut • El Bagre, Antioquia
+          - heading "Panel de Administración General" [level=1] [ref=f6e111]
+          - paragraph [ref=f6e112]: Resumen del inventario dendrológico, salud fitosanitaria y registro de intervenciones en campo.
+        - generic [ref=f6e113]:
+          - link "Nuevo Individuo" [ref=f6e114] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/individuos/crear.php
+          - link "Imprimir Placas" [ref=f6e117] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php
+      - generic [ref=f6e122]:
+        - generic [ref=f6e123]:
+          - generic [ref=f6e124]: Individuos Forestales
+          - text: "4"
+          - generic [ref=f6e129]: Censo activo
+        - generic [ref=f6e130]:
+          - generic [ref=f6e131]: Zonas Territoriales
+          - text: "3"
+          - generic [ref=f6e136]: Sectores en El Bagre
+        - generic [ref=f6e137]:
+          - generic [ref=f6e138]: Intervenciones
+          - text: "3"
+          - generic [ref=f6e144]: Mantenimientos y podas
+        - generic [ref=f6e145]:
+          - generic [ref=f6e146]: Personal y Usuarios
+          - text: "3"
+          - generic [ref=f6e153]: Cuentas activas
+      - generic [ref=f6e154]:
+        - generic [ref=f6e155]:
+          - generic [ref=f6e156]:
+            - heading "Distribución Fitosanitaria" [level=3] [ref=f6e157]
+            - generic [ref=f6e158]: Salud actual
+          - generic [ref=f6e161]:
+            - generic [ref=f6e162]:
+              - generic [ref=f6e163]: "Sano:"
+              - generic [ref=f6e164]: "3"
+            - generic [ref=f6e165]:
+              - generic [ref=f6e166]: "En observación:"
+              - generic [ref=f6e167]: "1"
+        - generic [ref=f6e168]:
+          - generic [ref=f6e169]:
+            - heading "Cobertura Arbórea por Zona" [level=3] [ref=f6e170]
+            - generic [ref=f6e171]: El Bagre
+          - generic [ref=f6e174]:
+            - generic [ref=f6e175]:
+              - text: "Zona con mayor censo:"
+              - strong [ref=f6e176]: Parque Principal El Bagre
+            - link "Ver Zonas" [ref=f6e177] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+      - generic [ref=f6e178]:
+        - generic [ref=f6e179]:
+          - generic [ref=f6e180]:
+            - heading "Atención Fitosanitaria Prioritaria" [level=3] [ref=f6e184]
+            - generic [ref=f6e185]: 1 alertas
+          - generic [ref=f6e187]:
+            - generic [ref=f6e188]:
+              - generic [ref=f6e189]:
+                - generic [ref=f6e190]: EBG-SENA-002
+                - generic [ref=f6e191]: En observación
+              - heading "Ceiba Bruja / Bonga" [level=4] [ref=f6e193]
+              - paragraph [ref=f6e194]: Presencia leve de epífitas y ramas secas en el tercio superior de la copa debido a estrés hídrico estacional.
+              - generic [ref=f6e195]: 📍 SENA Complejo Minero Bajo Cauca
+            - link "Inspeccionar" [ref=f6e196] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/individuos/detalle.php?id=55555555-5555-5555-5555-555555555502
+        - generic [ref=f6e197]:
+          - generic [ref=f6e198]:
+            - heading "Últimas Intervenciones Registradas" [level=3] [ref=f6e204]
+            - link "Ver todas" [ref=f6e205] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/reportes/index.php
+          - generic [ref=f6e206]:
+            - generic [ref=f6e207]:
+              - generic [ref=f6e208]:
+                - generic [ref=f6e209]:
+                  - generic [ref=f6e210]: Riego
+                  - generic [ref=f6e211]: • EBG-PARQ-004 (Palma Real / Palma de Cera)
+                - paragraph [ref=f6e212]: Jornada de hidratación intensiva y aplicación de acolchado vegetal (mulch) alrededor del plato de la palma.
+                - generic [ref=f6e213]: 12 de Octubre, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+              - link [ref=f6e214] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-004
+            - generic [ref=f6e219]:
+              - generic [ref=f6e220]:
+                - generic [ref=f6e221]:
+                  - generic [ref=f6e222]: Poda
+                  - generic [ref=f6e223]: • EBG-SENA-002 (Ceiba Bruja / Bonga)
+                - paragraph [ref=f6e224]: Poda sanitaria de elevación y eliminación de ramas bajeras con riesgo de desprendimiento sobre sendero peatonal.
+                - generic [ref=f6e225]: 3 de Octubre, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+              - link [ref=f6e226] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-SENA-002
+            - generic [ref=f6e231]:
+              - generic [ref=f6e232]:
+                - generic [ref=f6e233]:
+                  - generic [ref=f6e234]: Fertilización
+                  - generic [ref=f6e235]: • EBG-PARQ-001 (Guayacán Rosado)
+                - paragraph [ref=f6e236]: Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+                - generic [ref=f6e237]: 31 de Agosto, 2026 (02:45 PM) — Gabriel Jaime Correa Correa
+              - link [ref=f6e238] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/publico/ficha.php?codigo=EBG-PARQ-001
+  - contentinfo [ref=f6e243]:
+    - generic [ref=f6e244]:
+      - generic [ref=f6e245]:
+        - generic [ref=f6e246]:
+          - generic [ref=f6e247]: ForestID
+          - paragraph [ref=f6e253]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f6e254]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f6e255]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f6e260]:
+          - heading "Marco Institucional" [level=4] [ref=f6e261]
+          - paragraph [ref=f6e262]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f6e263]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f6e264]: Semillero iRed SENA
+        - generic [ref=f6e269]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f6e270]
+          - list [ref=f6e271]:
+            - listitem [ref=f6e272]:
+              - text: •
+              - strong [ref=f6e273]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f6e274]:
+              - text: •
+              - strong [ref=f6e275]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f6e276]:
+              - text: •
+              - strong [ref=f6e277]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f6e278]:
+              - text: •
+              - strong [ref=f6e279]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f6e280]:
+        - generic [ref=f6e281]:
+          - text: © 2026
+          - strong [ref=f6e282]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f6e283]:
+          - link "Inicio Público" [ref=f6e284] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f6e285]: •
+          - link "Buscador" [ref=f6e286] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f6e287]: •
+          - link "Acceso Restringido" [ref=f6e288] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

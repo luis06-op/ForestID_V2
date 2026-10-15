@@ -1,0 +1,1 @@
+- generic [active] [ref=f2e1]: "Fatal error: Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number in C:\\xampp\\htdocs\\ForestID_V2\\publico\\buscar.php:58 Stack trace: #0 C:\\xampp\\htdocs\\ForestID_V2\\publico\\buscar.php(58): PDOStatement->execute(Array) #1 {main} thrown in C:\\xampp\\htdocs\\ForestID_V2\\publico\\buscar.php on line 58"

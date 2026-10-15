@@ -1,0 +1,152 @@
+- generic [active] [ref=f11e1]:
+  - generic [ref=f11e2]: Warning
+  - text: ": Object of class PDOStatement could not be converted to int in"
+  - generic [ref=f11e3]: C:\xampp\htdocs\ForestID_V2\operario\dashboard.php
+  - text: on line
+  - generic [ref=f11e4]: "17"
+  - generic [ref=f11e5]:
+    - generic [ref=f11e7]:
+      - generic [ref=f11e8]: Éxito
+      - paragraph [ref=f11e9]: ¡Bienvenido(a), Gabriel Jaime!
+    - button [ref=f11e10] [cursor=pointer]
+  - banner [ref=f11e13]:
+    - generic [ref=f11e15]:
+      - link "ForestID Emincut • El Bagre" [ref=f11e17] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f11e22]:
+          - generic [ref=f11e23]: ForestID
+          - generic [ref=f11e24]: Emincut • El Bagre
+      - generic [ref=f11e25]:
+        - link "Cerrar Sesión" [ref=f11e26] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button [ref=f11e30] [cursor=pointer]
+  - generic [ref=f11e32]:
+    - complementary [ref=f11e33]:
+      - generic [ref=f11e39]:
+        - heading "Panel de Campo" [level=3] [ref=f11e40]
+        - generic [ref=f11e41]: Técnico Operario
+      - navigation [ref=f11e42]:
+        - link "Dashboard Operario" [ref=f11e43] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/dashboard.php
+        - generic [ref=f11e50]: Acciones de Campo
+        - link "Escanear Placa QR" [ref=f11e51] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/escanear.php
+        - link "Alta Rápida en Campo" [ref=f11e56] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/registrar_individuo.php
+        - link "Individuos de Mi Zona" [ref=f11e60] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/individuos/index.php
+        - link "Registro de Mantenimiento" [ref=f11e65] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/actividades/index.php
+      - link "Ver Portal Público" [ref=f11e72] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/publico/index.php
+    - main [ref=f11e82]:
+      - generic [ref=f11e83]:
+        - generic [ref=f11e84]:
+          - text: Trabajo de Campo • Emincut
+          - heading "Panel Técnico Operario" [level=1] [ref=f11e85]
+          - paragraph [ref=f11e86]: Bienvenido(a), Gabriel Jaime. Gestione inspecciones y actividades en campo.
+        - link "Escanear Placa QR" [ref=f11e88] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/escanear.php
+      - generic [ref=f11e92]:
+        - link "Escanear Placa QR Abrir escáner con cámara" [ref=f11e93] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/escanear.php
+          - generic [ref=f11e98]:
+            - generic [ref=f11e99]: Escanear Placa QR
+            - text: Abrir escáner con cámara
+        - link "Alta Rápida en Campo Registrar árbol nuevo con GPS" [ref=f11e100] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/registrar_individuo.php
+          - generic [ref=f11e104]:
+            - generic [ref=f11e105]: Alta Rápida en Campo
+            - text: Registrar árbol nuevo con GPS
+        - link "Nueva Intervención Podas, abonos y tratamientos" [ref=f11e106] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/actividades/crear.php
+          - generic [ref=f11e110]:
+            - generic [ref=f11e111]: Nueva Intervención
+            - text: Podas, abonos y tratamientos
+      - generic [ref=f11e112]:
+        - generic [ref=f11e113]:
+          - generic [ref=f11e114]:
+            - heading "Especímenes Prioritarios para Inspección" [level=3] [ref=f11e115]
+            - generic [ref=f11e118]: El Bagre
+          - generic [ref=f11e120]:
+            - generic [ref=f11e121]:
+              - generic [ref=f11e122]:
+                - generic [ref=f11e123]: EBG-SENA-002
+                - generic [ref=f11e124]: En observación
+              - heading "Ceiba Bruja / Bonga" [level=4] [ref=f11e126]
+              - generic [ref=f11e127]: 📍 SENA Complejo Minero Bajo Cauca
+            - link "Inspeccionar" [ref=f11e128] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/operario/individuos/detalle.php?id=55555555-5555-5555-5555-555555555502
+        - generic [ref=f11e129]:
+          - generic [ref=f11e130]:
+            - heading "Mis Intervenciones Recientes" [level=3] [ref=f11e131]
+            - generic [ref=f11e136]: 3 total
+          - generic [ref=f11e137]:
+            - generic [ref=f11e138]:
+              - generic [ref=f11e139]:
+                - generic [ref=f11e140]: Riego
+                - generic [ref=f11e141]: 12 de Octubre, 2026
+              - paragraph [ref=f11e142]: Jornada de hidratación intensiva y aplicación de acolchado vegetal (mulch) alrededor del plato de la palma.
+              - generic [ref=f11e143]: EBG-PARQ-004 (Palma Real / Palma de Cera)
+            - generic [ref=f11e144]:
+              - generic [ref=f11e145]:
+                - generic [ref=f11e146]: Poda
+                - generic [ref=f11e147]: 3 de Octubre, 2026
+              - paragraph [ref=f11e148]: Poda sanitaria de elevación y eliminación de ramas bajeras con riesgo de desprendimiento sobre sendero peatonal.
+              - generic [ref=f11e149]: EBG-SENA-002 (Ceiba Bruja / Bonga)
+            - generic [ref=f11e150]:
+              - generic [ref=f11e151]:
+                - generic [ref=f11e152]: Fertilización
+                - generic [ref=f11e153]: 31 de Agosto, 2026
+              - paragraph [ref=f11e154]: Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+              - generic [ref=f11e155]: EBG-PARQ-001 (Guayacán Rosado)
+  - contentinfo [ref=f11e156]:
+    - generic [ref=f11e157]:
+      - generic [ref=f11e158]:
+        - generic [ref=f11e159]:
+          - generic [ref=f11e160]: ForestID
+          - paragraph [ref=f11e166]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f11e167]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f11e168]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f11e173]:
+          - heading "Marco Institucional" [level=4] [ref=f11e174]
+          - paragraph [ref=f11e175]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f11e176]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f11e177]: Semillero iRed SENA
+        - generic [ref=f11e182]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f11e183]
+          - list [ref=f11e184]:
+            - listitem [ref=f11e185]:
+              - text: •
+              - strong [ref=f11e186]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f11e187]:
+              - text: •
+              - strong [ref=f11e188]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f11e189]:
+              - text: •
+              - strong [ref=f11e190]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f11e191]:
+              - text: •
+              - strong [ref=f11e192]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f11e193]:
+        - generic [ref=f11e194]:
+          - text: © 2026
+          - strong [ref=f11e195]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f11e196]:
+          - link "Inicio Público" [ref=f11e197] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f11e198]: •
+          - link "Buscador" [ref=f11e199] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f11e200]: •
+          - link "Acceso Restringido" [ref=f11e201] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

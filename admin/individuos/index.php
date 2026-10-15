@@ -22,8 +22,12 @@ $where = ["i.estado_registro = 1"];
 $params = [];
 
 if (!empty($q)) {
-    $where[] = "(i.codigo_placa LIKE :q OR i.nombre_comun LIKE :q OR i.nombre_cientifico LIKE :q OR i.familia_botanica LIKE :q)";
-    $params[':q'] = "%{$q}%";
+    $where[] = "(i.codigo_placa LIKE :q1 OR i.nombre_comun LIKE :q2 OR i.nombre_cientifico LIKE :q3 OR i.familia_botanica LIKE :q4)";
+    $term = "%{$q}%";
+    $params[':q1'] = $term;
+    $params[':q2'] = $term;
+    $params[':q3'] = $term;
+    $params[':q4'] = $term;
 }
 
 if (!empty($filtro_zona)) {
@@ -187,11 +191,14 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                         <a href="<?= BASE_URL ?>admin/individuos/editar.php?id=<?= $arbol['id_individuo'] ?>" class="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 inline-flex" title="Editar">
                                             <i data-lucide="edit-3" class="w-4 h-4"></i>
                                         </a>
-                                        <a href="<?= BASE_URL ?>admin/individuos/eliminar.php?id=<?= $arbol['id_individuo'] ?>&csrf=<?= $csrf_token ?>"
-                                           data-confirm="¿Está seguro de dar de baja lógica a este espécimen forestal?"
-                                           class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 inline-flex" title="Dar de baja">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </a>
+                                        <form method="POST" action="<?= BASE_URL ?>admin/individuos/eliminar.php" class="inline">
+                                            <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+                                            <input type="hidden" name="id" value="<?= $arbol['id_individuo'] ?>">
+                                            <button type="submit" data-confirm="¿Está seguro de dar de baja lógica a este espécimen forestal?"
+                                                    class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 inline-flex items-center justify-center" title="Dar de baja">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

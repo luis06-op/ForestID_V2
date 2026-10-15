@@ -24,8 +24,12 @@ $where = ["i.estado_registro = 1"];
 $params = [];
 
 if (!empty($q)) {
-    $where[] = "(i.codigo_placa LIKE :q OR i.nombre_comun LIKE :q OR i.nombre_cientifico LIKE :q OR i.familia_botanica LIKE :q)";
-    $params[':q'] = "%{$q}%";
+    $where[] = "(i.codigo_placa LIKE :q1 OR i.nombre_comun LIKE :q2 OR i.nombre_cientifico LIKE :q3 OR i.familia_botanica LIKE :q4)";
+    $term = "%{$q}%";
+    $params[':q1'] = $term;
+    $params[':q2'] = $term;
+    $params[':q3'] = $term;
+    $params[':q4'] = $term;
 }
 
 if (!empty($filtro_zona)) {

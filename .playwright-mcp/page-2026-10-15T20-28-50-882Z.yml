@@ -1,0 +1,112 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f12e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f12e11]:
+          - generic [ref=f12e12]: ForestID
+          - generic [ref=f12e13]: Emincut • El Bagre
+      - generic [ref=f12e14]:
+        - link "Cerrar Sesión" [ref=f12e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button [ref=f12e19] [cursor=pointer]
+  - generic [ref=f12e21]:
+    - complementary [ref=f12e22]:
+      - generic [ref=f12e28]:
+        - heading "Panel de Campo" [level=3] [ref=f12e29]
+        - generic [ref=f12e30]: Técnico Operario
+      - navigation [ref=f12e31]:
+        - link "Dashboard Operario" [ref=f12e32] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/dashboard.php
+        - generic [ref=f12e39]: Acciones de Campo
+        - link "Escanear Placa QR" [ref=f12e40] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/escanear.php
+        - link "Alta Rápida en Campo" [ref=f12e45] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/registrar_individuo.php
+        - link "Individuos de Mi Zona" [ref=f12e49] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/individuos/index.php
+        - link "Registro de Mantenimiento" [ref=f12e54] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/actividades/index.php
+      - link "Ver Portal Público" [ref=f12e61] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/publico/index.php
+    - main [ref=f12e71]:
+      - generic [ref=f12e72]:
+        - generic [ref=f12e73]:
+          - text: Escáner Óptico de Campo
+          - heading "Escanear Placa QR" [level=1] [ref=f12e74]
+          - paragraph [ref=f12e75]: Apunta la cámara al código QR fijado en el árbol para abrir su ficha de inspección técnica.
+        - link "Volver" [ref=f12e76] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/operario/dashboard.php
+      - generic [ref=f12e79]:
+        - generic [ref=f12e83]:
+          - generic [ref=f12e84]: Cámara activa buscando código QR...
+          - button "Reiniciar" [ref=f12e87] [cursor=pointer]
+        - generic [ref=f12e88]:
+          - generic [ref=f12e89]:
+            - heading "Ingreso Manual de Placa" [level=3] [ref=f12e90]
+            - paragraph [ref=f12e93]: "Si la placa física está sucia o la cámara no enfoca, digita el código impreso:"
+          - generic [ref=f12e94]:
+            - generic [ref=f12e95]:
+              - generic [ref=f12e96]: Código de Placa
+              - textbox "Código de Placa" [ref=f12e97]:
+                - /placeholder: ej. EBG-PARQ-001
+            - button "Abrir Ficha del Árbol" [ref=f12e98] [cursor=pointer]
+          - generic [ref=f12e102]:
+            - generic [ref=f12e103]: "Placas de prueba rápida:"
+            - generic [ref=f12e104]:
+              - link "EBG-PARQ-001" [ref=f12e105] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/operario/individuos/detalle.php?codigo=EBG-PARQ-001
+              - link "EBG-SENA-002" [ref=f12e106] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/operario/individuos/detalle.php?codigo=EBG-SENA-002
+              - link "EBG-NECH-003" [ref=f12e107] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/operario/individuos/detalle.php?codigo=EBG-NECH-003
+  - contentinfo [ref=f12e108]:
+    - generic [ref=f12e109]:
+      - generic [ref=f12e110]:
+        - generic [ref=f12e111]:
+          - generic [ref=f12e112]: ForestID
+          - paragraph [ref=f12e118]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f12e119]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f12e120]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f12e125]:
+          - heading "Marco Institucional" [level=4] [ref=f12e126]
+          - paragraph [ref=f12e127]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f12e128]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f12e129]: Semillero iRed SENA
+        - generic [ref=f12e134]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f12e135]
+          - list [ref=f12e136]:
+            - listitem [ref=f12e137]:
+              - text: •
+              - strong [ref=f12e138]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f12e139]:
+              - text: •
+              - strong [ref=f12e140]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f12e141]:
+              - text: •
+              - strong [ref=f12e142]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f12e143]:
+              - text: •
+              - strong [ref=f12e144]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f12e145]:
+        - generic [ref=f12e146]:
+          - text: © 2026
+          - strong [ref=f12e147]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f12e148]:
+          - link "Inicio Público" [ref=f12e149] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f12e150]: •
+          - link "Buscador" [ref=f12e151] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f12e152]: •
+          - link "Acceso Restringido" [ref=f12e153] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

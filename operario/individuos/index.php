@@ -20,8 +20,11 @@ $where = ["i.estado_registro = 1"];
 $params = [];
 
 if (!empty($q)) {
-    $where[] = "(i.codigo_placa LIKE :q OR i.nombre_comun LIKE :q OR i.nombre_cientifico LIKE :q)";
-    $params[':q'] = "%{$q}%";
+    $where[] = "(i.codigo_placa LIKE :q1 OR i.nombre_comun LIKE :q2 OR i.nombre_cientifico LIKE :q3)";
+    $term = "%{$q}%";
+    $params[':q1'] = $term;
+    $params[':q2'] = $term;
+    $params[':q3'] = $term;
 }
 if (!empty($filtro_zona)) {
     $where[] = "i.id_zona = :zona";

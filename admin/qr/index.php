@@ -13,10 +13,10 @@ requerir_rol(['AdminEmincut']);
 
 $pdo = getDBConnection();
 
-// Acción de regenerar QR individual
-if (isset($_GET['regenerar_id'])) {
-    $reg_id = $_GET['regenerar_id'];
-    $csrf = $_GET['csrf'] ?? '';
+// Acción de regenerar QR individual vía POST con CSRF
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['regenerar_id'])) {
+    $reg_id = $_POST['regenerar_id'];
+    $csrf = $_POST['csrf_token'] ?? '';
 
     if (validar_token_csrf($csrf)) {
         $stmt = $pdo->prepare("SELECT codigo_placa FROM `individuos_forestales` WHERE id_individuo = :id");
@@ -33,6 +33,8 @@ if (isset($_GET['regenerar_id'])) {
             registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REGENERAR_QR', 'QR', ['codigo_placa' => $ind['codigo_placa']]);
             set_flash('success', "Código QR para la placa {$ind['codigo_placa']} regenerado correctamente.");
         }
+    } else {
+        set_flash('error', 'Token de seguridad inválido o expirado.');
     }
     header('Location: ' . BASE_URL . 'admin/qr/index.php');
     exit;
@@ -145,9 +147,13 @@ require_once __DIR__ . '/../../includes/navbar.php';
                         <a href="<?= BASE_URL ?>admin/qr/imprimir.php?codigo=<?= urlencode($arbol['codigo_placa']) ?>" target="_blank" class="btn-forest-secondary text-[11px] py-1.5 justify-center">
                             <i data-lucide="printer" class="w-3 h-3"></i> Imprimir
                         </a>
-                        <a href="<?= BASE_URL ?>admin/qr/index.php?regenerar_id=<?= $arbol['id_individuo'] ?>&csrf=<?= $csrf_token ?>" class="p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
-                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
-                        </a>
+                        <form method="POST" action="<?= BASE_URL ?>admin/qr/index.php" class="w-full inline-block">
+                            <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+                            <input type="hidden" name="regenerar_id" value="<?= $arbol['id_individuo'] ?>">
+                            <button type="submit" class="w-full p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
+                            </button>
+                        </form>
                     </div>
 
                 </div>

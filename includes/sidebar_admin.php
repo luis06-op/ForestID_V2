@@ -7,7 +7,7 @@
 $pagina_actual = basename($_SERVER['PHP_SELF']);
 $dir_actual = basename(dirname($_SERVER['PHP_SELF']));
 ?>
-<aside class="w-64 bg-emerald-950 text-emerald-100 flex flex-col shrink-0 min-h-[calc(100vh-4rem)] border-r border-emerald-900/50 shadow-lg">
+<aside class="hidden md:flex w-64 bg-emerald-950 text-emerald-100 flex-col shrink-0 min-h-[calc(100vh-4rem)] border-r border-emerald-900/50 shadow-lg">
     <!-- Encabezado Sidebar -->
     <div class="p-5 border-b border-emerald-900/60">
         <div class="flex items-center gap-3">

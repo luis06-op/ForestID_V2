@@ -1,0 +1,161 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f4e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f4e11]:
+          - generic [ref=f4e12]: ForestID
+          - generic [ref=f4e13]: Emincut • El Bagre
+      - generic [ref=f4e14]:
+        - link "Iniciar Sesión" [ref=f4e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/login.php
+        - button [ref=f4e19] [cursor=pointer]
+  - generic [ref=f4e21]:
+    - generic [ref=f4e22]:
+      - generic [ref=f4e24]:
+        - generic [ref=f4e25]:
+          - generic [ref=f4e26]:
+            - generic [ref=f4e27]: EBG-PARQ-001
+            - generic [ref=f4e28]: Árbol
+          - heading "Guayacán Rosado" [level=1] [ref=f4e29]
+          - paragraph [ref=f4e30]: Handroanthus chrysanthus
+        - generic [ref=f4e31]:
+          - generic [ref=f4e32]: Sano
+          - generic [ref=f4e35]:
+            - text: "Familia:"
+            - strong [ref=f4e36]: Bignoniaceae
+      - generic [ref=f4e37]:
+        - generic [ref=f4e38]:
+          - img "Guayacán Rosado" [ref=f4e40]
+          - generic [ref=f4e41]:
+            - generic [ref=f4e42]:
+              - img "QR" [ref=f4e44]
+              - generic [ref=f4e45]:
+                - generic [ref=f4e46]: Placa QR Oficial
+                - text: Fijada en el fuste
+            - link "Descargar código QR" [ref=f4e47] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/assets/qr/qr_EBG-PARQ-001.svg
+        - generic [ref=f4e51]:
+          - generic [ref=f4e52]:
+            - heading "Mediciones Dasométricas" [level=3] [ref=f4e53]
+            - generic [ref=f4e54]:
+              - generic [ref=f4e55]:
+                - generic [ref=f4e56]: DAP (1.30 m)
+                - text: 38.5 cm
+              - generic [ref=f4e61]:
+                - generic [ref=f4e62]: Altura Total
+                - text: 14.2 m
+              - generic [ref=f4e66]:
+                - generic [ref=f4e67]: Diám. Copa
+                - text: 9.5 m
+              - generic [ref=f4e74]:
+                - generic [ref=f4e75]: Fecha de Siembra / Edad Estimada
+                - text: 22 de Abril, 2018
+          - generic [ref=f4e79]:
+            - generic [ref=f4e80]:
+              - heading "Diagnóstico de Salud Fitosanitaria" [level=3] [ref=f4e81]
+              - generic [ref=f4e86]: 15 de Octubre, 2026
+            - paragraph [ref=f4e87]: Follaje verde vigoroso, sin signos de ataque de barrenadores ni necrosis en tronco. Estructura balanceada.
+            - generic [ref=f4e88]:
+              - strong [ref=f4e89]: "Recomendación Técnica:"
+              - text: Continuar con monitoreo semestral regular y fertilización orgánica al inicio del periodo de lluvias.
+          - generic [ref=f4e90]:
+            - heading "Observaciones Dendrológicas" [level=3] [ref=f4e91]
+            - paragraph [ref=f4e92]: Espécimen maduro ubicado en el costado noroccidental del parque principal. Floración abundante y fuste recto con buen desarrollo de dosel.
+          - button "Reportar Novedad sobre este Árbol" [ref=f4e94] [cursor=pointer]
+    - generic [ref=f4e97]:
+      - generic [ref=f4e98]:
+        - generic [ref=f4e99]:
+          - generic [ref=f4e100]:
+            - text: Ubicación Geográfica
+            - heading "Parque Principal El Bagre" [level=3] [ref=f4e101]
+          - generic [ref=f4e102]: El Bagre, Antioquia
+        - generic [ref=f4e103]:
+          - generic:
+            - button "Marker" [ref=f4e104] [cursor=pointer]
+            - generic [ref=f4e105]:
+              - generic [ref=f4e107]:
+                - strong [ref=f4e108]: Guayacán Rosado
+                - text: EBG-PARQ-001
+              - button "Close popup" [ref=f4e110] [cursor=pointer]: ×
+          - generic:
+            - generic [ref=f4e111]:
+              - button "Zoom in" [ref=f4e112] [cursor=pointer]: +
+              - button "Zoom out" [ref=f4e113] [cursor=pointer]: −
+            - generic [ref=f4e114]:
+              - link "Leaflet" [ref=f4e115] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| © OpenStreetMap"
+        - generic [ref=f4e120]:
+          - generic [ref=f4e121]: "Lat: 7.6044500 | Lng: -74.8092100"
+          - link "Abrir en Google Maps" [ref=f4e122] [cursor=pointer]:
+            - /url: https://www.google.com/maps/search/?api=1&query=7.6044500,-74.8092100
+      - generic [ref=f4e127]:
+        - text: Entidad Administradora
+        - heading "Emincut S.A.S. — Soluciones Ambientales y Forestales" [level=3] [ref=f4e128]
+        - paragraph [ref=f4e129]: Institución responsable del cuidado, poda técnica, fertilización y protección legal de este individuo forestal en el municipio de El Bagre.
+        - generic [ref=f4e130]:
+          - generic [ref=f4e131]: El Bagre, Antioquia — Colombia
+          - generic [ref=f4e136]: +57 312 856 9421
+    - generic [ref=f4e140]:
+      - generic [ref=f4e141]:
+        - generic [ref=f4e142]:
+          - text: Historial de Cuidados
+          - heading "Intervenciones y Mantenimiento" [level=3] [ref=f4e143]
+        - generic [ref=f4e144]: 1 eventos registrados
+      - generic [ref=f4e148]:
+        - generic [ref=f4e149]:
+          - generic [ref=f4e150]: Fertilización
+          - generic [ref=f4e151]: 31 de Agosto, 2026 (02:45 PM)
+        - paragraph [ref=f4e152]: Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+        - generic [ref=f4e153]: "Registrado por: Gabriel Jaime Correa Correa"
+  - contentinfo [ref=f4e154]:
+    - generic [ref=f4e155]:
+      - generic [ref=f4e156]:
+        - generic [ref=f4e157]:
+          - generic [ref=f4e158]: ForestID
+          - paragraph [ref=f4e164]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f4e165]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f4e166]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f4e171]:
+          - heading "Marco Institucional" [level=4] [ref=f4e172]
+          - paragraph [ref=f4e173]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f4e174]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f4e175]: Semillero iRed SENA
+        - generic [ref=f4e180]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f4e181]
+          - list [ref=f4e182]:
+            - listitem [ref=f4e183]:
+              - text: •
+              - strong [ref=f4e184]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f4e185]:
+              - text: •
+              - strong [ref=f4e186]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f4e187]:
+              - text: •
+              - strong [ref=f4e188]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f4e189]:
+              - text: •
+              - strong [ref=f4e190]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f4e191]:
+        - generic [ref=f4e192]:
+          - text: © 2026
+          - strong [ref=f4e193]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f4e194]:
+          - link "Inicio Público" [ref=f4e195] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f4e196]: •
+          - link "Buscador" [ref=f4e197] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f4e198]: •
+          - link "Acceso Restringido" [ref=f4e199] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

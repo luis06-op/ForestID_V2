@@ -1,0 +1,152 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - generic [ref=f11e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f11e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f11e11]:
+          - generic [ref=f11e12]: ForestID
+          - generic [ref=f11e13]: Emincut • El Bagre
+      - generic [ref=f11e14]:
+        - link "Cerrar Sesión" [ref=f11e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button [ref=f11e19] [cursor=pointer]
+  - generic [ref=f11e21]:
+    - complementary [ref=f11e22]:
+      - generic [ref=f11e29]:
+        - heading "Panel de Control" [level=3] [ref=f11e30]
+        - generic [ref=f11e31]: Admin Emincut
+      - navigation [ref=f11e32]:
+        - link "Dashboard" [ref=f11e33] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/dashboard.php
+        - generic [ref=f11e40]: Inventario & Territorio
+        - link "Individuos Forestales" [ref=f11e41] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+        - link "Zonas Territoriales" [ref=f11e46] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+        - link "Códigos QR & Placas" [ref=f11e51] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/qr/index.php
+        - generic [ref=f11e59]: Gestión Institucional
+        - link "Instituciones" [ref=f11e60] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/instituciones/index.php
+        - link "Usuarios & Roles" [ref=f11e66] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/usuarios/index.php
+        - generic [ref=f11e73]: Inteligencia & Auditoría
+        - link "Reportes & Métricas" [ref=f11e74] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/reportes/index.php
+        - link "Auditoría & Logs" [ref=f11e78] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/logs/index.php
+      - link "Ver Portal Público" [ref=f11e83] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/publico/index.php
+    - main [ref=f11e93]:
+      - generic [ref=f11e94]:
+        - generic [ref=f11e95]:
+          - text: Seguridad y Accesos
+          - heading "Usuarios del Sistema" [level=1] [ref=f11e96]
+          - paragraph [ref=f11e97]: Administración de cuentas, asignación de roles y control de estado de acceso.
+        - link "Crear Nuevo Usuario" [ref=f11e98] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/usuarios/crear.php
+      - generic [ref=f11e103]:
+        - textbox "Buscar por nombre, correo o rol..." [ref=f11e105]
+        - button "Buscar" [ref=f11e106] [cursor=pointer]
+      - table [ref=f11e109]:
+        - rowgroup [ref=f11e110]:
+          - row [ref=f11e111]:
+            - columnheader "Usuario" [ref=f11e112]
+            - columnheader "Correo" [ref=f11e113]
+            - columnheader "Rol" [ref=f11e114]
+            - columnheader "Institución" [ref=f11e115]
+            - columnheader "Estado" [ref=f11e116]
+            - columnheader "Último Acceso" [ref=f11e117]
+            - columnheader "Acciones" [ref=f11e118]
+        - rowgroup [ref=f11e119]:
+          - row [ref=f11e120]:
+            - cell "LM Luis Angel Muñoz Márquez" [ref=f11e121]:
+              - generic [ref=f11e122]:
+                - generic [ref=f11e123]: LM
+                - generic [ref=f11e124]: Luis Angel Muñoz Márquez
+            - cell "admin@emincut.com" [ref=f11e125]
+            - cell "AdminEmincut" [ref=f11e126]
+            - cell "Emincut S.A.S. — Soluciones Ambientales y Forestales" [ref=f11e128]
+            - cell "Activo" [ref=f11e129]
+            - cell "15 de Octubre, 2026 (04:08 PM)" [ref=f11e132]
+            - cell [ref=f11e133]:
+              - link "Editar" [ref=f11e134] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/admin/usuarios/editar.php?id=33333333-3333-3333-3333-333333333301
+          - row [ref=f11e137]:
+            - cell "GC Gabriel Jaime Correa Correa" [ref=f11e138]:
+              - generic [ref=f11e139]:
+                - generic [ref=f11e140]: GC
+                - generic [ref=f11e141]: Gabriel Jaime Correa Correa
+            - cell "operario@emincut.com" [ref=f11e142]
+            - cell "OperarioEmincut" [ref=f11e143]
+            - cell "Emincut S.A.S. — Soluciones Ambientales y Forestales" [ref=f11e145]
+            - cell "Activo" [ref=f11e146]
+            - cell "15 de Octubre, 2026 (04:02 PM)" [ref=f11e149]
+            - cell [ref=f11e150]:
+              - link "Editar" [ref=f11e151] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/admin/usuarios/editar.php?id=33333333-3333-3333-3333-333333333302
+              - button "Desactivar" [ref=f11e155] [cursor=pointer]
+          - row [ref=f11e161]:
+            - cell "MR Michael Rodríguez Londoño" [ref=f11e162]:
+              - generic [ref=f11e163]:
+                - generic [ref=f11e164]: MR
+                - generic [ref=f11e165]: Michael Rodríguez Londoño
+            - cell "ciudadano@emincut.com" [ref=f11e166]
+            - cell "UsuarioPublico" [ref=f11e167]
+            - cell "Emincut S.A.S. — Soluciones Ambientales y Forestales" [ref=f11e169]
+            - cell "Activo" [ref=f11e170]
+            - cell "15 de Octubre, 2026 (02:45 PM)" [ref=f11e173]
+            - cell [ref=f11e174]:
+              - link "Editar" [ref=f11e175] [cursor=pointer]:
+                - /url: http://localhost/ForestID_V2/admin/usuarios/editar.php?id=33333333-3333-3333-3333-333333333303
+              - button "Desactivar" [ref=f11e179] [cursor=pointer]
+  - contentinfo [ref=f11e185]:
+    - generic [ref=f11e186]:
+      - generic [ref=f11e187]:
+        - generic [ref=f11e188]:
+          - generic [ref=f11e189]: ForestID
+          - paragraph [ref=f11e195]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f11e196]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f11e197]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f11e202]:
+          - heading "Marco Institucional" [level=4] [ref=f11e203]
+          - paragraph [ref=f11e204]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f11e205]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f11e206]: Semillero iRed SENA
+        - generic [ref=f11e211]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f11e212]
+          - list [ref=f11e213]:
+            - listitem [ref=f11e214]:
+              - text: •
+              - strong [ref=f11e215]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f11e216]:
+              - text: •
+              - strong [ref=f11e217]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f11e218]:
+              - text: •
+              - strong [ref=f11e219]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f11e220]:
+              - text: •
+              - strong [ref=f11e221]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f11e222]:
+        - generic [ref=f11e223]:
+          - text: © 2026
+          - strong [ref=f11e224]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f11e225]:
+          - link "Inicio Público" [ref=f11e226] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f11e227]: •
+          - link "Buscador" [ref=f11e228] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f11e229]: •
+          - link "Acceso Restringido" [ref=f11e230] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

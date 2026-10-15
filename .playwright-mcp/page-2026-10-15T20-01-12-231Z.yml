@@ -1,0 +1,139 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - link "ForestID Emincut · El Bagre" [ref=e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/
+        - generic [ref=e11]:
+          - generic [ref=e12]: ForestID
+          - generic [ref=e13]: Emincut · El Bagre
+      - link "Iniciar sesión" [ref=e14] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/auth/login.php
+    - generic [ref=e18]:
+      - paragraph [ref=e19]: Sistema de control de restauración forestal posminería
+      - heading "Cada árbol sembrado, contado y verificado." [level=1] [ref=e20]
+      - paragraph [ref=e21]: ForestID le permite a Emincut llevar el registro de los árboles que siembra y de las hectáreas forestadas después de la minería, con evidencia para sustentar el cumplimiento de la Ley 2173 de 2021.
+      - generic [ref=e22]:
+        - link "Ingresar al sistema" [ref=e23] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/login.php
+        - link "Leer la Ley 2173 de 2021" [ref=e27] [cursor=pointer]:
+          - /url: https://www.minambiente.gov.co/wp-content/uploads/2024/07/LEY-2173-DEL-30-DE-DICIEMBRE-DE-2021.pdf
+      - paragraph [ref=e31]: Acceso solo para personal autorizado de Emincut.
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - term [ref=e35]: Conteo
+        - definition [ref=e36]: árbol por árbol
+      - generic [ref=e37]:
+        - term [ref=e38]: Hectáreas
+        - definition [ref=e39]: forestadas por zona
+      - generic [ref=e40]:
+        - term [ref=e41]: Ubicación
+        - definition [ref=e42]: de cada individuo en el mapa
+      - generic [ref=e43]:
+        - term [ref=e44]: Verificación
+        - definition [ref=e45]: del estado en campo
+  - generic [ref=e46]:
+    - generic [ref=e47]:
+      - heading "Lo que antes se contaba a mano, ahora queda registrado" [level=2] [ref=e48]
+      - paragraph [ref=e49]: Después de la minería, Emincut debe poder demostrar cuánto sembró y cómo está. ForestID reúne esa información en un solo lugar.
+    - list [ref=e50]:
+      - listitem [ref=e51]:
+        - generic [ref=e54]:
+          - heading "Registro de cada árbol" [level=3] [ref=e55]
+          - paragraph [ref=e56]: Especie, fecha de siembra, diámetro, altura y fotos. Cada individuo tiene su ficha y su placa con código QR.
+      - listitem [ref=e57]:
+        - generic [ref=e62]:
+          - heading "Hectáreas forestadas" [level=3] [ref=e63]
+          - paragraph [ref=e64]: Los árboles se agrupan por zona, para saber qué área ya está sembrada y cuál falta.
+      - listitem [ref=e65]:
+        - generic [ref=e70]:
+          - heading "Ubicación exacta" [level=3] [ref=e71]
+          - paragraph [ref=e72]: Cada árbol queda georreferenciado en el mapa, con sus coordenadas.
+      - listitem [ref=e73]:
+        - generic [ref=e78]:
+          - heading "Verificación en campo" [level=3] [ref=e79]
+          - paragraph [ref=e80]: Los operarios revisan el estado de salud y registran riegos, podas y fertilizaciones. Así se sabe cuántos árboles siguen vivos.
+      - listitem [ref=e81]:
+        - generic [ref=e84]:
+          - heading "Reportes de avance" [level=3] [ref=e85]
+          - paragraph [ref=e86]: Gráficos y cifras del total sembrado, el estado de los árboles y las zonas, listos para presentar.
+      - listitem [ref=e87]:
+        - generic [ref=e91]:
+          - heading "Información privada" [level=3] [ref=e92]
+          - paragraph [ref=e93]: Solo entra personal autorizado, con usuario y contraseña. Administración y operarios ven lo que les corresponde.
+  - generic [ref=e95]:
+    - heading "Del vivero a la verificación" [level=2] [ref=e96]
+    - list [ref=e97]:
+      - listitem [ref=e98]:
+        - text: "1"
+        - heading "Se siembra y se registra" [level=3] [ref=e99]
+        - paragraph [ref=e100]: "El operario registra el árbol en campo: especie, ubicación y medidas iniciales."
+      - listitem [ref=e101]:
+        - text: "2"
+        - heading "Se marca con su placa" [level=3] [ref=e102]
+        - paragraph [ref=e103]: El árbol recibe una placa con código QR para identificarlo en los recorridos de seguimiento.
+      - listitem [ref=e104]:
+        - text: "3"
+        - heading "Se verifica y se reporta" [level=3] [ref=e105]
+        - paragraph [ref=e106]: Administración revisa conteos, hectáreas y estado de salud, y genera los reportes de avance.
+  - generic [ref=e113]:
+    - heading "Hecho a la medida de Emincut" [level=2] [ref=e114]
+    - paragraph [ref=e115]: Emincut es una empresa minera legal y certificada de El Bagre, Antioquia. Su reto era contar, sembrar y verificar las hectáreas forestadas después de la minería. ForestID se construyó para resolverlo.
+    - paragraph [ref=e116]:
+      - text: Lo desarrollamos
+      - strong [ref=e117]: Luis Ángel Muñoz, Gabriel Correa y Valentina Hernández
+      - text: ", aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, durante nuestra etapa productiva en las instalaciones de Emincut."
+  - generic [ref=e118]:
+    - heading "¿Eres parte del equipo de Emincut?" [level=2] [ref=e119]
+    - paragraph [ref=e120]: Ingresa con tu usuario para registrar o consultar los árboles.
+    - link "Iniciar sesión" [ref=e121] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/auth/login.php
+  - contentinfo [ref=e125]:
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - generic [ref=e129]: ForestID
+          - paragraph [ref=e135]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=e136]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=e137]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=e142]:
+          - heading "Marco Institucional" [level=4] [ref=e143]
+          - paragraph [ref=e144]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=e145]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=e146]: Semillero iRed SENA
+        - generic [ref=e151]:
+          - heading "Equipo de Proyecto" [level=4] [ref=e152]
+          - list [ref=e153]:
+            - listitem [ref=e154]:
+              - text: •
+              - strong [ref=e155]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=e156]:
+              - text: •
+              - strong [ref=e157]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=e158]:
+              - text: •
+              - strong [ref=e159]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=e160]:
+              - text: •
+              - strong [ref=e161]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=e162]:
+        - generic [ref=e163]:
+          - text: © 2026
+          - strong [ref=e164]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=e165]:
+          - link "Inicio Público" [ref=e166] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=e167]: •
+          - link "Buscador" [ref=e168] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=e169]: •
+          - link "Acceso Restringido" [ref=e170] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

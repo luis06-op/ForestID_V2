@@ -14,7 +14,6 @@ $pdo = getDBConnection();
 $usuario_id = $_SESSION['usuario']['id_usuario'];
 
 // Estadísticas del operario
-$mis_actividades = (int)$pdo->prepare("SELECT COUNT(*) FROM `actividades_mantenimiento` WHERE realizado_por = :u");
 $mis_actividades_stmt = $pdo->prepare("SELECT COUNT(*) FROM `actividades_mantenimiento` WHERE realizado_por = :u");
 $mis_actividades_stmt->execute([':u' => $usuario_id]);
 $total_mis_actividades = (int)$mis_actividades_stmt->fetchColumn();

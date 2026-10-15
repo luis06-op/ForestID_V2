@@ -10,11 +10,16 @@ require_once __DIR__ . '/../../includes/auth_check.php';
 
 requerir_rol(['AdminEmincut']);
 
-$id = $_GET['id'] ?? '';
-$csrf = $_GET['csrf'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ' . BASE_URL . 'admin/individuos/index.php');
+    exit;
+}
+
+$id   = $_POST['id'] ?? '';
+$csrf = $_POST['csrf_token'] ?? '';
 
 if (!validar_token_csrf($csrf)) {
-    set_flash('error', 'Token de seguridad inválido.');
+    set_flash('error', 'Token de seguridad inválido o expirado.');
     header('Location: ' . BASE_URL . 'admin/individuos/index.php');
     exit;
 }

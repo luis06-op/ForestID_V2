@@ -40,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Token de seguridad inválido.';
     } elseif (empty($codigo_placa) || empty($id_zona) || empty($id_institucion) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
+    } elseif ($dap_cm <= 0 || $altura_total_m <= 0 || $diametro_copa_m <= 0) {
+        $error = 'Las medidas dasométricas (DAP, Altura y Diámetro de Copa) deben ser valores numéricos mayores a cero.';
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
         $chk->execute([':cod' => $codigo_placa]);
@@ -220,15 +222,15 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label for="dap_cm" class="block text-xs font-semibold text-gray-700 uppercase mb-1">DAP (cm) *</label>
-                        <input type="number" step="0.1" name="dap_cm" id="dap_cm" required placeholder="ej. 25.0" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
+                        <input type="number" step="0.1" min="0.1" name="dap_cm" id="dap_cm" required placeholder="ej. 25.0" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
                     </div>
                     <div>
                         <label for="altura_total_m" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Altura (m) *</label>
-                        <input type="number" step="0.1" name="altura_total_m" id="altura_total_m" required placeholder="ej. 9.5" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
+                        <input type="number" step="0.1" min="0.1" name="altura_total_m" id="altura_total_m" required placeholder="ej. 9.5" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
                     </div>
                     <div>
                         <label for="diametro_copa_m" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Copa (m) *</label>
-                        <input type="number" step="0.1" name="diametro_copa_m" id="diametro_copa_m" required placeholder="ej. 6.0" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
+                        <input type="number" step="0.1" min="0.1" name="diametro_copa_m" id="diametro_copa_m" required placeholder="ej. 6.0" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs">
                     </div>
                 </div>
 

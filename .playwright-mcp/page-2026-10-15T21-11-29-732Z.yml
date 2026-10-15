@@ -1,0 +1,151 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e4]:
+      - link "ForestID Emincut • El Bagre" [ref=f12e6] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/index.php
+        - generic [ref=f12e11]:
+          - generic [ref=f12e12]: ForestID
+          - generic [ref=f12e13]: Emincut • El Bagre
+      - generic [ref=f12e14]:
+        - link "Cerrar Sesión" [ref=f12e15] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/auth/logout.php
+        - button [ref=f12e19] [cursor=pointer]
+  - generic [ref=f12e21]:
+    - complementary [ref=f12e22]:
+      - generic [ref=f12e29]:
+        - heading "Panel de Control" [level=3] [ref=f12e30]
+        - generic [ref=f12e31]: Admin Emincut
+      - navigation [ref=f12e32]:
+        - link "Dashboard" [ref=f12e33] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/dashboard.php
+        - generic [ref=f12e40]: Inventario & Territorio
+        - link "Individuos Forestales" [ref=f12e41] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/individuos/index.php
+        - link "Zonas Territoriales" [ref=f12e46] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/zonas/index.php
+        - link "Códigos QR & Placas" [ref=f12e51] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/qr/index.php
+        - generic [ref=f12e59]: Gestión Institucional
+        - link "Instituciones" [ref=f12e60] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/instituciones/index.php
+        - link "Usuarios & Roles" [ref=f12e66] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/usuarios/index.php
+        - generic [ref=f12e73]: Inteligencia & Auditoría
+        - link "Reportes & Métricas" [ref=f12e74] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/reportes/index.php
+        - link "Auditoría & Logs" [ref=f12e78] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/logs/index.php
+      - link "Ver Portal Público" [ref=f12e83] [cursor=pointer]:
+        - /url: http://localhost/ForestID_V2/publico/index.php
+    - main [ref=f12e93]:
+      - generic [ref=f12e94]:
+        - generic [ref=f12e95]:
+          - text: Identificación Física
+          - heading "Gestor de Códigos QR y Placas" [level=1] [ref=f12e96]
+          - paragraph [ref=f12e97]: Generación, previsualización y reimpresión de placas físicas con códigos QR para el arbolado de El Bagre.
+        - link "Imprimir Placas de Zona" [ref=f12e99] [cursor=pointer]:
+          - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php
+      - generic [ref=f12e105]:
+        - generic [ref=f12e106]:
+          - generic [ref=f12e107]: Filtrar por Zona Territorial
+          - combobox [ref=f12e108]:
+            - option "Todas las zonas" [selected]
+            - option "Parque Principal El Bagre"
+            - option "Ronda Hídrica Río Nechí / Malecón"
+            - option "SENA Complejo Minero Bajo Cauca"
+        - button "Filtrar" [ref=f12e109] [cursor=pointer]
+      - generic [ref=f12e110]:
+        - generic [ref=f12e111]:
+          - generic [ref=f12e112]:
+            - generic [ref=f12e113]: EBG-NECH-003
+            - heading "Caracolí" [level=4] [ref=f12e114]
+            - paragraph [ref=f12e115]: Anacardium excelsum
+          - img "QR EBG-NECH-003" [ref=f12e117]
+          - generic [ref=f12e118]: 📍 Ronda Hídrica Río Nechí / Malecón
+          - generic [ref=f12e119]:
+            - link "Imprimir" [ref=f12e120] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php?codigo=EBG-NECH-003
+            - button "Regenerar" [ref=f12e126] [cursor=pointer]
+        - generic [ref=f12e130]:
+          - generic [ref=f12e131]:
+            - generic [ref=f12e132]: EBG-PARQ-001
+            - heading "Guayacán Rosado" [level=4] [ref=f12e133]
+            - paragraph [ref=f12e134]: Handroanthus chrysanthus
+          - img "QR EBG-PARQ-001" [ref=f12e136]
+          - generic [ref=f12e137]: 📍 Parque Principal El Bagre
+          - generic [ref=f12e138]:
+            - link "Imprimir" [ref=f12e139] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php?codigo=EBG-PARQ-001
+            - button "Regenerar" [ref=f12e145] [cursor=pointer]
+        - generic [ref=f12e149]:
+          - generic [ref=f12e150]:
+            - generic [ref=f12e151]: EBG-PARQ-004
+            - heading "Palma Real / Palma de Cera" [level=4] [ref=f12e152]
+            - paragraph [ref=f12e153]: Roystonea regia
+          - img "QR EBG-PARQ-004" [ref=f12e155]
+          - generic [ref=f12e156]: 📍 Parque Principal El Bagre
+          - generic [ref=f12e157]:
+            - link "Imprimir" [ref=f12e158] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php?codigo=EBG-PARQ-004
+            - button "Regenerar" [ref=f12e164] [cursor=pointer]
+        - generic [ref=f12e168]:
+          - generic [ref=f12e169]:
+            - generic [ref=f12e170]: EBG-SENA-002
+            - heading "Ceiba Bruja / Bonga" [level=4] [ref=f12e171]
+            - paragraph [ref=f12e172]: Ceiba pentandra
+          - img "QR EBG-SENA-002" [ref=f12e174]
+          - generic [ref=f12e175]: 📍 SENA Complejo Minero Bajo Cauca
+          - generic [ref=f12e176]:
+            - link "Imprimir" [ref=f12e177] [cursor=pointer]:
+              - /url: http://localhost/ForestID_V2/admin/qr/imprimir.php?codigo=EBG-SENA-002
+            - button "Regenerar" [ref=f12e183] [cursor=pointer]
+  - contentinfo [ref=f12e187]:
+    - generic [ref=f12e188]:
+      - generic [ref=f12e189]:
+        - generic [ref=f12e190]:
+          - generic [ref=f12e191]: ForestID
+          - paragraph [ref=f12e197]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f12e198]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f12e199]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f12e204]:
+          - heading "Marco Institucional" [level=4] [ref=f12e205]
+          - paragraph [ref=f12e206]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f12e207]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f12e208]: Semillero iRed SENA
+        - generic [ref=f12e213]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f12e214]
+          - list [ref=f12e215]:
+            - listitem [ref=f12e216]:
+              - text: •
+              - strong [ref=f12e217]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f12e218]:
+              - text: •
+              - strong [ref=f12e219]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f12e220]:
+              - text: •
+              - strong [ref=f12e221]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f12e222]:
+              - text: •
+              - strong [ref=f12e223]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f12e224]:
+        - generic [ref=f12e225]:
+          - text: © 2026
+          - strong [ref=f12e226]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f12e227]:
+          - link "Inicio Público" [ref=f12e228] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f12e229]: •
+          - link "Buscador" [ref=f12e230] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f12e231]: •
+          - link "Acceso Restringido" [ref=f12e232] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php

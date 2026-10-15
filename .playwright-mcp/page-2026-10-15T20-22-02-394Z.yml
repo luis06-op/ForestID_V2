@@ -1,0 +1,76 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e4]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]: ForestID
+      - heading "Acceso al Sistema" [level=2] [ref=f5e12]
+      - paragraph [ref=f5e13]: Ingrese sus credenciales de funcionario o técnico de campo.
+    - generic [ref=f5e14]:
+      - generic [ref=f5e15]:
+        - generic [ref=f5e16]: Correo Electrónico
+        - textbox "Correo Electrónico" [ref=f5e18]:
+          - /placeholder: nombre@emincut.com
+      - generic [ref=f5e19]:
+        - generic [ref=f5e20]:
+          - generic [ref=f5e21]: Contraseña
+          - link "¿Olvidó su contraseña?" [ref=f5e22] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/recuperar_password.php
+        - textbox "Contraseña" [ref=f5e24]:
+          - /placeholder: ••••••••••••
+      - button "Ingresar al Panel" [ref=f5e26] [cursor=pointer]
+    - generic [ref=f5e30]:
+      - generic [ref=f5e31]: Cuentas de Prueba Rápida (Semilla)
+      - generic [ref=f5e32]:
+        - button "AdminEmincut" [ref=f5e33] [cursor=pointer]
+        - button "OperarioEmincut" [ref=f5e35] [cursor=pointer]
+    - link "Volver al Portal Ciudadano Público" [ref=f5e38] [cursor=pointer]:
+      - /url: http://localhost/ForestID_V2/publico/index.php
+  - contentinfo [ref=f5e41]:
+    - generic [ref=f5e42]:
+      - generic [ref=f5e43]:
+        - generic [ref=f5e44]:
+          - generic [ref=f5e45]: ForestID
+          - paragraph [ref=f5e51]:
+            - text: Plataforma de gestión dendrológica, trazabilidad fitosanitaria e identificación inteligente de arborización con tecnología de códigos QR físicos para el municipio de
+            - strong [ref=f5e52]: El Bagre, Antioquia
+            - text: y el Bajo Cauca antioqueño.
+          - generic [ref=f5e53]: El Bagre, Antioquia, Colombia — Sede Principal Emincut
+        - generic [ref=f5e58]:
+          - heading "Marco Institucional" [level=4] [ref=f5e59]
+          - paragraph [ref=f5e60]:
+            - text: Iniciativa desarrollada en el marco del programa
+            - strong [ref=f5e61]: SENA Regional Antioquia – iRed Innovacción
+            - text: para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
+          - generic [ref=f5e62]: Semillero iRed SENA
+        - generic [ref=f5e67]:
+          - heading "Equipo de Proyecto" [level=4] [ref=f5e68]
+          - list [ref=f5e69]:
+            - listitem [ref=f5e70]:
+              - text: •
+              - strong [ref=f5e71]: Luis Angel Muñoz M.
+              - text: (Arquitectura)
+            - listitem [ref=f5e72]:
+              - text: •
+              - strong [ref=f5e73]: Gabriel Jaime Correa C.
+              - text: (Backend)
+            - listitem [ref=f5e74]:
+              - text: •
+              - strong [ref=f5e75]: Michael Rodríguez L.
+              - text: (UI / QA)
+            - listitem [ref=f5e76]:
+              - text: •
+              - strong [ref=f5e77]: Valentina
+              - text: (Verificación Calidad)
+      - generic [ref=f5e78]:
+        - generic [ref=f5e79]:
+          - text: © 2026
+          - strong [ref=f5e80]: Emincut S.A.S.
+          - text: — Todos los derechos reservados.
+        - generic [ref=f5e81]:
+          - link "Inicio Público" [ref=f5e82] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/index.php
+          - generic [ref=f5e83]: •
+          - link "Buscador" [ref=f5e84] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/publico/buscar.php
+          - generic [ref=f5e85]: •
+          - link "Acceso Restringido" [ref=f5e86] [cursor=pointer]:
+            - /url: http://localhost/ForestID_V2/auth/login.php
