@@ -7,7 +7,7 @@
     <!-- Pie de página Institucional -->
     <footer class="mt-auto bg-gradient-to-b from-[#FAFAF7] to-emerald-950/90 text-gray-200 border-t border-emerald-900/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Columna 1: Marca y Propósito -->
                 <div class="md:col-span-2 space-y-3">
                     <div class="flex items-center gap-2">
@@ -25,28 +25,28 @@
                     </div>
                 </div>
 
-                <!-- Columna 2: Marco Institucional -->
-                <div class="space-y-2">
-                    <h4 class="font-heading font-semibold text-sm text-emerald-300 uppercase tracking-wider">Marco Institucional</h4>
-                    <p class="text-xs text-emerald-100/75 leading-relaxed">
-                        Iniciativa desarrollada en el marco del programa <strong class="text-white">SENA Regional Antioquia – iRed Innovacción</strong> para el fomento de soluciones tecnológicas con impacto ambiental y productivo.
-                    </p>
-                    <div class="pt-1">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-emerald-900/80 text-emerald-200 border border-emerald-700/50">
-                            <i data-lucide="award" class="w-3 h-3 text-emerald-400"></i> Semillero iRed SENA
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Columna 3: Equipo de Desarrollo -->
-                <div class="space-y-2">
+                <!-- Columna 2: Equipo de Desarrollo y Memoria -->
+                <div class="space-y-3">
                     <h4 class="font-heading font-semibold text-sm text-emerald-300 uppercase tracking-wider">Equipo de Proyecto</h4>
                     <ul class="text-xs text-emerald-100/75 space-y-1">
                         <li>• <strong class="text-white">Luis Angel Muñoz M.</strong> (Arquitectura)</li>
                         <li>• <strong class="text-white">Gabriel Jaime Correa C.</strong> (Backend)</li>
-                        <li>• <strong class="text-white">Michael Rodríguez L.</strong> (UI / QA)</li>
                         <li>• <strong class="text-white">Valentina</strong> (Verificación Calidad)</li>
                     </ul>
+
+                    <!-- Conmemoración: Michael Rodríguez L. (100% Emincut: este proyecto es solo para Emincut) -->
+                    <div class="mt-3 pt-3 border-t border-emerald-800/60 space-y-1.5">
+                        <div class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-amber-300/90">
+                            <i data-lucide="star" class="w-3 h-3"></i> In memoriam
+                        </div>
+                        <p class="text-xs leading-relaxed text-emerald-100/85">
+                            <strong class="text-white">Michael Rodríguez L.</strong> (UI / QA)<br>
+                            <span class="text-amber-200/80">2008 &ndash; 2026</span>
+                        </p>
+                        <p class="text-[11px] italic text-emerald-200/60">
+                            Parte de este equipo para siempre. En agradecido recuerdo.
+                        </p>
+                    </div>
                 </div>
             </div>
 
