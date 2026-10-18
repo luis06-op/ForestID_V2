@@ -95,9 +95,6 @@ $titulo_pagina = 'Iniciar Sesión — ' . APP_NAME;
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<!-- Identidad visual Emincut: blanco, verde (principal) y amarillo -->
-<link rel="stylesheet" href="<?= BASE_URL ?>assets/css/emincut.css">
-
 <div class="min-h-screen flex items-stretch bg-[#FBFAF6]">
 
     <!-- Columna Izquierda: Branding Institucional Emincut -->

@@ -51,55 +51,56 @@ require_once __DIR__ . '/../includes/navbar.php';
 <div class="flex-1 flex flex-col md:flex-row">
     <?php require_once __DIR__ . '/../includes/sidebar_operario.php'; ?>
 
-    <main class="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <main class="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto" style="background:var(--emi-hueso)">
         
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 al-scroll">
             <div>
-                <span class="text-xs font-bold text-teal-700 uppercase tracking-widest">Trabajo de Campo • Emincut</span>
-                <h1 class="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900">
+                <span class="emi-display text-xs font-bold uppercase tracking-widest" style="color:var(--emi-ambar)">Trabajo de Campo • Emincut</span>
+                <h1 class="font-heading font-extrabold text-2xl sm:text-3xl" style="color:var(--emi-tinta)">
                     Panel Técnico Operario
                 </h1>
-                <p class="text-xs text-gray-500 mt-0.5">
+                <div class="linea-sol mt-2"></div>
+                <p class="text-xs mt-2" style="color:var(--emi-tinta-suave)">
                     Bienvenido(a), <?= htmlspecialchars($_SESSION['usuario']['nombres']) ?>. Gestione inspecciones y actividades en campo.
                 </p>
             </div>
             
             <div class="flex items-center gap-2">
-                <a href="<?= BASE_URL ?>operario/escanear.php" class="btn-forest-primary text-xs py-2.5 px-4 shadow-md bg-emerald-700 hover:bg-emerald-800">
-                    <i data-lucide="camera" class="w-4 h-4 animate-pulse"></i> Escanear Placa QR
+                <a href="<?= BASE_URL ?>operario/escanear.php" class="emi-btn emi-btn-sol text-xs py-2.5 px-4">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="camera" class="w-4 h-4"></i> Escanear Placa QR</span>
                 </a>
             </div>
         </div>
 
         <!-- Accesos Rápidos de Campo (Mobile-First) -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <a href="<?= BASE_URL ?>operario/escanear.php" class="forest-card p-6 border-l-4 border-l-emerald-600 hover:bg-emerald-50/50 transition-all flex items-center gap-4 group">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <a href="<?= BASE_URL ?>operario/escanear.php" class="emi-card p-6 flex items-center gap-4 group al-scroll">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background:var(--emi-amarillo-suave); color:var(--emi-ambar)">
                     <i data-lucide="camera" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <span class="block text-base font-bold text-gray-900 font-heading">Escanear Placa QR</span>
-                    <span class="text-xs text-gray-500">Abrir escáner con cámara</span>
+                    <span class="block text-base font-bold font-heading" style="color:var(--emi-tinta)">Escanear Placa QR</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">Abrir escáner con cámara</span>
                 </div>
             </a>
 
-            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="forest-card p-6 border-l-4 border-l-teal-600 hover:bg-teal-50/50 transition-all flex items-center gap-4 group">
-                <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <a href="<?= BASE_URL ?>operario/registrar_individuo.php" class="emi-card p-6 flex items-center gap-4 group al-scroll d1">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
                     <i data-lucide="plus-circle" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <span class="block text-base font-bold text-gray-900 font-heading">Alta Rápida en Campo</span>
-                    <span class="text-xs text-gray-500">Registrar árbol nuevo con GPS</span>
+                    <span class="block text-base font-bold font-heading" style="color:var(--emi-tinta)">Alta Rápida en Campo</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">Registrar árbol nuevo con GPS</span>
                 </div>
             </a>
 
-            <a href="<?= BASE_URL ?>operario/actividades/crear.php" class="forest-card p-6 border-l-4 border-l-blue-600 hover:bg-blue-50/50 transition-all flex items-center gap-4 group">
-                <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <a href="<?= BASE_URL ?>operario/actividades/crear.php" class="emi-card p-6 flex items-center gap-4 group al-scroll d2">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background:var(--emi-amarillo-suave); color:var(--emi-ambar)">
                     <i data-lucide="wrench" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <span class="block text-base font-bold text-gray-900 font-heading">Nueva Intervención</span>
-                    <span class="text-xs text-gray-500">Podas, abonos y tratamientos</span>
+                    <span class="block text-base font-bold font-heading" style="color:var(--emi-tinta)">Nueva Intervención</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">Podas, abonos y tratamientos</span>
                 </div>
             </a>
         </div>
@@ -107,30 +108,30 @@ require_once __DIR__ . '/../includes/navbar.php';
         <!-- Tareas Prioritarias de Inspección -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <div class="lg:col-span-7 forest-card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <h3 class="font-heading font-bold text-base text-gray-900 flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
+            <div class="lg:col-span-7 emi-card p-6 space-y-4 al-scroll">
+                <div class="flex items-center justify-between border-b border-[#E7EADD] pb-3">
+                    <h3 class="font-heading font-bold text-base flex items-center gap-2" style="color:var(--emi-tinta)">
+                        <i data-lucide="alert-triangle" class="w-5 h-5" style="color:var(--emi-ambar)"></i>
                         Especímenes Prioritarios para Inspección
                     </h3>
-                    <span class="text-xs text-gray-500">El Bagre</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">El Bagre</span>
                 </div>
 
                 <div class="space-y-3">
                     <?php if (empty($pendientes)): ?>
-                        <p class="text-xs text-gray-400 italic">No hay alertas de inspección pendientes.</p>
+                        <p class="text-xs italic" style="color:var(--emi-tinta-suave)">No hay alertas de inspección pendientes.</p>
                     <?php else: ?>
                         <?php foreach ($pendientes as $p): ?>
-                            <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between gap-3">
+                            <div class="p-3.5 rounded-xl flex items-center justify-between gap-3 border" style="background:var(--emi-verde-suave); border-color:#CBD9B8">
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-xs text-gray-900"><?= htmlspecialchars($p['codigo_placa']) ?></span>
+                                        <span class="font-bold text-xs" style="color:var(--emi-tinta)"><?= htmlspecialchars($p['codigo_placa']) ?></span>
                                         <?= obtener_badge_estado($p['estado'] ?? 'Sano') ?>
                                     </div>
-                                    <h4 class="font-semibold text-xs text-gray-800 mt-0.5"><?= htmlspecialchars($p['nombre_comun']) ?></h4>
-                                    <span class="block text-[11px] text-gray-500">📍 <?= htmlspecialchars($p['nombre_zona']) ?></span>
+                                    <h4 class="font-semibold text-xs mt-0.5" style="color:var(--emi-tinta)"><?= htmlspecialchars($p['nombre_comun']) ?></h4>
+                                    <span class="block text-[11px]" style="color:var(--emi-tinta-suave)">📍 <?= htmlspecialchars($p['nombre_zona']) ?></span>
                                 </div>
-                                <a href="<?= BASE_URL ?>operario/individuos/detalle.php?id=<?= $p['id_individuo'] ?>" class="btn-forest-secondary text-xs py-1.5 px-3">
+                                <a href="<?= BASE_URL ?>operario/individuos/detalle.php?id=<?= $p['id_individuo'] ?>" class="emi-btn text-xs py-1.5 px-3" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">
                                     Inspeccionar
                                 </a>
                             </div>
@@ -140,29 +141,27 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
 
             <!-- Mantenimientos Registrados por el Operario -->
-            <div class="lg:col-span-5 forest-card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <h3 class="font-heading font-bold text-base text-gray-900 flex items-center gap-2">
-                        <i data-lucide="history" class="w-5 h-5 text-teal-600"></i>
+            <div class="lg:col-span-5 emi-card p-6 space-y-4 al-scroll d1">
+                <div class="flex items-center justify-between border-b border-[#E7EADD] pb-3">
+                    <h3 class="font-heading font-bold text-base flex items-center gap-2" style="color:var(--emi-tinta)">
+                        <i data-lucide="history" class="w-5 h-5" style="color:var(--emi-verde)"></i>
                         Mis Intervenciones Recientes
                     </h3>
-                    <span class="text-xs text-teal-800 font-bold bg-teal-100 px-2 py-0.5 rounded-full">
-                        <?= $total_mis_actividades ?> total
-                    </span>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-full cifra" style="background:var(--emi-amarillo-suave); color:#8A5E10" data-contador="<?= (int)$total_mis_actividades ?>" data-sufijo=" total">0 total</span>
                 </div>
 
                 <div class="space-y-3">
                     <?php if (empty($ultimos_mantenimientos)): ?>
-                        <p class="text-xs text-gray-400 italic">No has registrado intervenciones aún.</p>
+                        <p class="text-xs italic" style="color:var(--emi-tinta-suave)">No has registrado intervenciones aún.</p>
                     <?php else: ?>
                         <?php foreach ($ultimos_mantenimientos as $m): ?>
-                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-1">
+                            <div class="p-3 rounded-xl space-y-1 border" style="background:var(--emi-hueso); border-color:#E7EADD">
                                 <div class="flex items-center justify-between">
-                                    <span class="font-bold text-xs text-emerald-800"><?= htmlspecialchars($m['tipo_actividad']) ?></span>
-                                    <span class="text-[10px] text-gray-400"><?= formatear_fecha($m['fecha_actividad']) ?></span>
+                                    <span class="font-bold text-xs" style="color:var(--emi-verde-oscuro)"><?= htmlspecialchars($m['tipo_actividad']) ?></span>
+                                    <span class="text-[10px]" style="color:var(--emi-tinta-suave)"><?= formatear_fecha($m['fecha_actividad']) ?></span>
                                 </div>
-                                <p class="text-xs text-gray-700"><?= htmlspecialchars($m['descripcion']) ?></p>
-                                <span class="block text-[10px] text-gray-500 font-mono"><?= htmlspecialchars($m['codigo_placa']) ?> (<?= htmlspecialchars($m['nombre_comun']) ?>)</span>
+                                <p class="text-xs" style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($m['descripcion']) ?></p>
+                                <span class="block text-[10px] font-mono" style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($m['codigo_placa']) ?> (<?= htmlspecialchars($m['nombre_comun']) ?>)</span>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>

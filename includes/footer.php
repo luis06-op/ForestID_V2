@@ -32,7 +32,7 @@
                     <ul class="text-xs text-white/75 space-y-1">
                         <li>• <strong class="text-white">Luis Angel Muñoz M.</strong> (Arquitectura)</li>
                         <li>• <strong class="text-white">Gabriel Jaime Correa C.</strong> (Backend)</li>
-                        <li>• <strong class="text-white">Valentina</strong> (Verificación Calidad)</li>
+                        <li>• <strong class="text-white">Valentina Hernández Zapata</strong> (Verificación Calidad)</li>
                     </ul>
                     <p class="text-[11px] text-white/45 leading-relaxed">
                         Desarrollado por aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, en etapa productiva con Emincut.
@@ -76,6 +76,47 @@
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
+
+        // Animaciones globales: reveal al scroll + contadores (todas las páginas)
+        (function () {
+            const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const elementos = document.querySelectorAll('.al-scroll, .linea-sol');
+            if (reducir || !('IntersectionObserver' in window)) {
+                elementos.forEach(el => el.classList.add('visible'));
+            } else {
+                const io = new IntersectionObserver((entradas) => {
+                    entradas.forEach(e => {
+                        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+                    });
+                }, { threshold: .15 });
+                elementos.forEach(el => io.observe(el));
+            }
+
+            // Contadores animados
+            const contadores = document.querySelectorAll('[data-contador]');
+            const animar = (el) => {
+                const meta = parseInt(el.dataset.contador, 10);
+                const sufijo = el.dataset.sufijo || '';
+                const dur = 1400, inicio = performance.now();
+                const paso = (ahora) => {
+                    const p = Math.min((ahora - inicio) / dur, 1);
+                    const suave = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(meta * suave).toLocaleString('es-CO') + sufijo;
+                    if (p < 1) requestAnimationFrame(paso);
+                };
+                requestAnimationFrame(paso);
+            };
+            if (reducir || !('IntersectionObserver' in window)) {
+                contadores.forEach(el => {
+                    el.textContent = parseInt(el.dataset.contador, 10).toLocaleString('es-CO') + (el.dataset.sufijo || '');
+                });
+            } else {
+                const io2 = new IntersectionObserver((entradas) => {
+                    entradas.forEach(e => { if (e.isIntersecting) { animar(e.target); io2.unobserve(e.target); } });
+                }, { threshold: .5 });
+                contadores.forEach(el => io2.observe(el));
+            }
+        })();
     </script>
 </body>
 </html>

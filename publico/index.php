@@ -25,9 +25,6 @@ $titulo_pagina = 'ForestID — Control de siembra y hectáreas forestadas | Emin
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<!-- Identidad visual Emincut — variante "Sol": amarillo protagonista + verde institucional -->
-<link rel="stylesheet" href="<?= BASE_URL ?>assets/css/emincut.css">
-
 <style>
     /* ================= Fondo del hero: amanecer dorado sobre colinas ================= */
     .hero-sol {
@@ -360,45 +357,5 @@ require_once __DIR__ . '/../includes/header.php';
         <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="log-in" class="w-4 h-4"></i> Iniciar sesión</span>
     </a>
 </section>
-
-<script>
-    // Reveal de secciones al hacer scroll
-    (function () {
-        const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const elementos = document.querySelectorAll('.al-scroll, .linea-sol');
-        if (reducir || !('IntersectionObserver' in window)) {
-            elementos.forEach(el => el.classList.add('visible'));
-        } else {
-            const io = new IntersectionObserver((entradas) => {
-                entradas.forEach(e => {
-                    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-                });
-            }, { threshold: .18 });
-            elementos.forEach(el => io.observe(el));
-        }
-
-        // Contadores animados de la franja de cifras
-        const contadores = document.querySelectorAll('[data-contador]');
-        const animar = (el) => {
-            const meta = parseInt(el.dataset.contador, 10);
-            const dur = 1400, inicio = performance.now();
-            const paso = (ahora) => {
-                const p = Math.min((ahora - inicio) / dur, 1);
-                const suave = 1 - Math.pow(1 - p, 3); // ease-out cúbico
-                el.textContent = Math.round(meta * suave).toLocaleString('es-CO');
-                if (p < 1) requestAnimationFrame(paso);
-            };
-            requestAnimationFrame(paso);
-        };
-        if (reducir || !('IntersectionObserver' in window)) {
-            contadores.forEach(el => el.textContent = parseInt(el.dataset.contador, 10).toLocaleString('es-CO'));
-        } else {
-            const io2 = new IntersectionObserver((entradas) => {
-                entradas.forEach(e => { if (e.isIntersecting) { animar(e.target); io2.unobserve(e.target); } });
-            }, { threshold: .6 });
-            contadores.forEach(el => io2.observe(el));
-        }
-    })();
-</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

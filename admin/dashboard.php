@@ -73,107 +73,108 @@ require_once __DIR__ . '/../includes/navbar.php';
     <?php require_once __DIR__ . '/../includes/sidebar_admin.php'; ?>
 
     <!-- Contenido Principal -->
-    <main class="flex-1 p-6 sm:p-8 space-y-8 overflow-y-auto">
-        
+    <main class="flex-1 p-6 sm:p-8 space-y-8 overflow-y-auto" style="background:var(--emi-hueso)">
+
         <!-- Cabecera de Bienvenida y Acciones Rápidas -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 al-scroll">
             <div>
-                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Emincut • El Bagre, Antioquia</span>
-                <h1 class="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900">
+                <span class="emi-display text-xs font-bold uppercase tracking-widest" style="color:var(--emi-ambar)">Emincut • El Bagre, Antioquia</span>
+                <h1 class="font-heading font-extrabold text-2xl sm:text-3xl" style="color:var(--emi-tinta)">
                     Panel de Administración General
                 </h1>
-                <p class="text-xs sm:text-sm text-gray-500 mt-0.5">
-                    Resumen del inventario dendrológico, salud fitosanitaria y registro de intervenciones en campo.
+                <div class="linea-sol mt-2"></div>
+                <p class="text-xs sm:text-sm mt-2" style="color:var(--emi-tinta-suave)">
+                    Resumen del inventario, salud fitosanitaria y registro de intervenciones en campo.
                 </p>
             </div>
-            
+
             <div class="flex items-center gap-2">
-                <a href="<?= BASE_URL ?>admin/individuos/crear.php" class="btn-forest-primary text-xs py-2.5 px-4 shadow-sm">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Nuevo Individuo
+                <a href="<?= BASE_URL ?>admin/individuos/crear.php" class="emi-btn emi-btn-verde text-xs py-2.5 px-4">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4"></i> Nuevo Individuo</span>
                 </a>
-                <a href="<?= BASE_URL ?>admin/qr/imprimir.php" class="btn-forest-secondary text-xs py-2.5 px-4">
-                    <i data-lucide="printer" class="w-4 h-4"></i> Imprimir Placas
+                <a href="<?= BASE_URL ?>admin/qr/imprimir.php" class="emi-btn text-xs py-2.5 px-4 border" style="background:#fff; color:var(--emi-verde-oscuro); border-color:#CBD9B8">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="printer" class="w-4 h-4"></i> Imprimir Placas</span>
                 </a>
             </div>
         </div>
 
         <!-- Tarjetas de Métricas Principales (KPIs) -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="forest-card p-5 border-l-4 border-l-emerald-600">
+            <div class="emi-kpi al-scroll">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">Individuos Forestales</span>
-                    <i data-lucide="trees" class="w-5 h-5 text-emerald-600"></i>
+                    <span class="emi-label">Individuos Forestales</span>
+                    <i data-lucide="trees" class="w-5 h-5" style="color:var(--emi-verde)"></i>
                 </div>
-                <span class="text-3xl font-extrabold font-heading text-gray-900"><?= $total_arboles ?></span>
-                <span class="block text-[11px] text-emerald-700 font-medium mt-1">Censo activo</span>
+                <span class="text-3xl font-extrabold font-heading cifra" style="color:var(--emi-tinta)" data-contador="<?= (int)$total_arboles ?>">0</span>
+                <span class="block text-[11px] font-semibold mt-1" style="color:var(--emi-verde)">Censo activo</span>
             </div>
 
-            <div class="forest-card p-5 border-l-4 border-l-teal-600">
+            <div class="emi-kpi al-scroll d1">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">Zonas Territoriales</span>
-                    <i data-lucide="map-pin" class="w-5 h-5 text-teal-600"></i>
+                    <span class="emi-label">Zonas Territoriales</span>
+                    <i data-lucide="map-pin" class="w-5 h-5" style="color:var(--emi-ambar)"></i>
                 </div>
-                <span class="text-3xl font-extrabold font-heading text-gray-900"><?= $total_zonas ?></span>
-                <span class="block text-[11px] text-teal-700 font-medium mt-1">Sectores en El Bagre</span>
+                <span class="text-3xl font-extrabold font-heading cifra" style="color:var(--emi-tinta)" data-contador="<?= (int)$total_zonas ?>">0</span>
+                <span class="block text-[11px] font-semibold mt-1" style="color:var(--emi-ambar)">Sectores en El Bagre</span>
             </div>
 
-            <div class="forest-card p-5 border-l-4 border-l-blue-600">
+            <div class="emi-kpi al-scroll d2">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">Intervenciones</span>
-                    <i data-lucide="clipboard-check" class="w-5 h-5 text-blue-600"></i>
+                    <span class="emi-label">Intervenciones</span>
+                    <i data-lucide="clipboard-check" class="w-5 h-5" style="color:var(--emi-verde)"></i>
                 </div>
-                <span class="text-3xl font-extrabold font-heading text-gray-900"><?= $total_actividades ?></span>
-                <span class="block text-[11px] text-blue-700 font-medium mt-1">Mantenimientos y podas</span>
+                <span class="text-3xl font-extrabold font-heading cifra" style="color:var(--emi-tinta)" data-contador="<?= (int)$total_actividades ?>">0</span>
+                <span class="block text-[11px] font-semibold mt-1" style="color:var(--emi-verde)">Mantenimientos y podas</span>
             </div>
 
-            <div class="forest-card p-5 border-l-4 border-l-purple-600">
+            <div class="emi-kpi al-scroll d3">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-gray-500 uppercase">Personal y Usuarios</span>
-                    <i data-lucide="users" class="w-5 h-5 text-purple-600"></i>
+                    <span class="emi-label">Personal y Usuarios</span>
+                    <i data-lucide="users" class="w-5 h-5" style="color:var(--emi-ambar)"></i>
                 </div>
-                <span class="text-3xl font-extrabold font-heading text-gray-900"><?= $total_usuarios ?></span>
-                <span class="block text-[11px] text-purple-700 font-medium mt-1">Cuentas activas</span>
+                <span class="text-3xl font-extrabold font-heading cifra" style="color:var(--emi-tinta)" data-contador="<?= (int)$total_usuarios ?>">0</span>
+                <span class="block text-[11px] font-semibold mt-1" style="color:var(--emi-ambar)">Cuentas activas</span>
             </div>
         </div>
 
         <!-- Gráficos de Estadísticas con Chart.js -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             <!-- Gráfico 1: Estado Fitosanitario (Doughnut) -->
-            <div class="lg:col-span-5 forest-card p-6 flex flex-col justify-between">
+            <div class="lg:col-span-5 emi-card p-6 flex flex-col justify-between al-scroll">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-heading font-bold text-base text-gray-900">
+                    <h3 class="font-heading font-bold text-base" style="color:var(--emi-tinta)">
                         Distribución Fitosanitaria
                     </h3>
-                    <span class="text-xs text-gray-400">Salud actual</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">Salud actual</span>
                 </div>
                 <div class="relative h-64 flex items-center justify-center">
                     <canvas id="chart-fitosanitario"></canvas>
                 </div>
-                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
+                <div class="mt-4 pt-3 border-t border-[#E7EADD] grid grid-cols-2 gap-2 text-xs">
                     <?php foreach ($distribucion_salud as $ds): ?>
-                        <div class="flex items-center justify-between text-gray-600">
+                        <div class="flex items-center justify-between" style="color:var(--emi-tinta-suave)">
                             <span><?= htmlspecialchars($ds['estado']) ?>:</span>
-                            <span class="font-bold text-gray-900"><?= $ds['cantidad'] ?></span>
+                            <span class="font-bold" style="color:var(--emi-tinta)"><?= $ds['cantidad'] ?></span>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
             <!-- Gráfico 2: Árboles por Zona (Bar Chart) -->
-            <div class="lg:col-span-7 forest-card p-6 flex flex-col justify-between">
+            <div class="lg:col-span-7 emi-card p-6 flex flex-col justify-between al-scroll d1">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-heading font-bold text-base text-gray-900">
+                    <h3 class="font-heading font-bold text-base" style="color:var(--emi-tinta)">
                         Cobertura Arbórea por Zona
                     </h3>
-                    <span class="text-xs text-gray-400">El Bagre</span>
+                    <span class="text-xs" style="color:var(--emi-tinta-suave)">El Bagre</span>
                 </div>
                 <div class="relative h-64">
                     <canvas id="chart-zonas"></canvas>
                 </div>
-                <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                    <span>Zona con mayor censo: <strong><?= !empty($individuos_por_zona[0]['nombre_zona']) ? htmlspecialchars($individuos_por_zona[0]['nombre_zona']) : 'N/A' ?></strong></span>
-                    <a href="<?= BASE_URL ?>admin/zonas/index.php" class="text-emerald-700 font-semibold hover:underline">Ver Zonas</a>
+                <div class="mt-4 pt-3 border-t border-[#E7EADD] flex items-center justify-between text-xs" style="color:var(--emi-tinta-suave)">
+                    <span>Zona con mayor censo: <strong style="color:var(--emi-tinta)"><?= !empty($individuos_por_zona[0]['nombre_zona']) ? htmlspecialchars($individuos_por_zona[0]['nombre_zona']) : 'N/A' ?></strong></span>
+                    <a href="<?= BASE_URL ?>admin/zonas/index.php" class="font-semibold hover:underline" style="color:var(--emi-verde)">Ver Zonas</a>
                 </div>
             </div>
 
@@ -181,35 +182,35 @@ require_once __DIR__ . '/../includes/navbar.php';
 
         <!-- Sección de Alertas y Tareas Pendientes -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             <!-- Tabla: Especímenes en Observación / Riesgo -->
-            <div class="lg:col-span-6 forest-card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div class="lg:col-span-6 emi-card p-6 space-y-4 al-scroll">
+                <div class="flex items-center justify-between border-b border-[#E7EADD] pb-3">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
-                        <h3 class="font-heading font-bold text-base text-gray-900">Atención Fitosanitaria Prioritaria</h3>
+                        <i data-lucide="alert-triangle" class="w-5 h-5" style="color:var(--emi-ambar)"></i>
+                        <h3 class="font-heading font-bold text-base" style="color:var(--emi-tinta)">Atención Fitosanitaria Prioritaria</h3>
                     </div>
-                    <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:var(--emi-amarillo-suave); color:#8A5E10">
                         <?= count($alertas_fitosanitarias) ?> alertas
                     </span>
                 </div>
 
                 <?php if (empty($alertas_fitosanitarias)): ?>
-                    <p class="text-xs text-gray-400 italic py-4">No hay individuos registrados con estado crítico o en observación.</p>
+                    <p class="text-xs italic py-4" style="color:var(--emi-tinta-suave)">No hay individuos registrados con estado crítico o en observación.</p>
                 <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($alertas_fitosanitarias as $alerta): ?>
-                            <div class="p-3.5 bg-amber-50/50 border border-amber-200/70 rounded-xl flex items-start justify-between gap-3">
+                            <div class="p-3.5 rounded-xl flex items-start justify-between gap-3 border" style="background:var(--emi-amarillo-suave); border-color:#F2DCAC">
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-xs text-gray-900"><?= htmlspecialchars($alerta['codigo_placa']) ?></span>
+                                        <span class="font-bold text-xs" style="color:var(--emi-tinta)"><?= htmlspecialchars($alerta['codigo_placa']) ?></span>
                                         <?= obtener_badge_estado($alerta['estado']) ?>
                                     </div>
-                                    <h4 class="font-heading font-semibold text-sm text-gray-800"><?= htmlspecialchars($alerta['nombre_comun']) ?></h4>
-                                    <p class="text-xs text-gray-600 leading-snug line-clamp-2"><?= htmlspecialchars($alerta['diagnostico']) ?></p>
-                                    <span class="block text-[10px] text-gray-400">📍 <?= htmlspecialchars($alerta['nombre_zona']) ?></span>
+                                    <h4 class="font-heading font-semibold text-sm" style="color:var(--emi-tinta)"><?= htmlspecialchars($alerta['nombre_comun']) ?></h4>
+                                    <p class="text-xs leading-snug line-clamp-2" style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($alerta['diagnostico']) ?></p>
+                                    <span class="block text-[10px]" style="color:var(--emi-tinta-suave)">📍 <?= htmlspecialchars($alerta['nombre_zona']) ?></span>
                                 </div>
-                                <a href="<?= BASE_URL ?>admin/individuos/detalle.php?id=<?= $alerta['id_individuo'] ?>" class="btn-forest-secondary text-[11px] py-1.5 px-2.5 shrink-0">
+                                <a href="<?= BASE_URL ?>admin/individuos/detalle.php?id=<?= $alerta['id_individuo'] ?>" class="emi-btn text-[11px] py-1.5 px-2.5 shrink-0" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">
                                     Inspeccionar
                                 </a>
                             </div>
@@ -219,35 +220,35 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
 
             <!-- Tabla: Registro Reciente de Actividades en Campo -->
-            <div class="lg:col-span-6 forest-card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div class="lg:col-span-6 emi-card p-6 space-y-4 al-scroll d1">
+                <div class="flex items-center justify-between border-b border-[#E7EADD] pb-3">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="history" class="w-5 h-5 text-emerald-600"></i>
-                        <h3 class="font-heading font-bold text-base text-gray-900">Últimas Intervenciones Registradas</h3>
+                        <i data-lucide="history" class="w-5 h-5" style="color:var(--emi-verde)"></i>
+                        <h3 class="font-heading font-bold text-base" style="color:var(--emi-tinta)">Últimas Intervenciones Registradas</h3>
                     </div>
-                    <a href="<?= BASE_URL ?>admin/reportes/index.php" class="text-xs text-emerald-700 font-semibold hover:underline">
+                    <a href="<?= BASE_URL ?>admin/reportes/index.php" class="text-xs font-semibold hover:underline" style="color:var(--emi-verde)">
                         Ver todas
                     </a>
                 </div>
 
                 <?php if (empty($ultimas_actividades)): ?>
-                    <p class="text-xs text-gray-400 italic py-4">Aún no se han registrado actividades de mantenimiento.</p>
+                    <p class="text-xs italic py-4" style="color:var(--emi-tinta-suave)">Aún no se han registrado actividades de mantenimiento.</p>
                 <?php else: ?>
                     <div class="space-y-3">
                         <?php foreach ($ultimas_actividades as $act): ?>
-                            <div class="p-3 bg-gray-50 border border-gray-200/80 rounded-xl flex items-center justify-between gap-3">
+                            <div class="p-3 rounded-xl flex items-center justify-between gap-3 border" style="background:var(--emi-verde-suave); border-color:#CBD9B8">
                                 <div class="space-y-0.5">
                                     <div class="flex items-center gap-2">
-                                        <span class="text-xs font-bold text-emerald-800"><?= htmlspecialchars($act['tipo_actividad']) ?></span>
-                                        <span class="text-[11px] text-gray-500">• <?= htmlspecialchars($act['codigo_placa']) ?> (<?= htmlspecialchars($act['nombre_comun']) ?>)</span>
+                                        <span class="text-xs font-bold" style="color:var(--emi-verde-oscuro)"><?= htmlspecialchars($act['tipo_actividad']) ?></span>
+                                        <span class="text-[11px]" style="color:var(--emi-tinta-suave)">• <?= htmlspecialchars($act['codigo_placa']) ?> (<?= htmlspecialchars($act['nombre_comun']) ?>)</span>
                                     </div>
-                                    <p class="text-xs text-gray-600 truncate max-w-sm"><?= htmlspecialchars($act['descripcion']) ?></p>
-                                    <span class="block text-[10px] text-gray-400">
+                                    <p class="text-xs truncate max-w-sm" style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($act['descripcion']) ?></p>
+                                    <span class="block text-[10px]" style="color:var(--emi-tinta-suave)">
                                         <?= formatear_fecha($act['fecha_actividad'], true) ?>
                                         <?= !empty($act['nombres']) ? '— ' . htmlspecialchars($act['nombres'] . ' ' . $act['apellidos']) : '— Reporte Ciudadano' ?>
                                     </span>
                                 </div>
-                                <a href="<?= BASE_URL ?>publico/ficha.php?codigo=<?= urlencode($act['codigo_placa']) ?>" target="_blank" class="p-2 text-gray-400 hover:text-emerald-700">
+                                <a href="<?= BASE_URL ?>publico/ficha.php?codigo=<?= urlencode($act['codigo_placa']) ?>" target="_blank" class="p-2" style="color:var(--emi-tinta-suave)">
                                     <i data-lucide="external-link" class="w-4 h-4"></i>
                                 </a>
                             </div>
@@ -270,16 +271,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const valoresSalud = datosSalud.map(d => parseInt(d.cantidad));
 
     const colorMap = {
-        'Sano': '#16A34A',
-        'En observación': '#D97706',
-        'Enfermo': '#E11D48',
+        'Sano': '#5B7C3A',
+        'En observación': '#E9A22E',
+        'Enfermo': '#DC2626',
         'Plagado': '#9333EA',
-        'En riesgo': '#DC2626',
+        'En riesgo': '#C2410C',
         'Muerto en pie': '#78716C',
         'Talado': '#52525B'
     };
 
-    const colores = etiquetasSalud.map(e => colorMap[e] || '#10B981');
+    const colores = etiquetasSalud.map(e => colorMap[e] || '#7A9B54');
 
     new Chart(document.getElementById('chart-fitosanitario'), {
         type: 'doughnut',
@@ -317,7 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
             datasets: [{
                 label: 'Individuos Forestales',
                 data: valoresZonas,
-                backgroundColor: '#2E7D32',
+                backgroundColor: '#5B7C3A',
+                hoverBackgroundColor: '#E9A22E',
                 borderRadius: 6
             }]
         },

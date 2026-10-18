@@ -199,3 +199,136 @@ body.emi-theme,
     .emi-btn::before { display: none; }
     .emi-card, .emi-btn { transition: none; }
 }
+
+/* ============================================================
+   DISEÑO UNIFICADO DE PANELES (navbar + sidebar + dashboards)
+   ============================================================ */
+
+/* --- Barra superior institucional (se une al sidebar) --- */
+.emi-navbar {
+    background-color: var(--emi-verde-noche);
+    border-bottom: 3px solid var(--emi-ambar);
+}
+
+/* --- Sidebar unificado con la barra superior --- */
+.emi-sidebar {
+    background-color: var(--emi-verde-noche);
+    border-right: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: none;
+}
+.emi-sidebar .emi-seccion {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--emi-amarillo);
+    padding: .9rem .875rem .4rem;
+}
+.emi-sidebar .emi-enlace {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .6rem .85rem;
+    border-radius: .7rem;
+    font-size: .875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .78);
+    transition: background-color .2s ease, color .2s ease, transform .2s ease;
+}
+.emi-sidebar .emi-enlace:hover {
+    background-color: rgba(255, 255, 255, .07);
+    color: #fff;
+    transform: translateX(3px);
+}
+.emi-sidebar .emi-enlace.activo {
+    background: linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-ambar) 100%);
+    color: var(--emi-verde-noche);
+    font-weight: 700;
+    box-shadow: 0 6px 16px -6px rgba(233, 162, 46, .55);
+}
+.emi-sidebar .emi-enlace.activo svg { color: var(--emi-verde-noche); }
+
+/* --- Drawer en móvil: el sidebar se desliza desde la izquierda --- */
+.emi-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 22, 12, .55);
+    backdrop-filter: blur(2px);
+    z-index: 55;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+}
+.emi-overlay.visible { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 767px) {
+    .emi-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 60;
+        width: 17rem;
+        min-height: 100vh;
+        transform: translateX(-100%);
+        transition: transform .32s cubic-bezier(.22,.68,.32,1);
+        overflow-y: auto;
+    }
+    .emi-sidebar.abierta { transform: translateX(0); }
+}
+
+/* --- Reveal al hacer scroll (disponible en todas las páginas) --- */
+.al-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .75s cubic-bezier(.22,.68,.32,1), transform .75s cubic-bezier(.22,.68,.32,1);
+    will-change: opacity, transform;
+}
+.al-scroll.visible { opacity: 1; transform: translateY(0); }
+.al-scroll.d1 { transition-delay: .12s; }
+.al-scroll.d2 { transition-delay: .24s; }
+.al-scroll.d3 { transition-delay: .36s; }
+
+/* Subrayado que se dibuja bajo los títulos */
+.linea-sol {
+    height: 5px;
+    width: 88px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--emi-verde), var(--emi-amarillo));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .9s cubic-bezier(.22,.68,.32,1) .2s;
+}
+.linea-sol.visible { transform: scaleX(1); }
+
+/* Contador animado */
+.cifra { font-variant-numeric: tabular-nums; }
+
+/* KPI tarjeta con acento */
+.emi-kpi {
+    background: var(--emi-blanco);
+    border: 1px solid #E7EADD;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform .35s cubic-bezier(.22,.68,.32,1), box-shadow .35s ease;
+    box-shadow: 0 6px 18px -8px rgba(34, 55, 28, .08);
+}
+.emi-kpi::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--emi-amarillo), var(--emi-verde));
+}
+.emi-kpi:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -14px rgba(34, 55, 28, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .al-scroll { opacity: 1; transform: none; transition: none; }
+    .linea-sol { transform: scaleX(1); transition: none; }
+    .emi-sidebar, .emi-overlay { transition: none; }
+}
