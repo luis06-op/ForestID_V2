@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/readme/banner-forestid.svg" alt="🌲 ForestID — Banner animado" width="100%"/>
+<img src="assets/readme/forestid-hero-3d.gif" alt="🌲 ForestID — banner 3D renderizado en GPU con WebGL" width="100%"/>
 
 # 🌲 ForestID <sub>(ForestSRD)</sub>
 
@@ -17,6 +17,7 @@
 ![Leaflet](https://img.shields.io/badge/Leaflet-OpenStreetMap-22771E?style=for-the-badge&logo=leaflet&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-Tableros-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
 ![QR SVG](https://img.shields.io/badge/QR-Generador%20SVG%20propio-1B5E20?style=for-the-badge)
+![Banners 3D](https://img.shields.io/badge/Banners%203D-GPU%20%C2%B7%20WebGL-00FF41?style=for-the-badge&logo=threedotjs&logoColor=black)
 
 <img src="assets/readme/divider.svg" alt="" width="65%"/>
 
@@ -36,8 +37,8 @@ Cada individuo forestal recibe una **placa QR única**: el personal de campo la 
 | :--: | :--: | :--: |
 | 🌳 [Acerca del proyecto](#acerca) | ✨ [Características](#caracteristicas) | 🧩 [Módulos y roles](#modulos) |
 | 🗄️ [Modelo de datos](#datos) | 🛠️ [Stack tecnológico](#stack) | 🔐 [Seguridad](#seguridad) |
-| 🔑 [Credenciales de prueba](#credenciales) | 🚀 [Instalación en XAMPP](#instalacion) | 📁 [Estructura del proyecto](#estructura) |
-| 📚 [Documentación](#docs) | 👥 [Equipo de proyecto](#equipo) | 🏆 [Reconocimientos](#reconocimientos) |
+| 📁 [Estructura del proyecto](#estructura) | 📚 [Documentación](#docs) | 🎬 [Renderizado 3D](#render3d) |
+| 👥 [Equipo de proyecto](#equipo) | 🏆 [Reconocimientos](#reconocimientos) | ⬆️ [Volver arriba](#indice) |
 
 ---
 
@@ -71,10 +72,12 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 <table>
 <tr>
 <td width="50%" align="center">
-<img src="assets/readme/qr-scan.svg" alt="Animación: escaneo QR en tiempo real" width="100%"/>
+<img src="assets/readme/placa-qr-3d.gif" alt="Placa QR forestal en 3D con línea de escaneo" width="100%"/>
+<sub><b>Placa QR única</b> · identidad por individuo</sub>
 </td>
 <td width="50%" align="center">
-<img src="assets/readme/chart-animate.svg" alt="Animación: tablero de indicadores con gráficos" width="100%"/>
+<img src="assets/readme/mapa-gps-3d.gif" alt="Mapa GPS en 3D con pines y ruta de monitoreo" width="100%"/>
+<sub><b>GPS + mapas</b> · alta y rutas de monitoreo</sub>
 </td>
 </tr>
 </table>
@@ -98,6 +101,14 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 ## 🗄️ Modelo de datos
 
 La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, juego de caracteres `utf8mb4` (collation `utf8mb4_spanish_ci`) y **llaves primarias UUID** generadas nativamente con `DEFAULT (UUID())`.
+
+<div align="center">
+
+<img src="assets/readme/modelo-datos-3d.gif" alt="Base de datos MySQL 8.0 representada en 3D" width="100%"/>
+
+<sub><b>esquema relacional volumétrico</b> · MySQL 8.0 · InnoDB · render 3D en GPU</sub>
+
+</div>
 
 | Capa lógica | Tablas | Contenido |
 | :-- | :-- | :-- |
@@ -171,6 +182,22 @@ Todo el conocimiento del proyecto vive en [`docs/`](docs):
 [![Diccionario de Datos](https://img.shields.io/badge/%F0%9F%97%84-Diccionario%20de%20Datos-0C4831?style=for-the-badge)](docs/DICCIONARIO_DATOS.md)
 [![Diagrama Entidad-Relación](https://img.shields.io/badge/%F0%9F%93%90-Diagrama%20ER-E9A22E?style=for-the-badge)](docs/diagramas/diagrama_er.md)
 [![Diagrama de Flujos](https://img.shields.io/badge/%F0%9F%94%80-Diagrama%20de%20Flujos-F2B632?style=for-the-badge)](docs/diagramas/diagrama_flujos.md)
+
+---
+
+<a id="render3d"></a>
+## 🎬 Renderizado 3D de los banners
+
+Los banners de este README **no son imágenes estáticas**: son escenas 3D reales construidas con **WebGL** y renderizadas con la **tarjeta gráfica** fotograma a fotograma, y después convertidas a GIF.
+
+|  |  |
+| :-- | :-- |
+| 🧊 **Motor 3D** | Three.js + **WebGL** (todo el pipeline es propio, sin servicios de pago) |
+| 🎮 **Tarjeta gráfica** | **AMD Radeon RX 9060 XT** — backend `ANGLE · Direct3D 11 · vs_5_0 / ps_5_0` |
+| 🎞️ **Escenas** | Árbol con placas QR en órbita y pines GPS · Placa QR con línea de escaneo · Mapa con rejilla, pines y ruta de monitoreo · Base de datos volumétrica con filas orbitando |
+| ✨ **Post-proceso** | Glow aditivo, luciérnagas, terreno ondulado, anillos de radar y barrido de escaneo |
+| ⚡ **Rendimiento** | **~0,2–0,3 ms por fotograma en GPU**; el coste real del pipeline está en la codificación GIF (CPU + FFmpeg) |
+| 📦 **Assets** | `assets/readme/*.gif` — ver [`assets/readme/README.md`](assets/readme/README.md) para el detalle técnico |
 
 ---
 
