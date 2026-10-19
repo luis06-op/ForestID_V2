@@ -241,7 +241,6 @@ Todo el conocimiento del proyecto vive en [`docs/`](docs):
 | :-- | :-- |
 | **Luis Angel Muñoz Márquez** | 🏗️ Líder de Arquitectura |
 | **Gabriel Jaime Correa Correa** | ⚙️ Desarrollador Backend |
-| **Michael Rodríguez Londoño** | 🎨 Desarrollador UI / QA |
 | **Valentina** | ✅ Supervisor / Verificador de Calidad |
 
 ---
@@ -251,7 +250,7 @@ Todo el conocimiento del proyecto vive en [`docs/`](docs):
 
 <div align="center">
 
-🌱 Proyecto de innovación desarrollado en el marco de **SENA Regional Antioquia – iRed Innovacción**<br/>
+🌱 Proyecto desarrollado en el **Centro de formacion minero ambiental**<br/>
 para la empresa **Emincut S.A.S.** — El Bagre, Antioquia 🇨🇴
 
 <img src="assets/readme/divider.svg" alt="" width="65%"/>
