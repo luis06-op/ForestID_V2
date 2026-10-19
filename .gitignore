@@ -1,0 +1,8 @@
+# Credenciales locales (no subir al repositorio)
+config/mailer.php
+
+# Sistema / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

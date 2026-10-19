@@ -6,14 +6,21 @@
  * Envía al usuario nuevo su contraseña de acceso por correo electrónico
  * y por WhatsApp (número móvil registrado).
  *
- * Configuración:
+ * Configuración (véase config/mailer.ejemplo.php):
  *  - CORREO_REMITENTE: dirección desde la que se envían los correos.
- *  - SMTP/WhatsApp: XAMPP no incluye servidor de correo por defecto; si
- *    mail() no está disponible, se registra el intento y se ofrece un
- *    enlace wa.me / mailto: de respaldo para envío manual.
- *  - WHATSAPP_API_TOKEN / WHATSAPP_API_PHONE_ID: opcional. Si se definen,
- *    el envío por WhatsApp es automático vía WhatsApp Business Cloud API.
+ *  - SMTP real: si existe config/mailer.php con SMTP_HOST definido, el
+ *    correo se envía vía SMTP con PHPMailer. Sin SMTP, se usa mail() de
+ *    respaldo (XAMPP no incluye servidor de correo) y se ofrece un
+ *    enlace wa.me / mailto: para envío manual.
+ *  - WHATSAPP_API_TOKEN / WHATSAPP_API_PHONE_ID: si se definen
+ *    (variables de entorno o config/mailer.php), el envío por WhatsApp
+ *    es automático vía WhatsApp Business Cloud API.
  */
+
+// Credenciales locales de envío (archivo privado, no versionado en Git)
+if (is_file(__DIR__ . '/../config/mailer.php')) {
+    require_once __DIR__ . '/../config/mailer.php';
+}
 
 // Remitente institucional
 if (!defined('CORREO_REMITENTE')) {
@@ -43,12 +50,87 @@ function texto_credenciales(string $nombres, string $apellidos, string $correo, 
 }
 
 /**
+ * Cuerpo HTML del correo de credenciales (identidad visual Emincut)
+ */
+function cuerpo_html_credenciales(string $nombres, string $apellidos, string $correo, string $password, string $rol): string {
+    $url_login = BASE_URL . 'auth/login.php';
+    $html = '<!DOCTYPE html>
+<html lang="es"><body style="margin:0;padding:24px;background:#FBFAF6;font-family:Arial,Helvetica,sans-serif;color:#22371C;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #E7EADD;border-radius:14px;">
+    <tr><td style="padding:24px 28px;border-bottom:4px solid #E9A22E;">
+      <p style="margin:0;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#E9A22E;">Emincut S.A.S. — El Bagre, Antioquia</p>
+      <h1 style="margin:6px 0 0;font-size:20px;">Credenciales de acceso ForestID</h1>
+    </td></tr>
+    <tr><td style="padding:24px 28px;font-size:14px;line-height:1.6;">
+      <p style="margin:0 0 14px;">Hola <strong>' . htmlspecialchars($nombres . ' ' . $apellidos) . '</strong>,</p>
+      <p style="margin:0 0 16px;">Tu cuenta ha sido creada. Estos son tus datos para ingresar:</p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;background:#F2B63222;border:1px solid #F2DCAC;border-radius:10px;">
+        <tr><td style="padding:14px 18px;font-size:14px;">
+          <p style="margin:0 0 6px;"><strong>Correo:</strong> ' . htmlspecialchars($correo) . '</p>
+          <p style="margin:0 0 6px;"><strong>Contraseña:</strong> <span style="font-family:Consolas,monospace;background:#fff;border:1px solid #F2DCAC;border-radius:4px;padding:2px 8px;">' . htmlspecialchars($password) . '</span></p>
+          <p style="margin:0;"><strong>Rol:</strong> ' . htmlspecialchars($rol) . '</p>
+        </td></tr>
+      </table>
+      <p style="margin:20px 0;"><a href="' . $url_login . '" style="display:inline-block;background:#E9A22E;color:#22371C;font-weight:bold;font-size:14px;padding:10px 22px;border-radius:10px;text-decoration:none;">Ingresar a la plataforma</a></p>
+      <p style="margin:0;color:#5a6b4f;font-size:12px;">Por seguridad, cambia tu contraseña después del primer ingreso.</p>
+    </td></tr>
+    <tr><td style="padding:16px 28px;border-top:1px solid #E7EADD;background:#FBFAF6;border-radius:0 0 14px 14px;font-size:11px;color:#5a6b4f;">
+      ForestID | Emincut S.A.S. | El Bagre, Antioquia
+    </td></tr>
+  </table>
+</body></html>';
+    return $html;
+}
+
+/**
  * Envía las credenciales por correo electrónico.
+ * Con SMTP configurado (config/mailer.php) usa PHPMailer; si no, mail() de respaldo.
  * @return array{ok: bool, detalle: string}
  */
 function enviar_correo_credenciales(string $correo, string $nombres, string $apellidos, string $password, string $rol): array {
     $asunto = 'ForestID — Tus credenciales de acceso';
     $mensaje = texto_credenciales($nombres, $apellidos, $correo, $password, $rol);
+
+    $remitente = (defined('SMTP_USUARIO') && SMTP_USUARIO !== '') ? SMTP_USUARIO : CORREO_REMITENTE;
+    $puede_smtp = defined('SMTP_HOST') && SMTP_HOST !== '' && defined('SMTP_USUARIO') && SMTP_USUARIO !== '';
+
+    if ($puede_smtp) {
+        try {
+            $base = __DIR__ . '/../vendor/phpmailer/src';
+            require_once $base . '/Exception.php';
+            require_once $base . '/PHPMailer.php';
+            require_once $base . '/SMTP.php';
+
+            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->isSMTP();
+            $mail->isHTML(true);
+            $mail->Host       = SMTP_HOST;
+            $mail->Port       = defined('SMTP_PORT') ? SMTP_PORT : 587;
+            $mail->CharSet    = 'UTF-8';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = SMTP_USUARIO;
+            $mail->Password   = SMTP_CONTRASENA;
+            $mail->Timeout    = 15;
+            $cifrado = defined('SMTP_CIFRADO') ? strtolower((string)SMTP_CIFRADO) : 'tls';
+            if ($cifrado === 'ssl') {
+                $mail->SMTPSecure = 'ssl';
+            } elseif ($cifrado === 'tls') {
+                $mail->SMTPSecure = 'tls';
+            }
+            $mail->setFrom($remitente, 'ForestID Emincut');
+            $mail->addReplyTo($remitente, 'ForestID Emincut');
+            $mail->addAddress($correo, trim($nombres . ' ' . $apellidos));
+            $mail->Subject = $asunto;
+            $mail->altBody = $mensaje;
+            $mail->Body    = cuerpo_html_credenciales($nombres, $apellidos, $correo, $password, $rol);
+            $mail->send();
+
+            return ['ok' => true, 'detalle' => "Correo enviado por SMTP (" . SMTP_HOST . ") a {$correo}."];
+        } catch (Throwable $e) {
+            error_log('[ForestID] Fallo SMTP a ' . $correo . ': ' . (isset($mail) ? $mail->ErrorInfo : $e->getMessage()));
+            return ['ok' => false, 'detalle' => 'No fue posible enviar el correo vía SMTP: revise config/mailer.php (host, puerto, usuario y contraseña).'];
+        }
+    }
 
     $headers  = "From: ForestID Emincut <" . CORREO_REMITENTE . ">\r\n";
     $headers .= "Reply-To: " . CORREO_REMITENTE . "\r\n";
@@ -62,7 +144,7 @@ function enviar_correo_credenciales(string $correo, string $nombres, string $ape
     }
 
     error_log("[ForestID] Fallo de envío de correo de credenciales a: {$correo}");
-    return ['ok' => false, 'detalle' => 'No fue posible enviar el correo automáticamente (verifique el servidor de correo de XAMPP).'];
+    return ['ok' => false, 'detalle' => 'No fue posible enviar el correo automáticamente: configure SMTP en config/mailer.php o use mailto: de respaldo.'];
 }
 
 /**
