@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" width="100%" role="img" aria-label="Escaneo QR en tiempo real con la cámara">
+  <title>Escáner de placas QR con la cámara</title>
+
+  <defs>
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F2B632" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#F2B632" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#F2B632" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="beamGlow" x="-40%" y="-200%" width="180%" height="500%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="qrClip">
+      <rect x="100" y="48" width="160" height="160" rx="12"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fondo de la tarjeta -->
+  <rect x="1" y="1" width="358" height="308" rx="24" fill="#05271C" stroke="#16653F" stroke-width="2"/>
+
+  <!-- Placa blanca -->
+  <rect x="100" y="48" width="160" height="160" rx="12" fill="#FFFFFF"/>
+
+  <!-- Módulos del código QR -->
+  <g fill="#05271C">
+    <!-- Patrones de detección -->
+    <rect x="112" y="60" width="36" height="36" rx="2"/>
+    <rect x="117" y="65" width="26" height="26" rx="1" fill="#FFFFFF"/>
+    <rect x="122" y="70" width="16" height="16" rx="1" fill="#05271C"/>
+
+    <rect x="212" y="60" width="36" height="36" rx="2"/>
+    <rect x="217" y="65" width="26" height="26" rx="1" fill="#FFFFFF"/>
+    <rect x="222" y="70" width="16" height="16" rx="1" fill="#05271C"/>
+
+    <rect x="112" y="160" width="36" height="36" rx="2"/>
+    <rect x="117" y="165" width="26" height="26" rx="1" fill="#FFFFFF"/>
+    <rect x="122" y="170" width="16" height="16" rx="1" fill="#05271C"/>
+
+    <!-- Líneas de tiempo -->
+    <rect x="156" y="92" width="8" height="8"/>
+    <rect x="172" y="92" width="8" height="8"/>
+    <rect x="188" y="92" width="8" height="8"/>
+    <rect x="204" y="92" width="8" height="8"/>
+    <rect x="152" y="156" width="8" height="8"/>
+    <rect x="152" y="172" width="8" height="8"/>
+    <rect x="152" y="188" width="8" height="8"/>
+
+    <!-- Datos -->
+    <rect x="156" y="108" width="8" height="8"/>
+    <rect x="172" y="108" width="8" height="8"/>
+    <rect x="204" y="108" width="8" height="8"/>
+    <rect x="220" y="108" width="8" height="8"/>
+    <rect x="236" y="108" width="8" height="8"/>
+    <rect x="164" y="124" width="8" height="8"/>
+    <rect x="188" y="124" width="8" height="8"/>
+    <rect x="212" y="124" width="8" height="8"/>
+    <rect x="244" y="124" width="8" height="8"/>
+    <rect x="156" y="140" width="8" height="8"/>
+    <rect x="180" y="140" width="8" height="8"/>
+    <rect x="196" y="140" width="8" height="8"/>
+    <rect x="228" y="140" width="8" height="8"/>
+    <rect x="244" y="140" width="8" height="8"/>
+    <rect x="164" y="156" width="8" height="8"/>
+    <rect x="196" y="156" width="8" height="8"/>
+    <rect x="220" y="156" width="8" height="8"/>
+    <rect x="236" y="156" width="8" height="8"/>
+    <rect x="180" y="172" width="8" height="8"/>
+    <rect x="212" y="172" width="8" height="8"/>
+    <rect x="244" y="172" width="8" height="8"/>
+    <rect x="164" y="188" width="8" height="8"/>
+    <rect x="196" y="188" width="8" height="8"/>
+    <rect x="228" y="188" width="8" height="8"/>
+  </g>
+
+  <!-- Haz de escaneo que recorre la placa -->
+  <g clip-path="url(#qrClip)">
+    <g>
+      <rect x="100" y="0" width="160" height="46" fill="url(#beamGrad)"/>
+      <rect x="100" y="0" width="160" height="5" fill="#F2B632" opacity="0.55" filter="url(#beamGlow)"/>
+      <rect x="100" y="0" width="160" height="4" rx="2" fill="#F2B632"/>
+      <animateTransform attributeName="transform" type="translate" dur="3s" repeatCount="indefinite"
+                        values="0 50; 0 204; 0 50"/>
+    </g>
+  </g>
+
+  <!-- Esquinas de encuadre -->
+  <g fill="none" stroke="#F2B632" stroke-width="5" stroke-linecap="round">
+    <path d="M86 60 V34 H112">
+      <animate attributeName="stroke-opacity" values="0.35;1;0.35" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M248 34 H274 V60">
+      <animate attributeName="stroke-opacity" values="1;0.35;1" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M86 196 V222 H112">
+      <animate attributeName="stroke-opacity" values="1;0.35;1" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M248 222 H274 V196">
+      <animate attributeName="stroke-opacity" values="0.35;1;0.35" dur="3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Etiquetas -->
+  <text x="180" y="254" text-anchor="middle" font-family="'Segoe UI','Inter',Helvetica,Arial,sans-serif"
+        font-size="17" font-weight="600" fill="#E8F5E9">Escaneo QR en tiempo real</text>
+  <text x="180" y="280" text-anchor="middle" font-family="'Segoe UI','Inter',Helvetica,Arial,sans-serif"
+        font-size="12.5" font-weight="500" letter-spacing="0.5" fill="#E9A22E">html5-qrcode · cámara móvil / webcam</text>
+</svg>

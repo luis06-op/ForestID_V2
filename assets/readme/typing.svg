@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 76" width="100%" role="img" aria-label="Monitoreo fitosanitario en tiempo real">
+  <title>Monitoreo fitosanitario en tiempo real</title>
+
+  <defs>
+    <clipPath id="typeReveal">
+      <rect x="28" y="0" width="0" height="76">
+        <animate attributeName="width" calcMode="discrete" dur="7s" repeatCount="indefinite"
+          values="0;13.16;26.32;39.47;52.63;65.79;78.95;92.11;105.26;118.42;131.58;144.74;157.89;171.05;184.21;197.37;210.53;223.68;236.84;250;263.16;276.32;289.47;302.63;315.79;328.95;342.11;355.26;368.42;381.58;394.74;407.89;421.05;434.21;447.37;460.53;473.68;486.84;500;500"
+          keyTimes="0;0.013158;0.026316;0.039474;0.052632;0.065789;0.078947;0.092105;0.105263;0.118421;0.131579;0.144737;0.157895;0.171053;0.184211;0.197368;0.210526;0.223684;0.236842;0.25;0.263158;0.276316;0.289474;0.302632;0.315789;0.328947;0.342105;0.355263;0.368421;0.381579;0.394737;0.407895;0.421053;0.434211;0.447368;0.460526;0.473684;0.486842;0.5;1"/>
+      </rect>
+    </clipPath>
+  </defs>
+
+  <!-- Fondo tipo terminal -->
+  <rect x="1" y="1" width="578" height="74" rx="37" fill="#05271C" stroke="#2E7D32" stroke-width="2"/>
+
+  <!-- Texto con efecto de tecleo -->
+  <text x="28" y="47" clip-path="url(#typeReveal)"
+        font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="24"
+        textLength="500" lengthAdjust="spacingAndGlyphs" fill="#C8E6C9">Monitoreo fitosanitario en tiempo real</text>
+
+  <!-- Cursor parpadeante que acompaña el tecleo -->
+  <rect x="34" y="24" width="11" height="28" rx="2.5" fill="#F2B632">
+    <animate attributeName="x" calcMode="discrete" dur="7s" repeatCount="indefinite"
+      values="34;47.16;60.32;73.47;86.63;99.79;112.95;126.11;139.26;152.42;165.58;178.74;191.89;205.05;218.21;231.37;244.53;257.68;270.84;284;297.16;310.32;323.47;336.63;349.79;362.95;376.11;389.26;402.42;415.58;428.74;441.89;455.05;468.21;481.37;494.53;507.68;520.84;534;534"
+      keyTimes="0;0.013158;0.026316;0.039474;0.052632;0.065789;0.078947;0.092105;0.105263;0.118421;0.131579;0.144737;0.157895;0.171053;0.184211;0.197368;0.210526;0.223684;0.236842;0.25;0.263158;0.276316;0.289474;0.302632;0.315789;0.328947;0.342105;0.355263;0.368421;0.381579;0.394737;0.407895;0.421053;0.434211;0.447368;0.460526;0.473684;0.486842;0.5;1"/>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.55;1"
+             dur="1.1s" repeatCount="indefinite"/>
+  </rect>
+</svg>

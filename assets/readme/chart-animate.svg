@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" width="100%" role="img" aria-label="Tablero de indicadores con gráficos animados">
+  <title>Tablero de indicadores dasométricos y fitosanitarios</title>
+
+  <!-- Fondo de la tarjeta -->
+  <rect x="1" y="1" width="358" height="308" rx="24" fill="#05271C" stroke="#16653F" stroke-width="2"/>
+
+  <!-- Título -->
+  <text x="180" y="38" text-anchor="middle" font-family="'Segoe UI','Inter',Helvetica,Arial,sans-serif"
+        font-size="17" font-weight="600" fill="#E8F5E9">Tablero de indicadores</text>
+
+  <!-- Líneas de guía -->
+  <g stroke="#14603F" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.7">
+    <line x1="46" y1="104" x2="332" y2="104"/>
+    <line x1="46" y1="174" x2="332" y2="174"/>
+  </g>
+
+  <!-- Ejes -->
+  <g stroke="#2E7D32" stroke-width="2" stroke-linecap="round">
+    <line x1="46" y1="70" x2="46" y2="240"/>
+    <line x1="46" y1="240" x2="332" y2="240"/>
+  </g>
+
+  <!-- Escala -->
+  <g font-family="'Segoe UI','Inter',Helvetica,Arial,sans-serif" font-size="11" fill="#81C784" text-anchor="end">
+    <text x="40" y="108">100</text>
+    <text x="40" y="178">50</text>
+    <text x="40" y="244">0</text>
+  </g>
+
+  <!-- Barras que crecen en bucle -->
+  <rect x="62" y="240" width="34" height="0" rx="6" fill="#4CAF50">
+    <animate attributeName="height" values="0;138;138;0" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.1s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="240;102;102;240" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.1s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="118" y="240" width="34" height="0" rx="6" fill="#66BB6A">
+    <animate attributeName="height" values="0;116;116;0" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.35s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="240;124;124;240" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.35s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="174" y="240" width="34" height="0" rx="6" fill="#A5D6A7">
+    <animate attributeName="height" values="0;84;84;0" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.6s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="240;156;156;240" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.6s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="230" y="240" width="34" height="0" rx="6" fill="#F2B632">
+    <animate attributeName="height" values="0;56;56;0" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.85s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="240;184;184;240" keyTimes="0;0.16;0.85;1" dur="5s" begin="0.85s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="286" y="240" width="34" height="0" rx="6" fill="#E9A22E">
+    <animate attributeName="height" values="0;32;32;0" keyTimes="0;0.16;0.85;1" dur="5s" begin="1.1s" repeatCount="indefinite"/>
+    <animate attributeName="y" values="240;208;208;240" keyTimes="0;0.16;0.85;1" dur="5s" begin="1.1s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Línea de tendencia que se dibuja -->
+  <polyline points="79,102 135,124 191,156 247,184 303,208" fill="none" stroke="#F2B632" stroke-width="3"
+            stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="260">
+    <animate attributeName="stroke-dashoffset" values="260;0;0;260" keyTimes="0;0.3;0.85;1"
+             dur="5s" repeatCount="indefinite"/>
+  </polyline>
+
+  <!-- Punto final con pulso -->
+  <circle cx="303" cy="208" r="5" fill="#F2B632"/>
+  <circle cx="303" cy="208" r="8" fill="#F2B632" opacity="0.4">
+    <animate attributeName="r" values="8;16" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.45;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Leyenda -->
+  <text x="180" y="280" text-anchor="middle" font-family="'Segoe UI','Inter',Helvetica,Arial,sans-serif"
+        font-size="12" font-weight="500" letter-spacing="0.4" fill="#E9A22E">Chart.js · dasométrico y fitosanitario</text>
+</svg>
