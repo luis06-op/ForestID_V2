@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 84" width="100%" role="img" aria-label="ForestID: cada árbol con identidad digital, en tiempo real">
+  <title>ForestID · identidad digital para cada árbol</title>
+
+  <defs>
+    <linearGradient id="fdPill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#061A12"/>
+      <stop offset="1" stop-color="#030C08"/>
+    </linearGradient>
+    <linearGradient id="fdScan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#00FF41" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#00FF41" stop-opacity="0.35"/>
+      <stop offset="1"   stop-color="#00FF41" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="fdGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="fdPillClip" clipPathUnits="userSpaceOnUse">
+      <rect x="1.5" y="1.5" width="637" height="81" rx="41"/>
+    </clipPath>
+    <clipPath id="fdClip1" clipPathUnits="userSpaceOnUse">
+      <rect x="54" y="0" width="0" height="84">
+        <animate attributeName="width" calcMode="discrete" dur="20s" repeatCount="indefinite"
+          keyTimes="0;0.00351;0.00703;0.01054;0.01405;0.01757;0.02108;0.02459;0.02811;0.03162;0.03514;0.03865;0.04216;0.04568;0.04919;0.0527;0.05622;0.05973;0.06324;0.06676;0.07027;0.07378;0.0773;0.08081;0.08432;0.08784;0.09135;0.09486;0.09838;0.10189;0.10541;0.10892;0.11243;0.11595;0.11946;0.12297;0.12649;0.13;1" values="0;12.6;25.2;37.8;50.4;63;75.6;88.2;100.8;113.4;126;138.6;151.2;163.8;176.4;189;201.6;214.2;226.8;239.4;252;264.6;277.2;289.8;302.4;315;327.6;340.2;352.8;365.4;378;390.6;403.2;415.8;428.4;441;453.6;466.2;466.2"/>
+      </rect>
+    </clipPath>
+    <clipPath id="fdClip2" clipPathUnits="userSpaceOnUse">
+      <rect x="54" y="0" width="0" height="84">
+        <animate attributeName="width" calcMode="discrete" dur="20s" repeatCount="indefinite"
+          keyTimes="0;0.25;0.25371;0.25743;0.26114;0.26486;0.26857;0.27229;0.276;0.27971;0.28343;0.28714;0.29086;0.29457;0.29829;0.302;0.30571;0.30943;0.31314;0.31686;0.32057;0.32429;0.328;0.33171;0.33543;0.33914;0.34286;0.34657;0.35029;0.354;0.35771;0.36143;0.36514;0.36886;0.37257;0.37629;0.38;1" values="0;0;12.6;25.2;37.8;50.4;63;75.6;88.2;100.8;113.4;126;138.6;151.2;163.8;176.4;189;201.6;214.2;226.8;239.4;252;264.6;277.2;289.8;302.4;315;327.6;340.2;352.8;365.4;378;390.6;403.2;415.8;428.4;441;441"/>
+      </rect>
+    </clipPath>
+    <clipPath id="fdClip3" clipPathUnits="userSpaceOnUse">
+      <rect x="54" y="0" width="0" height="84">
+        <animate attributeName="width" calcMode="discrete" dur="20s" repeatCount="indefinite"
+          keyTimes="0;0.5;0.50406;0.50812;0.51219;0.51625;0.52031;0.52438;0.52844;0.5325;0.53656;0.54063;0.54469;0.54875;0.55281;0.55688;0.56094;0.565;0.56906;0.57312;0.57719;0.58125;0.58531;0.58937;0.59344;0.5975;0.60156;0.60563;0.60969;0.61375;0.61781;0.62187;0.62594;0.63;1" values="0;0;12.6;25.2;37.8;50.4;63;75.6;88.2;100.8;113.4;126;138.6;151.2;163.8;176.4;189;201.6;214.2;226.8;239.4;252;264.6;277.2;289.8;302.4;315;327.6;340.2;352.8;365.4;378;390.6;403.2;403.2"/>
+      </rect>
+    </clipPath>
+    <clipPath id="fdClip4" clipPathUnits="userSpaceOnUse">
+      <rect x="54" y="0" width="0" height="84">
+        <animate attributeName="width" calcMode="discrete" dur="20s" repeatCount="indefinite"
+          keyTimes="0;0.75;0.75351;0.75703;0.76054;0.76405;0.76757;0.77108;0.77459;0.77811;0.78162;0.78514;0.78865;0.79216;0.79568;0.79919;0.8027;0.80622;0.80973;0.81324;0.81676;0.82027;0.82378;0.8273;0.83081;0.83432;0.83784;0.84135;0.84486;0.84838;0.85189;0.85541;0.85892;0.86243;0.86595;0.86946;0.87297;0.87649;0.88;1" values="0;0;12.6;25.2;37.8;50.4;63;75.6;88.2;100.8;113.4;126;138.6;151.2;163.8;176.4;189;201.6;214.2;226.8;239.4;252;264.6;277.2;289.8;302.4;315;327.6;340.2;352.8;365.4;378;390.6;403.2;415.8;428.4;441;453.6;466.2;466.2"/>
+      </rect>
+    </clipPath>
+  </defs>
+
+  <!-- carcasa -->
+  <rect x="1.5" y="1.5" width="637" height="81" rx="41" fill="url(#fdPill)" stroke="#00FF41" stroke-opacity="0.45" stroke-width="1.5"/>
+  <rect x="7.5" y="7.5" width="625" height="69" rx="34" fill="none" stroke="#00FF41" stroke-opacity="0.12"/>
+
+  <!-- barrido de escaneo -->
+  <rect x="-150" y="2" width="150" height="80" fill="url(#fdScan)" opacity="0.5" clip-path="url(#fdPillClip)">
+    <animate attributeName="x" values="-150;640" dur="7s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- prompt -->
+  <text x="26" y="51" font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="22" fill="#00FF41" filter="url(#fdGlow)">$</text>
+
+  <!-- frase 1 -->
+  <g>
+    <animate attributeName="opacity" dur="20s" repeatCount="indefinite" keyTimes="0;0.009;0.2275;0.2425;1" values="1;1;1;0;0"/>
+    <g clip-path="url(#fdClip1)">
+      <text x="54" y="50" textLength="466.2" lengthAdjust="spacing" font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="21" fill="#CFFFE0">Escanea la placa y conoce su historia</text>
+    </g>
+    <rect y="32" width="10" height="24" rx="2" fill="#00FF41" filter="url(#fdGlow)">
+      <animate attributeName="x" calcMode="discrete" dur="20s" repeatCount="indefinite" keyTimes="0;0.00351;0.00703;0.01054;0.01405;0.01757;0.02108;0.02459;0.02811;0.03162;0.03514;0.03865;0.04216;0.04568;0.04919;0.0527;0.05622;0.05973;0.06324;0.06676;0.07027;0.07378;0.0773;0.08081;0.08432;0.08784;0.09135;0.09486;0.09838;0.10189;0.10541;0.10892;0.11243;0.11595;0.11946;0.12297;0.12649;0.13;1" values="54;66.6;79.2;91.8;104.4;117;129.6;142.2;154.8;167.4;180;192.6;205.2;217.8;230.4;243;255.6;268.2;280.8;293.4;306;318.6;331.2;343.8;356.4;369;381.6;394.2;406.8;419.4;432;444.6;457.2;469.8;482.4;495;507.6;520.2;520.2"/>
+      <animate attributeName="opacity" dur="1.2s" repeatCount="indefinite" keyTimes="0;0.5;0.55;1" values="1;1;0;0"/>
+    </rect>
+  </g>
+  <!-- frase 2 -->
+  <g>
+    <animate attributeName="opacity" dur="20s" repeatCount="indefinite" keyTimes="0;0.25;0.259;0.4775;0.4925;1" values="0;0;1;1;0;0"/>
+    <g clip-path="url(#fdClip2)">
+      <text x="54" y="50" textLength="441" lengthAdjust="spacing" font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="21" fill="#CFFFE0">Inventario georreferenciado en vivo</text>
+    </g>
+    <rect y="32" width="10" height="24" rx="2" fill="#00FF41" filter="url(#fdGlow)">
+      <animate attributeName="x" calcMode="discrete" dur="20s" repeatCount="indefinite" keyTimes="0;0.25;0.25371;0.25743;0.26114;0.26486;0.26857;0.27229;0.276;0.27971;0.28343;0.28714;0.29086;0.29457;0.29829;0.302;0.30571;0.30943;0.31314;0.31686;0.32057;0.32429;0.328;0.33171;0.33543;0.33914;0.34286;0.34657;0.35029;0.354;0.35771;0.36143;0.36514;0.36886;0.37257;0.37629;0.38;1" values="54;54;66.6;79.2;91.8;104.4;117;129.6;142.2;154.8;167.4;180;192.6;205.2;217.8;230.4;243;255.6;268.2;280.8;293.4;306;318.6;331.2;343.8;356.4;369;381.6;394.2;406.8;419.4;432;444.6;457.2;469.8;482.4;495;495"/>
+      <animate attributeName="opacity" dur="1.2s" repeatCount="indefinite" keyTimes="0;0.5;0.55;1" values="1;1;0;0"/>
+    </rect>
+  </g>
+  <!-- frase 3 -->
+  <g>
+    <animate attributeName="opacity" dur="20s" repeatCount="indefinite" keyTimes="0;0.5;0.509;0.7275;0.7425;1" values="0;0;1;1;0;0"/>
+    <g clip-path="url(#fdClip3)">
+      <text x="54" y="50" textLength="403.2" lengthAdjust="spacing" font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="21" fill="#CFFFE0">Cada árbol con su placa QR única</text>
+    </g>
+    <rect y="32" width="10" height="24" rx="2" fill="#00FF41" filter="url(#fdGlow)">
+      <animate attributeName="x" calcMode="discrete" dur="20s" repeatCount="indefinite" keyTimes="0;0.5;0.50406;0.50812;0.51219;0.51625;0.52031;0.52438;0.52844;0.5325;0.53656;0.54063;0.54469;0.54875;0.55281;0.55688;0.56094;0.565;0.56906;0.57312;0.57719;0.58125;0.58531;0.58937;0.59344;0.5975;0.60156;0.60563;0.60969;0.61375;0.61781;0.62187;0.62594;0.63;1" values="54;54;66.6;79.2;91.8;104.4;117;129.6;142.2;154.8;167.4;180;192.6;205.2;217.8;230.4;243;255.6;268.2;280.8;293.4;306;318.6;331.2;343.8;356.4;369;381.6;394.2;406.8;419.4;432;444.6;457.2;457.2"/>
+      <animate attributeName="opacity" dur="1.2s" repeatCount="indefinite" keyTimes="0;0.5;0.55;1" values="1;1;0;0"/>
+    </rect>
+  </g>
+  <!-- frase 4 -->
+  <g>
+    <animate attributeName="opacity" dur="20s" repeatCount="indefinite" keyTimes="0;0.75;0.759;0.9775;0.9925;1" values="0;0;1;1;0;0"/>
+    <g clip-path="url(#fdClip4)">
+      <text x="54" y="50" textLength="466.2" lengthAdjust="spacing" font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="21" fill="#CFFFE0">Salud fitosanitaria y podas trazables</text>
+    </g>
+    <rect y="32" width="10" height="24" rx="2" fill="#00FF41" filter="url(#fdGlow)">
+      <animate attributeName="x" calcMode="discrete" dur="20s" repeatCount="indefinite" keyTimes="0;0.75;0.75351;0.75703;0.76054;0.76405;0.76757;0.77108;0.77459;0.77811;0.78162;0.78514;0.78865;0.79216;0.79568;0.79919;0.8027;0.80622;0.80973;0.81324;0.81676;0.82027;0.82378;0.8273;0.83081;0.83432;0.83784;0.84135;0.84486;0.84838;0.85189;0.85541;0.85892;0.86243;0.86595;0.86946;0.87297;0.87649;0.88;1" values="54;54;66.6;79.2;91.8;104.4;117;129.6;142.2;154.8;167.4;180;192.6;205.2;217.8;230.4;243;255.6;268.2;280.8;293.4;306;318.6;331.2;343.8;356.4;369;381.6;394.2;406.8;419.4;432;444.6;457.2;469.8;482.4;495;507.6;520.2;520.2"/>
+      <animate attributeName="opacity" dur="1.2s" repeatCount="indefinite" keyTimes="0;0.5;0.55;1" values="1;1;0;0"/>
+    </rect>
+  </g>
+
+  <!-- indicador en vivo -->
+  <g font-family="Consolas,'Cascadia Mono','Courier New',monospace" font-size="12.5" letter-spacing="1" fill="#9DFFC0" fill-opacity="0.75">
+    <circle cx="546" cy="44" r="4" fill="#00FF41">
+      <animate attributeName="fill-opacity" values="1;0.25;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="546" cy="44" r="4" fill="none" stroke="#00FF41" stroke-width="1.2">
+      <animate attributeName="r" values="4;11" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-opacity" values="0.55;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="560" y="48.5">EN VIVO</text>
+  </g>
+</svg>

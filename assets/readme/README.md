@@ -11,7 +11,7 @@ Recursos visuales que acompañan al README de **ForestID**. Los banners no son i
 | `mapa-gps-3d.gif` | GIF animado | 1000×260 | Rejilla cartográfica con pines, ruta de monitoreo y punto recorriendo el trazado. |
 | `modelo-datos-3d.gif` | GIF animado | 1000×260 | Base de datos volumétrica (3 discos) con filas de datos orbitando. |
 | `divider.svg` | SVG | — | Separador decorativo en verde. |
-| `typing.svg` | SVG animado | 420px | Subtítulo con efecto de máquina de escribir. |
+| `typing-neon.svg` | SVG animado | 640×84 | Subtítulo tipo terminal neón: teclea 4 frases en bucle + indicador «EN VIVO». |
 
 ## ⚙️ Pipeline de generación
 

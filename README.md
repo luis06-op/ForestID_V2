@@ -4,9 +4,9 @@
 
 # 🌲 ForestID <sub>(ForestSRD)</sub>
 
-**Sistema de Identificación y Gestión del Inventario Forestal**
+**Cada árbol con identidad digital** — escanea su placa QR y consulta al instante su historia, su salud fitosanitaria y su ubicación exacta.
 
-<img src="assets/readme/typing.svg" alt="Monitoreo fitosanitario en tiempo real — animación" width="420"/>
+<img src="assets/readme/typing-neon.svg" alt="ForestID — escaneo, trazabilidad y salud del arbolado en tiempo real" width="620"/>
 
 <br/>
 
