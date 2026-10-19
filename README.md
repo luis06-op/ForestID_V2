@@ -26,7 +26,6 @@
 
 Cada individuo forestal recibe una **placa QR única**: el personal de campo la escanea con el celular para registrar salud y mantenimientos con coordenadas GPS, y cualquier ciudadano puede consultar su ficha técnica o reportar novedades **sin iniciar sesión**.
 
-El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed Innovacción**, semillero de innovación que fomenta soluciones tecnológicas con alto impacto ambiental, social y productivo.
 
 ---
 
