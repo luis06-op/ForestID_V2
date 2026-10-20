@@ -52,10 +52,10 @@ Cada individuo forestal recibe una **placa QR única**: el personal de campo la 
 |  |  |  |
 | :--: | :--: | :--: |
 | ⚡ [Instalación rápida](#instalacion) | 🌳 [Acerca del proyecto](#acerca) | ✨ [Características](#caracteristicas) |
-| 🧩 [Módulos y roles](#modulos) | 🎨 [Diseño Amarillo Sol](#diseno) | 🗄️ [Modelo de datos](#datos) |
-| 🛠️ [Stack tecnológico](#stack) | 🔐 [Seguridad](#seguridad) | 📁 [Estructura del proyecto](#estructura) |
-| 📚 [Documentación](#docs) | 🎬 [Renderizado 3D](#render3d) | 👥 [Equipo de proyecto](#equipo) |
-| 🏆 [Reconocimientos](#reconocimientos) | ⬆️ [Volver arriba](#indice) |  |
+| 🧩 [Módulos y roles](#modulos) | 🗺️ [Mapa de navegación](#flujo) | 🎨 [Diseño Amarillo Sol](#diseno) |
+| 🗄️ [Modelo de datos](#datos) | 🛠️ [Stack tecnológico](#stack) | 🔐 [Seguridad](#seguridad) |
+| 📁 [Estructura del proyecto](#estructura) | 📚 [Documentación](#docs) | 🎬 [Renderizado 3D](#render3d) |
+| 👥 [Equipo de proyecto](#equipo) | 🏆 [Reconocimientos](#reconocimientos) | ⬆️ [Volver arriba](#indice) |
 
 ---
 
@@ -140,6 +140,70 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 | 🌐 **Portal ciudadano** | `/publico/` | Sin login | Ficha técnica pública por QR, explorador y buscador de árboles y reporte de novedades con evidencia fotográfica. |
 | 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, y recuperación de contraseña mediante token criptográfico de un solo uso (válido 1 hora). |
 | ✉️ **Notificaciones** | `includes/` | — | Envío de credenciales por correo y WhatsApp al crear cuentas, con plantilla HTML institucional. |
+
+---
+
+<a id="flujo"></a>
+## 🗺️ Mapa de navegación
+
+Todo el sistema arranca en `index.php`, que evalúa la sesión y enruta según el rol. Este es el flujo completo —del ciudadano que escanea la placa hasta el administrador que imprime QR— con las recuperaciones de contraseña y el cierre de sesión incluidos:
+
+```mermaid
+%%{init: {'theme':'base','themeVariables': {'primaryColor':'#EDF2E5','primaryTextColor':'#23291F','primaryBorderColor':'#5B7C3A','lineColor':'#E9A22E','secondaryColor':'#FBEFD4','tertiaryColor':'#FBEFD4','fontFamily':'Asap, Segoe UI, sans-serif'}}}%%
+flowchart TD
+    Start([Usuario ingresa a index.php]) --> CheckAuth{¿Existe Sesión Activa?}
+
+    %% Flujo Sin Sesión
+    CheckAuth -- No --> Landing[Landing Pública: publico/index.php]
+
+    Landing --> ActionPublic{Acción Ciudadana}
+    ActionPublic -- "Escanear QR Físico con Celular" --> FichaPub[Ficha Técnica: publico/ficha.php?codigo=XXX]
+    ActionPublic -- "Búsqueda / Catálogo" --> BuscarPub[Buscador Público: publico/buscar.php]
+    ActionPublic -- "Iniciar Sesión" --> Login[Login: auth/login.php]
+
+    FichaPub --> ReportarNovedad[Reportar Novedad Ciudadana: publico/reportar_novedad.php]
+    ReportarNovedad --> FichaPub
+
+    BuscarPub --> FichaPub
+
+    %% Flujo Login y Recuperación
+    Login --> AuthCheck{Validar Credenciales y CSRF}
+    AuthCheck -- "Error" --> Login
+    AuthCheck -- "Olvidó Contraseña" --> Recuperar[auth/recuperar_password.php]
+    Recuperar --> Restablecer[auth/restablecer_password.php]
+    Restablecer --> Login
+
+    %% Flujo Con Sesión
+    AuthCheck -- "Éxito" --> CheckAuth
+    CheckAuth -- Sí --> RouterRoles{Evaluar Rol de Usuario}
+
+    %% Rol Administrador
+    RouterRoles -- "AdminEmincut" --> AdminDash[Dashboard Admin: admin/dashboard.php]
+    AdminDash --> AdminIndiv[Individuos: admin/individuos/]
+    AdminDash --> AdminZonas[Zonas: admin/zonas/]
+    AdminDash --> AdminInst[Instituciones: admin/instituciones/]
+    AdminDash --> AdminUsers[Usuarios: admin/usuarios/]
+    AdminDash --> AdminQR[Gestor e Impresión QR: admin/qr/]
+    AdminDash --> AdminRep[Reportes y CSV: admin/reportes/]
+    AdminDash --> AdminLogs[Auditoría: admin/logs/]
+
+    %% Rol Operario
+    RouterRoles -- "OperarioEmincut" --> OperarioDash[Dashboard Operario: operario/dashboard.php]
+    OperarioDash --> ScanCamera[Escáner QR Cámara: operario/escanear.php]
+    OperarioDash --> AltaGPS[Alta Rápida Campo con GPS: operario/registrar_individuo.php]
+    OperarioDash --> OperarioIndiv[Individuos de Zona: operario/individuos/]
+    OperarioDash --> OperarioMant[Registrar Labor: operario/actividades/crear.php]
+
+    ScanCamera -- "QR Detectado" --> OperarioDetalle[Detalle Inspección: operario/individuos/detalle.php]
+    OperarioIndiv --> OperarioDetalle
+
+    %% Cierre de sesión
+    AdminDash --> Logout[auth/logout.php]
+    OperarioDash --> Logout
+    Logout --> Landing
+```
+
+<sub>📖 Diagrama completo y en su contexto: <a href="docs/diagramas/diagrama_flujos.md"><code>docs/diagramas/diagrama_flujos.md</code></a> · también el <a href="docs/diagramas/diagrama_er.md">diagrama Entidad-Relación</a>.</sub>
 
 ---
 
