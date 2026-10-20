@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 28" width="100%" role="img" aria-label="Separador decorativo con hoja en movimiento">
+  <defs>
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0C4831" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#2E7D32"/>
+      <stop offset="50%" stop-color="#E9A22E"/>
+      <stop offset="80%" stop-color="#2E7D32"/>
+      <stop offset="100%" stop-color="#0C4831" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="20" y="13" width="760" height="2" rx="1" fill="url(#lineGrad)"/>
+
+  <circle cx="20" cy="14" r="3" fill="#2E7D32"/>
+  <circle cx="780" cy="14" r="3" fill="#2E7D32"/>
+
+  <path d="M0 0 C 2 -8 12 -14 22 -12 C 22 -2 14 6 4 6 C 1 5 0 3 0 0 Z" fill="#F2B632" opacity="0.9">
+    <animateMotion path="M20 14 C 180 2, 320 26, 460 13 S 700 4, 780 14"
+                   dur="10s" rotate="auto" repeatCount="indefinite"/>
+  </path>
+</svg>
