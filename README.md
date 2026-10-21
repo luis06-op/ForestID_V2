@@ -2,7 +2,7 @@
 
 <img src="assets/readme/forestid-hero-3d.gif" alt="🌲 ForestID — banner 3D renderizado en GPU con WebGL" width="100%"/>
 
-# 🌲 ForestID <sub>(ForestSRD)</sub>
+# 🌲 ForestID</sub>
 
 **Cada árbol con identidad digital** — escanea su placa QR y consulta al instante su historia,
 su salud fitosanitaria y su ubicación exacta.
