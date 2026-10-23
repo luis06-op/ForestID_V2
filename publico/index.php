@@ -16,7 +16,9 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/auth_check.php';
 
-if (esta_autenticado()) {
+// Solo los paneles internos se redirigen: un UsuarioPublico (o un rol sin panel)
+// debe ver esta portada. Si se redirige a sí mismo se produce un bucle infinito.
+if (esta_autenticado() && (es_admin() || es_operario())) {
     redirigir_segun_rol();
     exit;
 }
