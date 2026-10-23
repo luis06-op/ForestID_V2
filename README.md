@@ -69,10 +69,12 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 | 1️⃣ | **Copiar el proyecto** | Llévelo a `C:\xampp\htdocs\ForestID_V2` (Windows) o `/opt/lampp/htdocs/ForestID_V2` (Linux). |
 | 2️⃣ | **Arrancar servicios** | En el panel de XAMPP active **Apache** y **MySQL**. |
 | 3️⃣ | **Importar la BD** | Abra `http://localhost/phpmyadmin`, cree `forestsrd_db` con collation `utf8mb4_spanish_ci` e importe [`database/forestsrd_db.sql`](database/forestsrd_db.sql) (DDL + DML con datos semilla). |
-| 4️⃣ | **Ajustar conexión** | Copie `config/config.local.ejemplo.php` → `config/config.local.php` y defina `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. Ese archivo está en `.gitignore`. |
+| 4️⃣ | **Ajustar conexión y URL** | Copie `config/config.local.ejemplo.php` → `config/config.local.php` y defina `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. En producción defina también `APP_URL` con el dominio real (ej. `https://forestid.emincut.com/`), porque ese valor se codifica en los QR. Ese archivo está en `.gitignore`. |
 | 5️⃣ | **Permisos de Apache** | Confirme que `AllowOverride All` esté activo y que `mod_rewrite` esté habilitado; los `.htaccess` incluidos bloquean `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` por HTTP. |
 | 6️⃣ | **Correo (opcional)** | Copie `config/mailer.ejemplo.php` → `config/mailer.php` y ponga su SMTP real. Sin ese archivo el sistema usa `mail()` de respaldo y ofrece enlaces manuales de correo / WhatsApp. *(El archivo real está en `.gitignore`: nunca sube credenciales.)* |
 | 7️⃣ | **Entrar** | 👉 **`http://localhost/ForestID_V2/`** |
+
+> **QR y dominio:** si cambia de servidor o dominio, configure `APP_URL` y entre a **Admin → Gestor QR** para regenerar las placas (individual o masivamente). Los QR semilla apuntan a `http://localhost/ForestID_V2/` y deben regenerarse en producción.
 
 ### 🔑 Credenciales de prueba (entorno local)
 
