@@ -39,13 +39,12 @@ ForestID está estructurado como una aplicación web modular en PHP puro sobre e
 
 La base de datos `forestsrd_db` utiliza el motor `InnoDB`, juego de caracteres `utf8mb4` y collation `utf8mb4_spanish_ci`. Todas las llaves primarias son cadenas UUID de 36 caracteres generadas nativamente mediante `DEFAULT (UUID())`.
 
-1. **Capa Institucional:**
+1. **Capa de Acceso y Seguridad:**
    - `roles`: Catálogo de perfiles (`AdminEmincut`, `OperarioEmincut`, `UsuarioPublico`).
-   - `instituciones`: Clientes y entidades territoriales (con sede principal Emincut en El Bagre).
-   - `usuarios`: Cuentas de funcionarios con contraseñas Bcrypt y control de acceso.
+   - `usuarios`: Cuentas del personal de Emincut con contraseñas Bcrypt y control de acceso.
    - `tokens_recuperacion`: Tokens criptográficos temporales de un solo uso (validez 1 hora).
 2. **Capa Territorial:**
-   - `zonas`: Parques, campus y sectores georreferenciados con coordenadas de referencia.
+   - `zonas`: Parques, campus y sectores internos de Emincut, georreferenciados con coordenadas de referencia.
 3. **Capa Núcleo (Core Dendrológico):**
    - `individuos_forestales`: Registro maestro con código de placa física único, mediciones dasométricas (DAP, altura, copa), fecha de siembra, coordenadas GPS y foto principal.
    - `estados_fitosanitarios`: Historial inmutable de evaluaciones de salud con diagnóstico y recomendaciones.
@@ -72,7 +71,9 @@ El generador implementado en `includes/qrcode_helper.php` usa la librería MIT *
 - Incluye corrección de errores (nivel M), información de formato/versión y enmascaramiento, por lo que **cualquier lector estándar puede decodificarlos** (cámaras, `html5-qrcode`, `zbar`, etc.).
 - Es 100 % vectorial, lo que permite escalarlo a cualquier tamaño de impresión física (placas metálicas, acrílico o laminado) sin pérdida de resolución.
 - Guarda automáticamente los archivos en `assets/qr/qr_[CODIGO_PLACA].svg`.
-- El contenido codificado es la URL pública de la ficha (`BASE_URL + publico/ficha.php?codigo=...`). **Al desplegar en otro dominio, regenere las placas** desde `admin/qr/index.php` para que apunten a la URL correcta.
+- El contenido codificado es la URL pública de la ficha (`APP_URL + publico/ficha.php?codigo=...`). `APP_URL` se define en `config/config.local.php` y, si se omite, se detecta automáticamente desde la petición.
+- El gestor `admin/qr/index.php` permite regenerar un QR individual o todo el inventario (o una zona) con la URL canónica vigente. **Al desplegar en otro dominio, configure `APP_URL` y regenere las placas** para que apunten a la URL correcta.
+- La impresión de placas está en `admin/qr/imprimir.php` y usa únicamente la identidad de Emincut.
 - Verificación recomendada antes de imprimir: `zbarimg --raw assets/qr/qr_EBG-PARQ-001.svg`.
 
 ---

@@ -13,10 +13,9 @@ requerir_rol(['AdminEmincut']);
 $pdo = getDBConnection();
 
 $stmt = $pdo->query("
-    SELECT z.*, i.nombre_institucion,
+    SELECT z.*,
            COUNT(ind.id_individuo) AS total_arboles
     FROM `zonas` z
-    INNER JOIN `instituciones` i ON z.id_institucion = i.id_institucion
     LEFT JOIN `individuos_forestales` ind ON z.id_zona = ind.id_zona AND ind.estado_registro = 1
     GROUP BY z.id_zona
     ORDER BY z.fecha_creacion DESC
@@ -52,7 +51,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <thead class="bg-gray-50 border-b border-gray-200 text-gray-700 uppercase font-semibold">
                         <tr>
                             <th class="p-4">Zona / Sector</th>
-                            <th class="p-4">Institución</th>
                             <th class="p-4">Municipio</th>
                             <th class="p-4">Coordenadas Ref.</th>
                             <th class="p-4">Árboles Censados</th>
@@ -63,7 +61,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <tbody class="divide-y divide-gray-100">
                         <?php if (empty($zonas)): ?>
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-gray-400 italic">No hay zonas territoriales registradas.</td>
+                                <td colspan="6" class="p-8 text-center text-gray-400 italic">No hay zonas territoriales registradas.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($zonas as $z): ?>
@@ -79,7 +77,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="p-4"><?= htmlspecialchars($z['nombre_institucion']) ?></td>
                                     <td class="p-4"><?= htmlspecialchars($z['municipio']) ?>, <?= htmlspecialchars($z['departamento']) ?></td>
                                     <td class="p-4 font-mono text-[11px] text-gray-500">
                                         <?= !empty($z['latitud_referencia']) ? "{$z['latitud_referencia']}, {$z['longitud_referencia']}" : 'Sin fijar' ?>

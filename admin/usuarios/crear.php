@@ -19,7 +19,6 @@ $envio = null;
 $usuario_nuevo = null;
 
 $roles = $pdo->query("SELECT id_rol, nombre_rol, descripcion FROM `roles` ORDER BY nombre_rol ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf     = $_POST['csrf_token'] ?? '';
@@ -28,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo         = sanear($_POST['correo'] ?? '');
     $telefono       = sanear($_POST['telefono'] ?? '');
     $id_rol         = $_POST['id_rol'] ?? '';
-    $id_institucion = !empty($_POST['id_institucion']) ? $_POST['id_institucion'] : null;
     $password       = $_POST['password'] ?? '';
 
     if (!validar_token_csrf($token_csrf)) {
@@ -51,17 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt = $pdo->prepare("
                 INSERT INTO `usuarios` (
-                    `id_usuario`, `id_rol`, `id_institucion`, `nombres`, `apellidos`, 
+                    `id_usuario`, `id_rol`, `nombres`, `apellidos`, 
                     `correo`, `password_hash`, `telefono`, `estado`, `fecha_creacion`
                 ) VALUES (
-                    :id, :id_rol, :id_institucion, :nombres, :apellidos,
+                    :id, :id_rol, :nombres, :apellidos,
                     :correo, :hash, :telefono, 1, NOW()
                 )
             ");
             $stmt->execute([
                 ':id'             => $id_nuevo,
                 ':id_rol'         => $id_rol,
-                ':id_institucion' => $id_institucion,
                 ':nombres'        => $nombres,
                 ':apellidos'      => $apellidos,
                 ':correo'         => $correo,
@@ -235,25 +232,14 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="id_rol" class="emi-label block mb-1">Rol en el Sistema *</label>
-                        <select name="id_rol" id="id_rol" required class="emi-input" style="padding-left:.75rem">
-                            <option value="">Seleccione un rol...</option>
-                            <?php foreach ($roles as $r): ?>
-                                <option value="<?= $r['id_rol'] ?>"><?= htmlspecialchars($r['nombre_rol']) ?> (<?= htmlspecialchars($r['descripcion']) ?>)</option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="id_institucion" class="emi-label block mb-1">Institución Perteneciente</label>
-                        <select name="id_institucion" id="id_institucion" class="emi-input" style="padding-left:.75rem">
-                            <option value="">Ninguna / Independiente</option>
-                            <?php foreach ($instituciones as $inst): ?>
-                                <option value="<?= $inst['id_institucion'] ?>"><?= htmlspecialchars($inst['nombre_institucion']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div>
+                    <label for="id_rol" class="emi-label block mb-1">Rol en el Sistema *</label>
+                    <select name="id_rol" id="id_rol" required class="emi-input" style="padding-left:.75rem">
+                        <option value="">Seleccione un rol...</option>
+                        <?php foreach ($roles as $r): ?>
+                            <option value="<?= $r['id_rol'] ?>"><?= htmlspecialchars($r['nombre_rol']) ?> (<?= htmlspecialchars($r['descripcion']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div>

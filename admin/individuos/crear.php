@@ -14,8 +14,7 @@ requerir_rol(['AdminEmincut']);
 $pdo = getDBConnection();
 $error = '';
 
-$zonas = $pdo->query("SELECT id_zona, id_institucion, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
+$zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
 
 // Código de placa sugerido automático
 $codigo_sugerido = generar_codigo_placa($pdo, 'EBG');
@@ -24,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
     $codigo_placa       = strtoupper(sanear($_POST['codigo_placa'] ?? ''));
     $id_zona            = $_POST['id_zona'] ?? '';
-    $id_institucion     = $_POST['id_institucion'] ?? '';
     $nombre_comun       = sanear($_POST['nombre_comun'] ?? '');
     $nombre_cientifico  = sanear($_POST['nombre_cientifico'] ?? '');
     $familia_botanica   = sanear($_POST['familia_botanica'] ?? '');
@@ -44,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($codigo_placa) || empty($id_zona) || empty($id_institucion) || empty($nombre_comun) || empty($nombre_cientifico)) {
+    } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun) || empty($nombre_cientifico)) {
         $error = 'Todos los campos obligatorios (*) deben ser completados.';
     } else {
         // Verificar código de placa único
@@ -70,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id_usuario   = $_SESSION['usuario']['id_usuario'];
 
                 // 1. Generar archivo QR SVG apuntando a la ficha pública
-                $urlPublicaFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($codigo_placa);
+                $urlPublicaFicha = QRCodeGenerator::urlFicha($codigo_placa);
                 try {
                     $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlPublicaFicha);
                 } catch (Throwable $e) {
@@ -83,12 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // 2. Insertar Individuo Forestal
                 $insIndiv = $pdo->prepare("
                     INSERT INTO `individuos_forestales` (
-                        `id_individuo`, `codigo_placa`, `id_zona`, `id_institucion`, 
+                        `id_individuo`, `codigo_placa`, `id_zona`, 
                         `nombre_comun`, `nombre_cientifico`, `familia_botanica`, `tipo_individuo`, 
                         `fecha_siembra`, `latitud`, `longitud`, `dap_cm`, `altura_total_m`, `diametro_copa_m`, 
                         `foto_principal_url`, `descripcion_general`, `qr_url`, `registrado_por`, `estado_registro`, `fecha_registro`
                     ) VALUES (
-                        :id, :codigo, :id_zona, :id_inst,
+                        :id, :codigo, :id_zona,
                         :nom_com, :nom_cie, :familia, :tipo,
                         :siembra, :lat, :lng, :dap, :alt, :copa,
                         :foto, :desc, :qr, :user, 1, NOW()
@@ -98,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':id'      => $id_individuo,
                     ':codigo'  => $codigo_placa,
                     ':id_zona' => $id_zona,
-                    ':id_inst' => $id_institucion,
                     ':nom_com' => $nombre_comun,
                     ':nom_cie' => $nombre_cientifico,
                     ':familia' => $familia_botanica,
@@ -189,7 +186,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     1. Identificación y Ubicación Territorial
                 </h3>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="codigo_placa" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa QR *</label>
                         <input type="text" name="codigo_placa" id="codigo_placa" required value="<?= htmlspecialchars($codigo_sugerido) ?>" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-bold uppercase focus:ring-2 focus:ring-emerald-600 outline-none">
@@ -200,14 +197,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <option value="">Seleccione una zona...</option>
                             <?php foreach ($zonas as $z): ?>
                                 <option value="<?= $z['id_zona'] ?>"><?= htmlspecialchars($z['nombre_zona']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="id_institucion" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Institución / Cliente *</label>
-                        <select name="id_institucion" id="id_institucion" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                            <?php foreach ($instituciones as $inst): ?>
-                                <option value="<?= $inst['id_institucion'] ?>"><?= htmlspecialchars($inst['nombre_institucion']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

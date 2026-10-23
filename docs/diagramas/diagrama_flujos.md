@@ -34,7 +34,6 @@ flowchart TD
     RouterRoles -- "AdminEmincut" --> AdminDash[Dashboard Admin: admin/dashboard.php]
     AdminDash --> AdminIndiv[Individuos: admin/individuos/]
     AdminDash --> AdminZonas[Zonas: admin/zonas/]
-    AdminDash --> AdminInst[Instituciones: admin/instituciones/]
     AdminDash --> AdminUsers[Usuarios: admin/usuarios/]
     AdminDash --> AdminQR[Gestor e Impresión QR: admin/qr/]
     AdminDash --> AdminRep[Reportes y CSV: admin/reportes/]

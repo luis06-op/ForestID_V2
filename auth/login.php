@@ -29,10 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $pdo = getDBConnection();
         $stmt = $pdo->prepare("
-            SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol, i.nombre_institucion
+            SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol
             FROM `usuarios` u
             INNER JOIN `roles` r ON u.id_rol = r.id_rol
-            LEFT JOIN `instituciones` i ON u.id_institucion = i.id_institucion
             WHERE u.correo = :correo AND u.estado = 1
             LIMIT 1
         ");
@@ -52,9 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'apellidos'          => $usuario['apellidos'],
                 'correo'             => $usuario['correo'],
                 'id_rol'             => $usuario['id_rol'],
-                'nombre_rol'         => $usuario['nombre_rol'],
-                'id_institucion'     => $usuario['id_institucion'],
-                'nombre_institucion' => $usuario['nombre_institucion'] ?? 'Emincut S.A.S.'
+                'nombre_rol'         => $usuario['nombre_rol']
             ];
 
             // Registrar acceso en BD y logs

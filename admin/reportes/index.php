@@ -16,12 +16,11 @@ $pdo = getDBConnection();
 if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     $stmtCsv = $pdo->query("
         SELECT i.codigo_placa, i.nombre_comun, i.nombre_cientifico, i.familia_botanica, i.tipo_individuo,
-               z.nombre_zona, inst.nombre_institucion, i.latitud, i.longitud,
+               z.nombre_zona, i.latitud, i.longitud,
                i.dap_cm, i.altura_total_m, i.diametro_copa_m, i.fecha_siembra,
                e.estado AS estado_salud, i.fecha_registro
         FROM `individuos_forestales` i
         INNER JOIN `zonas` z ON i.id_zona = z.id_zona
-        INNER JOIN `instituciones` inst ON i.id_institucion = inst.id_institucion
         LEFT JOIN `estados_fitosanitarios` e ON i.id_estado_fitosanitario_actual = e.id_estado
         WHERE i.estado_registro = 1
         ORDER BY i.codigo_placa ASC
@@ -38,7 +37,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     // Cabecera CSV
     fputcsv($salida, [
         'Código Placa', 'Nombre Común', 'Nombre Científico', 'Familia Botánica', 'Tipo',
-        'Zona', 'Institución', 'Latitud', 'Longitud', 'DAP (cm)', 'Altura Total (m)',
+        'Zona', 'Latitud', 'Longitud', 'DAP (cm)', 'Altura Total (m)',
         'Diámetro Copa (m)', 'Fecha Siembra', 'Estado Fitosanitario', 'Fecha Registro'
     ]);
 
@@ -50,7 +49,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $f['familia_botanica'],
             $f['tipo_individuo'],
             $f['nombre_zona'],
-            $f['nombre_institucion'],
             $f['latitud'],
             $f['longitud'],
             $f['dap_cm'],

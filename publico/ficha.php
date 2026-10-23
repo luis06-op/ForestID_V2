@@ -22,12 +22,10 @@ $actividades = [];
 if (!empty($codigo) || !empty($id)) {
     $sql = "
         SELECT i.*, z.nombre_zona, z.municipio AS zona_municipio, z.departamento AS zona_departamento,
-               inst.nombre_institucion, inst.telefono_contacto AS inst_telefono,
                e.estado AS estado_salud, e.diagnostico AS diagnostico_salud, e.recomendacion AS recomendacion_salud, e.fecha_evaluacion,
                u.nombres AS evaluador_nombres, u.apellidos AS evaluador_apellidos
         FROM `individuos_forestales` i
         INNER JOIN `zonas` z ON i.id_zona = z.id_zona
-        INNER JOIN `instituciones` inst ON i.id_institucion = inst.id_institucion
         LEFT JOIN `estados_fitosanitarios` e ON i.id_estado_fitosanitario_actual = e.id_estado
         LEFT JOIN `usuarios` u ON e.evaluado_por = u.id_usuario
         WHERE (i.codigo_placa = :codigo OR i.id_individuo = :id) AND i.estado_registro = 1
@@ -279,24 +277,22 @@ require_once __DIR__ . '/../includes/navbar.php';
             </div>
 
             <div class="md:col-span-5 forest-card p-5 space-y-4">
-                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Entidad Administradora</span>
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Empresa Responsable</span>
                 <h3 class="font-heading font-bold text-lg text-gray-900">
-                    <?= htmlspecialchars($arbol['nombre_institucion']) ?>
+                    <?= htmlspecialchars(EMINCUT_NOMBRE_LARGO) ?>
                 </h3>
                 <p class="text-xs text-gray-600 leading-relaxed">
-                    Institución responsable del cuidado, poda técnica, fertilización y protección legal de este individuo forestal en el municipio de El Bagre.
+                    Emincut S.A.S. es responsable del cuidado, poda técnica, fertilización y protección legal de este individuo forestal en el municipio de El Bagre.
                 </p>
                 <div class="pt-3 border-t border-gray-100 space-y-2 text-xs text-gray-600">
                     <div class="flex items-center gap-2">
                         <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
-                        <span>El Bagre, Antioquia — Colombia</span>
+                        <span><?= htmlspecialchars(EMINCUT_DIRECCION . ' — ' . EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO) ?></span>
                     </div>
-                    <?php if (!empty($arbol['inst_telefono'])): ?>
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
-                            <span><?= htmlspecialchars($arbol['inst_telefono']) ?></span>
-                        </div>
-                    <?php endif; ?>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
+                        <span><?= htmlspecialchars(EMINCUT_TELEFONO) ?></span>
+                    </div>
                 </div>
             </div>
 

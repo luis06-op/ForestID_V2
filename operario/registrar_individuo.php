@@ -14,8 +14,7 @@ requerir_rol(['OperarioEmincut', 'AdminEmincut']);
 $pdo = getDBConnection();
 $error = '';
 
-$zonas = $pdo->query("SELECT id_zona, id_institucion, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
+$zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
 
 $codigo_sugerido = generar_codigo_placa($pdo, 'EBG');
 
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
     $codigo_placa       = strtoupper(sanear($_POST['codigo_placa'] ?? ''));
     $id_zona            = $_POST['id_zona'] ?? '';
-    $id_institucion     = $_POST['id_institucion'] ?? '';
     $nombre_comun       = sanear($_POST['nombre_comun'] ?? '');
     $nombre_cientifico  = sanear($_POST['nombre_cientifico'] ?? '');
     $familia_botanica   = sanear($_POST['familia_botanica'] ?? '');
@@ -38,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($codigo_placa) || empty($id_zona) || empty($id_institucion) || empty($nombre_comun)) {
+    } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
@@ -59,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_usuario = $_SESSION['usuario']['id_usuario'];
 
             // Generar código QR SVG
-            $urlFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($codigo_placa);
+            $urlFicha = QRCodeGenerator::urlFicha($codigo_placa);
             try {
                 $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
             } catch (Throwable $e) {
@@ -72,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insertar espécimen
             $ins = $pdo->prepare("
                 INSERT INTO `individuos_forestales` (
-                    `id_individuo`, `codigo_placa`, `id_zona`, `id_institucion`,
+                    `id_individuo`, `codigo_placa`, `id_zona`,
                     `nombre_comun`, `nombre_cientifico`, `familia_botanica`, `tipo_individuo`,
                     `latitud`, `longitud`, `dap_cm`, `altura_total_m`, `diametro_copa_m`,
                     `foto_principal_url`, `descripcion_general`, `qr_url`, `registrado_por`, `estado_registro`, `fecha_registro`
                 ) VALUES (
-                    :id, :cod, :zona, :inst,
+                    :id, :cod, :zona,
                     :com, :cie, :fam, :tipo,
                     :lat, :lng, :dap, :alt, :copa,
                     :foto, :desc, :qr, :user, 1, NOW()
@@ -87,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':id'   => $id_individuo,
                 ':cod'  => $codigo_placa,
                 ':zona' => $id_zona,
-                ':inst' => $id_institucion,
                 ':com'  => $nombre_comun,
                 ':cie'  => $nombre_cientifico ?: $nombre_comun,
                 ':fam'  => $familia_botanica ?: 'No especificada',
@@ -194,8 +191,6 @@ require_once __DIR__ . '/../includes/navbar.php';
                         </select>
                     </div>
                 </div>
-
-                <input type="hidden" name="id_institucion" value="<?= !empty($instituciones[0]['id_institucion']) ? $instituciones[0]['id_institucion'] : '22222222-2222-2222-2222-222222222201' ?>">
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>

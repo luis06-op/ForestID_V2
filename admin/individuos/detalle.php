@@ -15,12 +15,11 @@ $pdo = getDBConnection();
 
 // Cargar individuo
 $stmt = $pdo->prepare("
-    SELECT i.*, z.nombre_zona, z.municipio AS zona_municipio, inst.nombre_institucion,
+    SELECT i.*, z.nombre_zona, z.municipio AS zona_municipio,
            e.estado AS estado_salud, e.diagnostico AS diagnostico_salud, e.recomendacion AS recomendacion_salud, e.fecha_evaluacion,
            u_reg.nombres AS reg_nombres, u_reg.apellidos AS reg_apellidos
     FROM `individuos_forestales` i
     INNER JOIN `zonas` z ON i.id_zona = z.id_zona
-    INNER JOIN `instituciones` inst ON i.id_institucion = inst.id_institucion
     LEFT JOIN `estados_fitosanitarios` e ON i.id_estado_fitosanitario_actual = e.id_estado
     LEFT JOIN `usuarios` u_reg ON i.registrado_por = u_reg.id_usuario
     WHERE i.id_individuo = :id
@@ -253,8 +252,8 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <span>📍 <?= htmlspecialchars($arbol['nombre_zona']) ?> (<?= htmlspecialchars($arbol['zona_municipio']) ?>)</span>
                         </div>
                         <div>
-                            <span class="block font-semibold text-gray-700">Institución Administradora:</span>
-                            <span>🏢 <?= htmlspecialchars($arbol['nombre_institucion']) ?></span>
+                            <span class="block font-semibold text-gray-700">Empresa Responsable:</span>
+                            <span>🏢 <?= htmlspecialchars(EMINCUT_NOMBRE) ?></span>
                         </div>
                         <div>
                             <span class="block font-semibold text-gray-700">Coordenadas GPS:</span>

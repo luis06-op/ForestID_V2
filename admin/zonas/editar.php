@@ -24,11 +24,9 @@ if (!$zona) {
 }
 
 $error = '';
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf     = $_POST['csrf_token'] ?? '';
-    $id_institucion = $_POST['id_institucion'] ?? '';
     $nombre_zona    = sanear($_POST['nombre_zona'] ?? '');
     $descripcion    = sanear($_POST['descripcion'] ?? '');
     $municipio      = sanear($_POST['municipio'] ?? 'El Bagre');
@@ -39,18 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($nombre_zona) || empty($id_institucion)) {
-        $error = 'El nombre de la zona y la institución son obligatorios.';
+    } elseif (empty($nombre_zona)) {
+        $error = 'El nombre de la zona es obligatorio.';
     } else {
         $upd = $pdo->prepare("
             UPDATE `zonas`
-            SET `id_institucion` = :id_inst, `nombre_zona` = :nombre, `descripcion` = :desc,
+            SET `nombre_zona` = :nombre, `descripcion` = :desc,
                 `municipio` = :muni, `departamento` = :depto, `latitud_referencia` = :lat,
                 `longitud_referencia` = :lng, `estado` = :estado
             WHERE `id_zona` = :id
         ");
         $upd->execute([
-            ':id_inst' => $id_institucion,
             ':nombre'  => $nombre_zona,
             ':desc'    => $descripcion,
             ':muni'    => $municipio,
@@ -103,21 +100,9 @@ require_once __DIR__ . '/../../includes/navbar.php';
             <form method="POST" action="editar.php?id=<?= urlencode($id) ?>" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="nombre_zona" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombre de la Zona *</label>
-                        <input type="text" name="nombre_zona" id="nombre_zona" required value="<?= htmlspecialchars($zona['nombre_zona']) ?>" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                    </div>
-                    <div>
-                        <label for="id_institucion" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Institución Responsable *</label>
-                        <select name="id_institucion" id="id_institucion" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                            <?php foreach ($instituciones as $inst): ?>
-                                <option value="<?= $inst['id_institucion'] ?>" <?= ($zona['id_institucion'] === $inst['id_institucion']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($inst['nombre_institucion']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div>
+                    <label for="nombre_zona" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombre de la Zona *</label>
+                    <input type="text" name="nombre_zona" id="nombre_zona" required value="<?= htmlspecialchars($zona['nombre_zona']) ?>" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
                 </div>
 
                 <div>

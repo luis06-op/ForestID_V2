@@ -19,6 +19,14 @@ class QRCodeGenerator {
     private const PATRON_COLOR = '/^#[0-9a-fA-F]{3,8}$/';
 
     /**
+     * URL pública canónica de la ficha de un individuo.
+     * Se usa APP_URL para que los QR apunten al dominio real en producción.
+     */
+    public static function urlFicha(string $codigoPlaca): string {
+        return rtrim(APP_URL, '/') . '/publico/ficha.php?codigo=' . rawurlencode($codigoPlaca);
+    }
+
+    /**
      * Valida un color CSS hexadecimal para evitar inyección en el SVG.
      */
     private static function normalizarColor(string $color, string $porDefecto): string {

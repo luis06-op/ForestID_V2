@@ -78,7 +78,7 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 
 | Rol | Correo | Contraseña | Alcance |
 | :-- | :-- | :-- | :-- |
-| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total: usuarios, zonas, instituciones, QR masivo, reportes y logs. |
+| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total: usuarios, zonas, QR masivo, reportes y logs. |
 | **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR con cámara, alta rápida con GPS y mantenimientos. |
 | **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano: ficha pública y reporte de novedades. |
 
@@ -138,7 +138,7 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 
 | Módulo | Ruta | Rol | Qué puedes hacer |
 | :-- | :--: | :-- | :-- |
-| 🧑‍💼 **Administrador** | `/admin/` | `AdminEmincut` | Dashboard de indicadores, gestión de individuos, zonas e instituciones, generación e impresión masiva de placas QR, reportes con exportación, administración de usuarios y bitácora de logs. |
+| 🧑‍💼 **Administrador** | `/admin/` | `AdminEmincut` | Dashboard de indicadores, gestión de individuos y zonas internas de Emincut, generación e impresión masiva de placas QR, reportes con exportación, administración de usuarios y bitácora de logs. |
 | 🌿 **Operario de campo** | `/operario/` | `OperarioEmincut` | Escaneo QR con la cámara, alta rápida de individuos con GPS, registro de mantenimientos y actualización del estado fitosanitario. |
 | 🌐 **Portal ciudadano** | `/publico/` | Sin login | Ficha técnica pública por QR, explorador y buscador de árboles y reporte de novedades con evidencia fotográfica. |
 | 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, y recuperación de contraseña mediante token criptográfico de un solo uso (válido 1 hora). |
@@ -184,7 +184,6 @@ flowchart TD
     RouterRoles -- "AdminEmincut" --> AdminDash[Dashboard Admin: admin/dashboard.php]
     AdminDash --> AdminIndiv[Individuos: admin/individuos/]
     AdminDash --> AdminZonas[Zonas: admin/zonas/]
-    AdminDash --> AdminInst[Instituciones: admin/instituciones/]
     AdminDash --> AdminUsers[Usuarios: admin/usuarios/]
     AdminDash --> AdminQR[Gestor e Impresión QR: admin/qr/]
     AdminDash --> AdminRep[Reportes y CSV: admin/reportes/]
@@ -246,8 +245,8 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 
 | Capa lógica | Tablas | Contenido |
 | :-- | :-- | :-- |
-| 🏛️ **Institucional** | `roles` · `instituciones` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, clientes, cuentas con Bcrypt y tokens temporales de 1 hora. |
-| 🗺️ **Territorial** | `zonas` | Parques, campus y sectores georreferenciados. |
+| 🔐 **Acceso y seguridad** | `roles` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, cuentas del personal de Emincut con Bcrypt y tokens temporales de 1 hora. |
+| 🗺️ **Territorial** | `zonas` | Parques, campus y sectores internos de Emincut, georreferenciados. |
 | 🌳 **Núcleo dendrológico** | `individuos_forestales` · `estados_fitosanitarios` | Registro maestro (placa, DAP, altura, copa, siembra, GPS, foto) e historial de salud inmutable. |
 | 🕵️ **Actividad y auditoría** | `actividades_mantenimiento` · `logs_sistema` | Labores silviculturales y reportes ciudadanos, más bitácora de eventos con IP y detalles JSON. |
 

@@ -33,7 +33,7 @@ El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed
 
 | Rol | Correo Electrónico | Contraseña | Alcance / Permisos |
 | :--- | :--- | :--- | :--- |
-| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total, usuarios, zonas, instituciones, QR masivo, logs. |
+| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total, usuarios, zonas internas, QR masivo, logs. |
 | **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR en campo, alta rápida con GPS, mantenimientos y salud. |
 | **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano, ficha pública sin login, reporte de novedades. |
 

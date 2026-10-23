@@ -1,7 +1,7 @@
 -- =============================================================================
 -- SISTEMA FORESTID / FORESTSRD - GESTIÓN E IDENTIFICACIÓN DEL INVENTARIO FORESTAL
 -- Empresa: Emincut S.A.S. | Sede: El Bagre, Antioquia, Colombia
--- Marco Institucional: SENA Regional Antioquia – iRed Innovacción
+-- Alcance: exclusivo de Emincut S.A.S. (sin instituciones ni entidades externas)
 -- Equipo de Desarrollo:
 --   - Luis Angel Muñoz Márquez (Líder de Arquitectura)
 --   - Gabriel Jaime Correa Correa (Desarrollador Backend)
@@ -27,13 +27,12 @@ DROP TABLE IF EXISTS `individuos_forestales`;
 DROP TABLE IF EXISTS `zonas`;
 DROP TABLE IF EXISTS `tokens_recuperacion`;
 DROP TABLE IF EXISTS `usuarios`;
-DROP TABLE IF EXISTS `instituciones`;
 DROP TABLE IF EXISTS `roles`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- =============================================================================
--- 1. CAPA INSTITUCIONAL
+-- 1. CAPA DE ACCESO Y SEGURIDAD
 -- =============================================================================
 
 -- 1.1 Tabla: roles
@@ -45,28 +44,10 @@ CREATE TABLE `roles` (
     PRIMARY KEY (`id_rol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- 1.2 Tabla: instituciones
-CREATE TABLE `instituciones` (
-    `id_institucion` CHAR(36) NOT NULL DEFAULT (UUID()),
-    `nombre_institucion` VARCHAR(150) NOT NULL,
-    `nit` VARCHAR(20) NOT NULL UNIQUE,
-    `direccion` VARCHAR(200) NULL,
-    `municipio` VARCHAR(100) NOT NULL DEFAULT 'El Bagre',
-    `departamento` VARCHAR(100) NOT NULL DEFAULT 'Antioquia',
-    `telefono_contacto` VARCHAR(20) NULL,
-    `correo_contacto` VARCHAR(150) NULL,
-    `logo_url` VARCHAR(255) NULL,
-    `estado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1: Activa, 0: Inactiva',
-    `fecha_registro` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id_institucion`),
-    INDEX `idx_institucion_municipio` (`municipio`, `departamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
--- 1.3 Tabla: usuarios
+-- 1.2 Tabla: usuarios
 CREATE TABLE `usuarios` (
     `id_usuario` CHAR(36) NOT NULL DEFAULT (UUID()),
     `id_rol` CHAR(36) NOT NULL,
-    `id_institucion` CHAR(36) NULL,
     `nombres` VARCHAR(100) NOT NULL,
     `apellidos` VARCHAR(100) NOT NULL,
     `correo` VARCHAR(150) NOT NULL UNIQUE,
@@ -77,12 +58,11 @@ CREATE TABLE `usuarios` (
     `fecha_creacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_usuario`),
     CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id_rol`) ON UPDATE CASCADE ON DELETE RESTRICT,
-    CONSTRAINT `fk_usuarios_instituciones` FOREIGN KEY (`id_institucion`) REFERENCES `instituciones` (`id_institucion`) ON UPDATE CASCADE ON DELETE SET NULL,
     INDEX `idx_usuarios_correo` (`correo`),
     INDEX `idx_usuarios_rol` (`id_rol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- 1.4 Tabla: tokens_recuperacion
+-- 1.3 Tabla: tokens_recuperacion
 CREATE TABLE `tokens_recuperacion` (
     `id_token` CHAR(36) NOT NULL DEFAULT (UUID()),
     `id_usuario` CHAR(36) NOT NULL,
@@ -102,7 +82,6 @@ CREATE TABLE `tokens_recuperacion` (
 -- 2.1 Tabla: zonas
 CREATE TABLE `zonas` (
     `id_zona` CHAR(36) NOT NULL DEFAULT (UUID()),
-    `id_institucion` CHAR(36) NOT NULL,
     `nombre_zona` VARCHAR(100) NOT NULL,
     `descripcion` VARCHAR(255) NULL,
     `municipio` VARCHAR(100) NOT NULL DEFAULT 'El Bagre',
@@ -112,8 +91,6 @@ CREATE TABLE `zonas` (
     `estado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1: Activa, 0: Inactiva',
     `fecha_creacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_zona`),
-    CONSTRAINT `fk_zonas_instituciones` FOREIGN KEY (`id_institucion`) REFERENCES `instituciones` (`id_institucion`) ON UPDATE CASCADE ON DELETE RESTRICT,
-    INDEX `idx_zonas_institucion` (`id_institucion`),
     INDEX `idx_zonas_municipio` (`municipio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
@@ -126,7 +103,6 @@ CREATE TABLE `individuos_forestales` (
     `id_individuo` CHAR(36) NOT NULL DEFAULT (UUID()),
     `codigo_placa` VARCHAR(30) NOT NULL UNIQUE COMMENT 'Identificador alfanumérico físico de la placa QR',
     `id_zona` CHAR(36) NOT NULL,
-    `id_institucion` CHAR(36) NOT NULL,
     `nombre_comun` VARCHAR(150) NOT NULL,
     `nombre_cientifico` VARCHAR(150) NOT NULL,
     `familia_botanica` VARCHAR(100) NOT NULL,
@@ -147,7 +123,6 @@ CREATE TABLE `individuos_forestales` (
     `fecha_actualizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_individuo`),
     CONSTRAINT `fk_indiv_zonas` FOREIGN KEY (`id_zona`) REFERENCES `zonas` (`id_zona`) ON UPDATE CASCADE ON DELETE RESTRICT,
-    CONSTRAINT `fk_indiv_instituciones` FOREIGN KEY (`id_institucion`) REFERENCES `instituciones` (`id_institucion`) ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT `fk_indiv_usuarios` FOREIGN KEY (`registrado_por`) REFERENCES `usuarios` (`id_usuario`) ON UPDATE CASCADE ON DELETE RESTRICT,
     INDEX `idx_indiv_codigo_placa` (`codigo_placa`),
     INDEX `idx_indiv_zona` (`id_zona`),
@@ -225,29 +200,11 @@ CREATE TABLE `logs_sistema` (
 
 -- 5.1 Roles del Sistema
 INSERT INTO `roles` (`id_rol`, `nombre_rol`, `descripcion`, `fecha_creacion`) VALUES
-('11111111-1111-1111-1111-111111111101', 'AdminEmincut', 'Administrador general del sistema y de la institución Emincut con acceso total', NOW()),
+('11111111-1111-1111-1111-111111111101', 'AdminEmincut', 'Administrador general del sistema de Emincut con acceso total', NOW()),
 ('11111111-1111-1111-1111-111111111102', 'OperarioEmincut', 'Personal técnico de campo encargado de inspecciones, mantenimiento y registro dendrológico', NOW()),
 ('11111111-1111-1111-1111-111111111103', 'UsuarioPublico', 'Ciudadano o visitante con acceso a consulta pública y reporte de novedades', NOW());
 
--- 5.2 Institución Principal: Emincut (El Bagre, Antioquia)
-INSERT INTO `instituciones` (
-    `id_institucion`, `nombre_institucion`, `nit`, `direccion`, `municipio`, 
-    `departamento`, `telefono_contacto`, `correo_contacto`, `logo_url`, `estado`, `fecha_registro`
-) VALUES (
-    '22222222-2222-2222-2222-222222222201',
-    'Emincut S.A.S. — Soluciones Ambientales y Forestales',
-    '901.458.789-3',
-    'Calle 50 # 45-20, Barrio Bijao',
-    'El Bagre',
-    'Antioquia',
-    '+57 312 856 9421',
-    'contacto@emincut.com',
-    'assets/img/logo_emincut.svg',
-    1,
-    NOW()
-);
-
--- 5.3 Usuarios Iniciales
+-- 5.2 Usuarios Iniciales
 -- NOTA DE SEGURIDAD PARA ENTORNO LOCAL / PRUEBAS:
 -- Contraseñas en texto plano para los 3 roles de prueba:
 -- 1. Administrador (admin@emincut.com): Admin123*
@@ -257,13 +214,12 @@ INSERT INTO `instituciones` (
 -- password_hash() y verificados con password_verify(). CÁMBIELOS antes de
 -- cualquier despliegue real: estas contraseñas son públicas (están en el README).
 INSERT INTO `usuarios` (
-    `id_usuario`, `id_rol`, `id_institucion`, `nombres`, `apellidos`, 
+    `id_usuario`, `id_rol`, `nombres`, `apellidos`, 
     `correo`, `password_hash`, `telefono`, `estado`, `ultimo_acceso`, `fecha_creacion`
 ) VALUES 
 (
     '33333333-3333-3333-3333-333333333301',
     '11111111-1111-1111-1111-111111111101', -- AdminEmincut
-    '22222222-2222-2222-2222-222222222201',
     'Luis Angel',
     'Muñoz Márquez',
     'admin@emincut.com',
@@ -276,7 +232,6 @@ INSERT INTO `usuarios` (
 (
     '33333333-3333-3333-3333-333333333302',
     '11111111-1111-1111-1111-111111111102', -- OperarioEmincut
-    '22222222-2222-2222-2222-222222222201',
     'Gabriel Jaime',
     'Correa Correa',
     'operario@emincut.com',
@@ -289,7 +244,6 @@ INSERT INTO `usuarios` (
 (
     '33333333-3333-3333-3333-333333333303',
     '11111111-1111-1111-1111-111111111103', -- UsuarioPublico
-    '22222222-2222-2222-2222-222222222201',
     'Michael',
     'Rodríguez Londoño',
     'ciudadano@emincut.com',
@@ -300,14 +254,13 @@ INSERT INTO `usuarios` (
     NOW()
 );
 
--- 5.4 Zonas Territoriales en El Bagre, Antioquia
+-- 5.3 Zonas Territoriales en El Bagre, Antioquia
 INSERT INTO `zonas` (
-    `id_zona`, `id_institucion`, `nombre_zona`, `descripcion`, `municipio`, 
+    `id_zona`, `nombre_zona`, `descripcion`, `municipio`, 
     `departamento`, `latitud_referencia`, `longitud_referencia`, `estado`, `fecha_creacion`
 ) VALUES 
 (
     '44444444-4444-4444-4444-444444444401',
-    '22222222-2222-2222-2222-222222222201',
     'Parque Principal El Bagre',
     'Plaza central municipal, corredor peatonal y zona de esparcimiento comunal con arborización madura.',
     'El Bagre',
@@ -319,7 +272,6 @@ INSERT INTO `zonas` (
 ),
 (
     '44444444-4444-4444-4444-444444444402',
-    '22222222-2222-2222-2222-222222222201',
     'SENA Complejo Minero Bajo Cauca',
     'Campus académico y semillero de innovación ambiental SENA Regional Antioquia.',
     'El Bagre',
@@ -331,7 +283,6 @@ INSERT INTO `zonas` (
 ),
 (
     '44444444-4444-4444-4444-444444444403',
-    '22222222-2222-2222-2222-222222222201',
     'Ronda Hídrica Río Nechí / Malecón',
     'Franja de protección ribereña y sendero ecológico sobre la cuenca del Río Nechí.',
     'El Bagre',
@@ -342,9 +293,9 @@ INSERT INTO `zonas` (
     NOW()
 );
 
--- 5.5 Individuos Forestales Iniciales (Flora representativa de la región)
+-- 5.4 Individuos Forestales Iniciales (Flora representativa de la región)
 INSERT INTO `individuos_forestales` (
-    `id_individuo`, `codigo_placa`, `id_zona`, `id_institucion`, 
+    `id_individuo`, `codigo_placa`, `id_zona`, 
     `nombre_comun`, `nombre_cientifico`, `familia_botanica`, `tipo_individuo`, 
     `fecha_siembra`, `latitud`, `longitud`, `dap_cm`, `altura_total_m`, `diametro_copa_m`, 
     `foto_principal_url`, `descripcion_general`, `qr_url`, `registrado_por`, `estado_registro`, `fecha_registro`
@@ -353,7 +304,6 @@ INSERT INTO `individuos_forestales` (
     '55555555-5555-5555-5555-555555555501',
     'EBG-PARQ-001',
     '44444444-4444-4444-4444-444444444401',
-    '22222222-2222-2222-2222-222222222201',
     'Guayacán Rosado',
     'Handroanthus chrysanthus',
     'Bignoniaceae',
@@ -375,7 +325,6 @@ INSERT INTO `individuos_forestales` (
     '55555555-5555-5555-5555-555555555502',
     'EBG-SENA-002',
     '44444444-4444-4444-4444-444444444402',
-    '22222222-2222-2222-2222-222222222201',
     'Ceiba Bruja / Bonga',
     'Ceiba pentandra',
     'Malvaceae',
@@ -397,7 +346,6 @@ INSERT INTO `individuos_forestales` (
     '55555555-5555-5555-5555-555555555503',
     'EBG-NECH-003',
     '44444444-4444-4444-4444-444444444403',
-    '22222222-2222-2222-2222-222222222201',
     'Caracolí',
     'Anacardium excelsum',
     'Anacardiaceae',
@@ -419,7 +367,6 @@ INSERT INTO `individuos_forestales` (
     '55555555-5555-5555-5555-555555555504',
     'EBG-PARQ-004',
     '44444444-4444-4444-4444-444444444401',
-    '22222222-2222-2222-2222-222222222201',
     'Palma Real / Palma de Cera',
     'Roystonea regia',
     'Arecaceae',
@@ -438,7 +385,7 @@ INSERT INTO `individuos_forestales` (
     NOW()
 );
 
--- 5.6 Estados Fitosanitarios Iniciales
+-- 5.5 Estados Fitosanitarios Iniciales
 INSERT INTO `estados_fitosanitarios` (
     `id_estado`, `id_individuo`, `estado`, `diagnostico`, `recomendacion`, `evaluado_por`, `fecha_evaluacion`
 ) VALUES 
@@ -485,7 +432,7 @@ UPDATE `individuos_forestales` SET `id_estado_fitosanitario_actual` = '66666666-
 UPDATE `individuos_forestales` SET `id_estado_fitosanitario_actual` = '66666666-6666-6666-6666-666666666603' WHERE `id_individuo` = '55555555-5555-5555-5555-555555555503';
 UPDATE `individuos_forestales` SET `id_estado_fitosanitario_actual` = '66666666-6666-6666-6666-666666666604' WHERE `id_individuo` = '55555555-5555-5555-5555-555555555504';
 
--- 5.7 Actividades de Mantenimiento Históricas
+-- 5.6 Actividades de Mantenimiento Históricas
 INSERT INTO `actividades_mantenimiento` (
     `id_actividad`, `id_individuo`, `tipo_actividad`, `descripcion`, 
     `evidencia_foto_url`, `realizado_por`, `fecha_actividad`, `fecha_registro`

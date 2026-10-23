@@ -4,7 +4,7 @@ Estructura completa de las 8 tablas en 4 capas lógicas diseñadas para MySQL 8.
 
 ---
 
-## 1. Capa Institucional
+## 1. Capa de Acceso y Seguridad
 
 ### 1.1 Tabla `roles`
 Catálogo de perfiles y niveles de autorización en el sistema.
@@ -18,33 +18,13 @@ Catálogo de perfiles y niveles de autorización en el sistema.
 
 ---
 
-### 1.2 Tabla `instituciones`
-Entidades públicas, privadas o educativas que administran inventarios arbóreos.
-
-| Campo | Tipo | Nulo | Por Defecto | Descripción / Regla |
-| :--- | :--- | :---: | :--- | :--- |
-| `id_institucion` | CHAR(36) | NO | `(UUID())` | Llave primaria UUID. |
-| `nombre_institucion` | VARCHAR(150) | NO | — | Razón social de la entidad (ej. Emincut S.A.S.). |
-| `nit` | VARCHAR(20) | NO | — | Identificador tributario único. |
-| `direccion` | VARCHAR(200) | SÍ | NULL | Dirección de la sede física. |
-| `municipio` | VARCHAR(100) | NO | `'El Bagre'` | Municipio sede. |
-| `departamento` | VARCHAR(100) | NO | `'Antioquia'` | Departamento sede. |
-| `telefono_contacto` | VARCHAR(20) | SÍ | NULL | Teléfono móvil o fijo. |
-| `correo_contacto` | VARCHAR(150) | SÍ | NULL | Correo de atención institucional. |
-| `logo_url` | VARCHAR(255) | SÍ | NULL | Ruta relativa al archivo de logotipo. |
-| `estado` | TINYINT(1) | NO | `1` | `1`: Activa, `0`: Inactiva. |
-| `fecha_registro` | DATETIME | NO | `CURRENT_TIMESTAMP` | Fecha de alta en el sistema. |
-
----
-
-### 1.3 Tabla `usuarios`
+### 1.2 Tabla `usuarios`
 Cuentas de acceso de funcionarios, técnicos de campo y administradores.
 
 | Campo | Tipo | Nulo | Por Defecto | Descripción / Regla |
 | :--- | :--- | :---: | :--- | :--- |
 | `id_usuario` | CHAR(36) | NO | `(UUID())` | Llave primaria UUID. |
 | `id_rol` | CHAR(36) | NO | — | FK → `roles.id_rol`. |
-| `id_institucion` | CHAR(36) | SÍ | NULL | FK → `instituciones.id_institucion`. |
 | `nombres` | VARCHAR(100) | NO | — | Nombres del usuario. |
 | `apellidos` | VARCHAR(100) | NO | — | Apellidos del usuario. |
 | `correo` | VARCHAR(150) | NO | — | Correo electrónico único para inicio de sesión. |
@@ -56,7 +36,7 @@ Cuentas de acceso de funcionarios, técnicos de campo y administradores.
 
 ---
 
-### 1.4 Tabla `tokens_recuperacion`
+### 1.3 Tabla `tokens_recuperacion`
 Tokens criptográficos de corta duración para restablecimiento de contraseña.
 
 | Campo | Tipo | Nulo | Por Defecto | Descripción / Regla |
@@ -73,12 +53,11 @@ Tokens criptográficos de corta duración para restablecimiento de contraseña.
 ## 2. Capa Territorial
 
 ### 2.1 Tabla `zonas`
-Sectores, parques, senderos y campus donde se ubica el arbolado en El Bagre.
+Sectores, parques, senderos y campus internos de Emincut donde se ubica el arbolado en El Bagre.
 
 | Campo | Tipo | Nulo | Por Defecto | Descripción / Regla |
 | :--- | :--- | :---: | :--- | :--- |
 | `id_zona` | CHAR(36) | NO | `(UUID())` | Llave primaria UUID. |
-| `id_institucion` | CHAR(36) | NO | — | FK → `instituciones.id_institucion`. |
 | `nombre_zona` | VARCHAR(100) | NO | — | Nombre representativo (ej. Parque Principal). |
 | `descripcion` | VARCHAR(255) | SÍ | NULL | Detalles y límites del sector. |
 | `municipio` | VARCHAR(100) | NO | `'El Bagre'` | Municipio. |
@@ -100,7 +79,6 @@ Registro maestro de cada árbol, palma o planta ornamental censada.
 | `id_individuo` | CHAR(36) | NO | `(UUID())` | Llave primaria UUID. |
 | `codigo_placa` | VARCHAR(30) | NO | — | Código físico único grabado en la placa QR. |
 | `id_zona` | CHAR(36) | NO | — | FK → `zonas.id_zona`. |
-| `id_institucion` | CHAR(36) | NO | — | FK → `instituciones.id_institucion`. |
 | `nombre_comun` | VARCHAR(150) | NO | — | Nombre vernáculo (ej. Guayacán Rosado). |
 | `nombre_cientifico` | VARCHAR(150) | NO | — | Nombre botánico en latín. |
 | `familia_botanica` | VARCHAR(100) | NO | — | Familia taxonómica (ej. Bignoniaceae). |

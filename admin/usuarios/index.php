@@ -44,10 +44,9 @@ if (!empty($q)) {
 }
 
 $stmt = $pdo->prepare("
-    SELECT u.*, r.nombre_rol, i.nombre_institucion
+    SELECT u.*, r.nombre_rol
     FROM `usuarios` u
     INNER JOIN `roles` r ON u.id_rol = r.id_rol
-    LEFT JOIN `instituciones` i ON u.id_institucion = i.id_institucion
     WHERE {$where}
     ORDER BY u.fecha_creacion DESC
 ");
@@ -111,7 +110,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <th class="p-4">Usuario</th>
                             <th class="p-4">Correo</th>
                             <th class="p-4">Rol</th>
-                            <th class="p-4">Institución</th>
                             <th class="p-4">Estado</th>
                             <th class="p-4">Último Acceso</th>
                             <th class="p-4 text-right">Acciones</th>
@@ -120,7 +118,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <tbody class="divide-y divide-gray-100">
                         <?php if (empty($usuarios)): ?>
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-gray-400 italic">
+                                <td colspan="6" class="p-8 text-center text-gray-400 italic">
                                     No se encontraron usuarios registrados con los criterios indicados.
                                 </td>
                             </tr>
@@ -142,7 +140,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                             <?= htmlspecialchars($u['nombre_rol']) ?>
                                         </span>
                                     </td>
-                                    <td class="p-4"><?= htmlspecialchars($u['nombre_institucion'] ?? 'Emincut S.A.S.') ?></td>
                                     <td class="p-4">
                                         <?php if ($u['estado'] == 1): ?>
                                             <span class="inline-flex items-center gap-1 text-emerald-700 font-semibold">

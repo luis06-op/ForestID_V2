@@ -29,10 +29,9 @@ if (!empty($codigo)) {
 $where_sql = implode(' AND ', $where);
 
 $stmt = $pdo->prepare("
-    SELECT i.*, z.nombre_zona, inst.nombre_institucion
+    SELECT i.*, z.nombre_zona
     FROM `individuos_forestales` i
     INNER JOIN `zonas` z ON i.id_zona = z.id_zona
-    INNER JOIN `instituciones` inst ON i.id_institucion = inst.id_institucion
     WHERE {$where_sql}
     ORDER BY i.codigo_placa ASC
 ");
@@ -122,10 +121,10 @@ $placas = $stmt->fetchAll();
                         <!-- Cabecera Institucional -->
                         <div class="text-center border-b border-gray-200 pb-2">
                             <span class="block font-black text-xs text-emerald-950 uppercase tracking-widest" style="font-family: 'Poppins', sans-serif;">
-                                EMINCUT S.A.S. • EL BAGRE, ANTIOQUIA
+                                <?= htmlspecialchars(strtoupper(EMINCUT_NOMBRE)) ?> • <?= htmlspecialchars(strtoupper(EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO)) ?>
                             </span>
                             <span class="text-[9px] text-gray-500 font-semibold uppercase tracking-wider">
-                                SENA Regional Antioquia — iRed Innovacción
+                                <?= htmlspecialchars(EMINCUT_ESLOGAN) ?>
                             </span>
                         </div>
 

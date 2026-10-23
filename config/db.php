@@ -2,7 +2,6 @@
 /**
  * ForestID / ForestSRD - Configuración de Base de Datos y Constantes Globales
  * Empresa: Emincut S.A.S. | El Bagre, Antioquia
- * Marco: SENA Regional Antioquia – iRed Innovacción
  */
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -16,6 +15,9 @@ if (is_file($config_local)) {
     require_once $config_local;
 }
 
+// Datos corporativos de Emincut (nombre, NIT, contacto, logo).
+require_once __DIR__ . '/empresa.php';
+
 // Prioridad: config.local.php > variables de entorno > valores por defecto de XAMPP.
 if (!defined('DB_HOST'))    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: 'forestsrd_db');
@@ -26,10 +28,10 @@ if (!defined('DB_CHARSET')) define('DB_CHARSET', 'utf8mb4');
 // Constantes de la Aplicación
 define('APP_NAME', 'ForestID');
 define('APP_FULL_NAME', 'ForestID — Identificación y Gestión del Inventario Forestal');
-define('APP_COMPANY', 'Emincut S.A.S.');
-define('APP_LOCATION', 'El Bagre, Antioquia, Colombia');
+define('APP_COMPANY', EMINCUT_NOMBRE);
+define('APP_LOCATION', EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', ' . EMINCUT_PAIS);
 define('APP_REGION', 'Bajo Cauca Antioqueño');
-define('APP_INITIATIVE', 'SENA Regional Antioquia – iRed Innovacción');
+define('APP_INITIATIVE', EMINCUT_NOMBRE);
 define('APP_VERSION', '1.0.0');
 
 // Créditos del Proyecto
@@ -75,6 +77,15 @@ if ($base_path === '/') {
 }
 
 define('BASE_URL', $protocol . $host . $base_path . '/');
+
+// URL canónica para enlaces públicos y contenido de los códigos QR.
+// En producción defina APP_URL en config/config.local.php, por ejemplo:
+//   define('APP_URL', 'https://forestid.emincut.com/');
+// Si no se define, se usa la URL detectada automáticamente (útil en local).
+if (!defined('APP_URL')) {
+    $app_url = getenv('APP_URL');
+    define('APP_URL', ($app_url !== false && $app_url !== '') ? rtrim($app_url, '/') . '/' : BASE_URL);
+}
 
 // Función Singleton para obtener conexión PDO
 function getDBConnection(): PDO {

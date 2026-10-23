@@ -5,9 +5,6 @@ Diagrama de las 8 tablas en sus 4 capas lógicas para la base de datos `forestsr
 ```mermaid
 erDiagram
     ROLES ||--o{ USUARIOS : "asigna permisos a"
-    INSTITUCIONES ||--o{ USUARIOS : "emplea a"
-    INSTITUCIONES ||--o{ ZONAS : "administra"
-    INSTITUCIONES ||--o{ INDIVIDUOS_FORESTALES : "es propietaria de"
     ZONAS ||--o{ INDIVIDUOS_FORESTALES : "contiene fisicamente a"
     USUARIOS ||--o{ TOKENS_RECUPERACION : "solicita"
     USUARIOS ||--o{ INDIVIDUOS_FORESTALES : "registra en censo"
@@ -26,24 +23,9 @@ erDiagram
         datetime fecha_creacion
     }
 
-    INSTITUCIONES {
-        char id_institucion PK "UUID"
-        varchar nombre_institucion "Emincut S.A.S."
-        varchar nit "Unique"
-        varchar direccion
-        varchar municipio "El Bagre"
-        varchar departamento "Antioquia"
-        varchar telefono_contacto
-        varchar correo_contacto
-        varchar logo_url
-        tinyint estado "1: Activa, 0: Inactiva"
-        datetime fecha_registro
-    }
-
     USUARIOS {
         char id_usuario PK "UUID"
         char id_rol FK
-        char id_institucion FK
         varchar nombres
         varchar apellidos
         varchar correo "Unique"
@@ -65,8 +47,7 @@ erDiagram
 
     ZONAS {
         char id_zona PK "UUID"
-        char id_institucion FK
-        varchar nombre_zona "Parque Principal, SENA, etc."
+        varchar nombre_zona "Parque Principal, Ronda Hídrica, etc."
         varchar descripcion
         varchar municipio "El Bagre"
         varchar departamento "Antioquia"
@@ -80,7 +61,6 @@ erDiagram
         char id_individuo PK "UUID"
         varchar codigo_placa "Unique: EBG-PARQ-001"
         char id_zona FK
-        char id_institucion FK
         varchar nombre_comun "Guayacan, Ceiba..."
         varchar nombre_cientifico
         varchar familia_botanica

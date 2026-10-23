@@ -107,7 +107,7 @@
 |---|---|---|---|
 | M1 | El error de conexión imprimía `$e->getMessage()` | `config/db.php` | ✅ Corregido: solo con `FORESTID_DEBUG=1`. |
 | M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php:45` | ⏳ Validar contra `APP_URL` o lista blanca. |
-| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`, `id_institucion`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ⏳ Validar contra listas permitidas y verificar FK activas. |
+| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ⏳ Validar contra listas permitidas y verificar FK activas. |
 | M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: cabeceras añadidas en `.htaccess`; falta CSP/HSTS y quitar CDNs sin SRI. |
 | M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php:274-275` | ⏳ Ofuscar (~100 m) o mostrar solo a autenticados; riesgo de extracción de especies. |
 | M6 | CSV sin protección contra inyección de fórmulas | `admin/reportes/index.php:39-60` | ⏳ Prefijar `'` a valores que empiecen por `= + - @`. |

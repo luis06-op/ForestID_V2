@@ -16,3 +16,8 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'forestsrd_db');
 define('DB_USER', 'forestsrd_app');
 define('DB_PASS', 'CAMBIA_ESTA_CLAVE');
+
+// URL canónica pública usada en los códigos QR y enlaces compartidos.
+// En producción defínala con el dominio real (con barra final opcional):
+// define('APP_URL', 'https://forestid.emincut.com/');
+// En local, si se omite, se detecta automáticamente desde la petición.

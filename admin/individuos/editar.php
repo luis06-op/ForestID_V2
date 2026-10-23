@@ -25,12 +25,10 @@ if (!$arbol) {
 
 $error = '';
 $zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
     $id_zona            = $_POST['id_zona'] ?? '';
-    $id_institucion     = $_POST['id_institucion'] ?? '';
     $nombre_comun       = sanear($_POST['nombre_comun'] ?? '');
     $nombre_cientifico  = sanear($_POST['nombre_cientifico'] ?? '');
     $familia_botanica   = sanear($_POST['familia_botanica'] ?? '');
@@ -45,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($id_zona) || empty($id_institucion) || empty($nombre_comun) || empty($nombre_cientifico)) {
+    } elseif (empty($id_zona) || empty($nombre_comun) || empty($nombre_cientifico)) {
         $error = 'Todos los campos obligatorios (*) deben ser completados.';
     } else {
         // Manejo de nueva foto opcional
@@ -62,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($error)) {
             $stmtUpd = $pdo->prepare("
                 UPDATE `individuos_forestales`
-                SET `id_zona` = :id_zona, `id_institucion` = :id_inst,
+                SET `id_zona` = :id_zona,
                     `nombre_comun` = :nom_com, `nombre_cientifico` = :nom_cie,
                     `familia_botanica` = :familia, `tipo_individuo` = :tipo,
                     `fecha_siembra` = :siembra, `latitud` = :lat, `longitud` = :lng,
@@ -72,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             $stmtUpd->execute([
                 ':id_zona'  => $id_zona,
-                ':id_inst'  => $id_institucion,
                 ':nom_com'  => $nombre_comun,
                 ':nom_cie'  => $nombre_cientifico,
                 ':familia'  => $familia_botanica,
@@ -139,7 +136,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     Ubicación y Placa
                 </h3>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Código de Placa (Inmutable)</label>
                         <input type="text" disabled value="<?= htmlspecialchars($arbol['codigo_placa']) ?>" class="w-full py-2.5 px-3 bg-gray-100 border border-gray-300 rounded-xl text-xs font-bold text-gray-700">
@@ -150,16 +147,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <?php foreach ($zonas as $z): ?>
                                 <option value="<?= $z['id_zona'] ?>" <?= ($arbol['id_zona'] === $z['id_zona']) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($z['nombre_zona']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="id_institucion" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Institución *</label>
-                        <select name="id_institucion" id="id_institucion" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                            <?php foreach ($instituciones as $inst): ?>
-                                <option value="<?= $inst['id_institucion'] ?>" <?= ($arbol['id_institucion'] === $inst['id_institucion']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($inst['nombre_institucion']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
