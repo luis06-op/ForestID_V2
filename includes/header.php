@@ -79,6 +79,8 @@ $meta_descripcion = $meta_descripcion ?? 'Sistema integral de gestión, identifi
 
     <!-- Estilos personalizados ForestID -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/custom.css">
+    <!-- Identidad visual Emincut (paleta, componentes y paneles unificados) -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/emincut.css">
 </head>
 <body class="min-h-full flex flex-col antialiased text-gray-800 bg-[#FAFAF7]">
     <?= render_flash() ?>

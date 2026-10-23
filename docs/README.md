@@ -56,18 +56,23 @@ El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed
      `forestsrd/database/forestsrd_db.sql`
    - Haga clic en **Continuar** para ejecutar la creación de tablas y datos semilla.
 
-4. **Verificar Configuración de Conexión (`config/db.php`):**
-   Asegúrese de que los parámetros coincidan con su entorno:
+4. **Configurar credenciales locales (`config/config.local.php`):**
+   Copie la plantilla y ajuste los parámetros de su entorno:
+   ```bash
+   cp config/config.local.ejemplo.php config/config.local.php
+   ```
    ```php
    define('DB_HOST', 'localhost');
    define('DB_NAME', 'forestsrd_db');
-   define('DB_USER', 'root');
-   define('DB_PASS', '');
+   define('DB_USER', 'forestsrd_app');
+   define('DB_PASS', 'su_clave_segura');
    ```
+   Este archivo está en `.gitignore` y **no debe subirse al repositorio**. En producción use un usuario MySQL con permisos mínimos, nunca `root`.
 
 5. **Acceder a la Aplicación:**
    Abra en su navegador:
-   👉 **`http://localhost/forestsrd`**
+   👉 **`http://localhost/ForestID_V2`**
+   > Asegúrese de que Apache tenga `AllowOverride All` y `mod_rewrite` activo para que los `.htaccess` protejan `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/`.
 
 ---
 

@@ -7,11 +7,16 @@
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../includes/funciones.php';
 require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/notificaciones.php';
 
 requerir_rol(['AdminEmincut']);
 
 $pdo = getDBConnection();
 $error = '';
+
+// Resultado del envío de credenciales (correo / WhatsApp)
+$envio = null;
+$usuario_nuevo = null;
 
 $roles = $pdo->query("SELECT id_rol, nombre_rol, descripcion FROM `roles` ORDER BY nombre_rol ASC")->fetchAll();
 $instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
@@ -69,9 +74,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'correo'            => $correo
             ]);
 
-            set_flash('success', "Usuario {$nombres} {$apellidos} creado con éxito.");
-            header('Location: ' . BASE_URL . 'admin/usuarios/index.php');
-            exit;
+            // Nombre del rol seleccionado (para las notificaciones)
+            $nombre_rol = '';
+            foreach ($roles as $r) {
+                if ((string)$r['id_rol'] === (string)$id_rol) { $nombre_rol = $r['nombre_rol']; break; }
+            }
+
+            // --- Envío de credenciales por correo y WhatsApp ---
+            $res_correo = enviar_correo_credenciales($correo, $nombres, $apellidos, $password, $nombre_rol);
+            $res_wa = enviar_whatsapp_credenciales($telefono, $nombres, $apellidos, $correo, $password, $nombre_rol);
+            $enlace_wa = enlace_whatsapp_credenciales($telefono, $nombres, $apellidos, $correo, $password, $nombre_rol);
+
+            registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'ENVIAR_CREDENCIALES', 'USUARIOS', [
+                'id_usuario_creado' => $id_nuevo,
+                'correo_ok'         => $res_correo['ok'],
+                'whatsapp_ok'       => $res_wa['ok']
+            ]);
+
+            $envio = [
+                'correo'       => $res_correo,
+                'whatsapp'     => $res_wa,
+                'enlace_wa'    => $enlace_wa,
+                'enlace_mail'  => 'mailto:' . $correo . '?subject=' . rawurlencode('ForestID — Tus credenciales de acceso') . '&body=' . rawurlencode(texto_credenciales($nombres, $apellidos, $correo, $password, $nombre_rol)),
+            ];
+            $usuario_nuevo = [
+                'nombres'   => $nombres,
+                'apellidos' => $apellidos,
+                'correo'    => $correo,
+                'password'  => $password,
+                'rol'       => $nombre_rol,
+                'telefono'  => $telefono,
+            ];
+            // No redirige: muestra el panel de estado de envío con los botones de respaldo
         }
     }
 }
@@ -85,55 +119,126 @@ require_once __DIR__ . '/../../includes/navbar.php';
 <div class="flex-1 flex flex-col md:flex-row">
     <?php require_once __DIR__ . '/../../includes/sidebar_admin.php'; ?>
 
-    <main class="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <main class="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto" style="background:var(--emi-hueso)">
         
         <div class="flex items-center justify-between">
             <div>
-                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Administración de Personal</span>
-                <h1 class="font-heading font-extrabold text-2xl text-gray-900">Crear Nuevo Usuario</h1>
+                <span class="emi-display text-xs font-bold uppercase tracking-widest" style="color:var(--emi-ambar)">Administración de Personal</span>
+                <h1 class="font-heading font-extrabold text-2xl" style="color:var(--emi-tinta)">Crear Nuevo Usuario</h1>
+                <div class="linea-sol mt-2"></div>
             </div>
-            <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="btn-forest-secondary text-xs py-2 px-3">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a Usuarios
+            <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="emi-btn text-xs py-2 px-3" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">
+                <span class="inline-flex items-center gap-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a Usuarios</span>
             </a>
         </div>
 
         <?php if (!empty($error)): ?>
-            <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-xl text-xs text-rose-800 flex items-center gap-2">
-                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 shrink-0"></i>
+            <div class="border-l-4 p-4 rounded-xl text-xs flex items-center gap-2 bg-red-50 border-red-500 text-red-800">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-red-600 shrink-0"></i>
                 <span><?= htmlspecialchars($error) ?></span>
             </div>
         <?php endif; ?>
 
-        <div class="forest-card p-6 sm:p-8 max-w-2xl">
+        <?php if ($usuario_nuevo !== null && $envio !== null): ?>
+        <!-- ===== Panel de resultado: envío de credenciales ===== -->
+        <div class="emi-card p-6 sm:p-8 max-w-2xl al-scroll">
+            <div class="flex items-center gap-3 mb-1">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
+                    <i data-lucide="user-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h2 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">
+                        <?= htmlspecialchars($usuario_nuevo['nombres'] . ' ' . $usuario_nuevo['apellidos']) ?> creado
+                    </h2>
+                    <p class="text-xs" style="color:var(--emi-tinta-suave)">Rol: <?= htmlspecialchars($usuario_nuevo['rol']) ?></p>
+                </div>
+            </div>
+
+            <div class="linea-sol mt-3 mb-5"></div>
+
+            <!-- Credenciales -->
+            <div class="rounded-xl p-4 border mb-5" style="background:var(--emi-amarillo-suave); border-color:#F2DCAC">
+                <span class="emi-label block mb-2">Credenciales de acceso</span>
+                <p class="text-sm" style="color:var(--emi-tinta)">
+                    <strong>Correo:</strong> <?= htmlspecialchars($usuario_nuevo['correo']) ?><br>
+                    <strong>Contraseña:</strong> <code class="px-1.5 py-0.5 rounded bg-white border border-[#F2DCAC]"><?= htmlspecialchars($usuario_nuevo['password']) ?></code>
+                </p>
+            </div>
+
+            <!-- Estado de los envíos -->
+            <div class="space-y-3 mb-6">
+                <!-- Correo -->
+                <div class="flex items-start gap-3 p-3.5 rounded-xl border" style="background:<?= $envio['correo']['ok'] ? 'var(--emi-verde-suave)' : 'var(--emi-hueso)' ?>; border-color:#CBD9B8">
+                    <i data-lucide="<?= $envio['correo']['ok'] ? 'check-circle' : 'alert-triangle' ?>" class="w-5 h-5 shrink-0 mt-0.5" style="color:<?= $envio['correo']['ok'] ? 'var(--emi-verde)' : 'var(--emi-ambar)' ?>"></i>
+                    <div class="text-xs" style="color:var(--emi-tinta)">
+                        <span class="font-bold block">Correo electrónico</span>
+                        <span style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($envio['correo']['detalle']) ?></span>
+                        <?php if (!$envio['correo']['ok']): ?>
+                            <a href="<?= $envio['enlace_mail'] ?>" class="block mt-1.5 font-semibold" style="color:var(--emi-verde)">Abrir en el cliente de correo →</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="flex items-start gap-3 p-3.5 rounded-xl border" style="background:<?= $envio['whatsapp']['ok'] ? 'var(--emi-verde-suave)' : 'var(--emi-hueso)' ?>; border-color:#CBD9B8">
+                    <i data-lucide="<?= $envio['whatsapp']['ok'] ? 'check-circle' : 'message-circle' ?>" class="w-5 h-5 shrink-0 mt-0.5" style="color:<?= $envio['whatsapp']['ok'] ? 'var(--emi-verde)' : 'var(--emi-ambar)' ?>"></i>
+                    <div class="text-xs" style="color:var(--emi-tinta)">
+                        <span class="font-bold block">WhatsApp</span>
+                        <span style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($envio['whatsapp']['detalle']) ?></span>
+                        <?php if (!$envio['whatsapp']['ok'] && !empty($envio['enlace_wa'])): ?>
+                            <a href="<?= htmlspecialchars($envio['enlace_wa']) ?>" target="_blank" rel="noopener" class="emi-btn emi-btn-sol text-[11px] py-2 px-3 mt-2 inline-flex">
+                                <span class="inline-flex items-center gap-1.5 relative z-10"><i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar credenciales por WhatsApp</span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (empty($envio['enlace_wa'])): ?>
+                            <span class="block mt-1 italic" style="color:var(--emi-tinta-suave)">Sin teléfono registrado: agregue un número al usuario para poder enviar por WhatsApp.</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-[#E7EADD] flex justify-end gap-2">
+                <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="emi-btn emi-btn-verde text-xs py-2.5 px-5">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Ir a Usuarios</span>
+                </a>
+                <a href="crear.php" class="emi-btn text-xs py-2.5 px-5" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">
+                    Crear otro usuario
+                </a>
+            </div>
+        </div>
+
+        <?php else: ?>
+        <!-- ===== Formulario de creación ===== -->
+        <div class="emi-card p-6 sm:p-8 max-w-2xl al-scroll">
             <form method="POST" action="crear.php" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="nombres" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombres *</label>
-                        <input type="text" name="nombres" id="nombres" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <label for="nombres" class="emi-label block mb-1">Nombres *</label>
+                        <input type="text" name="nombres" id="nombres" required class="emi-input" style="padding-left:.75rem">
                     </div>
                     <div>
-                        <label for="apellidos" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Apellidos *</label>
-                        <input type="text" name="apellidos" id="apellidos" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="correo" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Correo Electrónico *</label>
-                        <input type="email" name="correo" id="correo" required placeholder="ejemplo@emincut.com" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                    </div>
-                    <div>
-                        <label for="telefono" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Teléfono Móvil</label>
-                        <input type="text" name="telefono" id="telefono" placeholder="+57 3..." class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <label for="apellidos" class="emi-label block mb-1">Apellidos *</label>
+                        <input type="text" name="apellidos" id="apellidos" required class="emi-input" style="padding-left:.75rem">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="id_rol" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Rol en el Sistema *</label>
-                        <select name="id_rol" id="id_rol" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <label for="correo" class="emi-label block mb-1">Correo Electrónico *</label>
+                        <input type="email" name="correo" id="correo" required placeholder="ejemplo@emincut.com" class="emi-input" style="padding-left:.75rem">
+                    </div>
+                    <div>
+                        <label for="telefono" class="emi-label block mb-1">Teléfono Móvil (WhatsApp)</label>
+                        <input type="text" name="telefono" id="telefono" placeholder="+57 3..." class="emi-input" style="padding-left:.75rem">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_rol" class="emi-label block mb-1">Rol en el Sistema *</label>
+                        <select name="id_rol" id="id_rol" required class="emi-input" style="padding-left:.75rem">
                             <option value="">Seleccione un rol...</option>
                             <?php foreach ($roles as $r): ?>
                                 <option value="<?= $r['id_rol'] ?>"><?= htmlspecialchars($r['nombre_rol']) ?> (<?= htmlspecialchars($r['descripcion']) ?>)</option>
@@ -141,8 +246,8 @@ require_once __DIR__ . '/../../includes/navbar.php';
                         </select>
                     </div>
                     <div>
-                        <label for="id_institucion" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Institución Perteneciente</label>
-                        <select name="id_institucion" id="id_institucion" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <label for="id_institucion" class="emi-label block mb-1">Institución Perteneciente</label>
+                        <select name="id_institucion" id="id_institucion" class="emi-input" style="padding-left:.75rem">
                             <option value="">Ninguna / Independiente</option>
                             <?php foreach ($instituciones as $inst): ?>
                                 <option value="<?= $inst['id_institucion'] ?>"><?= htmlspecialchars($inst['nombre_institucion']) ?></option>
@@ -152,18 +257,22 @@ require_once __DIR__ . '/../../includes/navbar.php';
                 </div>
 
                 <div>
-                    <label for="password" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Contraseña Inicial *</label>
-                    <input type="password" name="password" id="password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                    <label for="password" class="emi-label block mb-1">Contraseña Inicial *</label>
+                    <input type="password" name="password" id="password" required minlength="6" placeholder="Mínimo 6 caracteres" class="emi-input" style="padding-left:.75rem">
+                    <p class="text-[11px] mt-1.5" style="color:var(--emi-tinta-suave)">
+                        <i data-lucide="info" class="w-3 h-3 inline"></i> Se enviará al correo y al WhatsApp del usuario al guardar.
+                    </p>
                 </div>
 
-                <div class="pt-4 border-t border-gray-100 flex justify-end gap-2">
-                    <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="btn-forest-secondary text-xs py-2.5 px-4">Cancelar</a>
-                    <button type="submit" class="btn-forest-primary text-xs py-2.5 px-5">
-                        <i data-lucide="check" class="w-4 h-4"></i> Guardar Usuario
+                <div class="pt-4 border-t border-[#E7EADD] flex justify-end gap-2">
+                    <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="emi-btn text-xs py-2.5 px-4" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">Cancelar</a>
+                    <button type="submit" class="emi-btn emi-btn-sol text-xs py-2.5 px-5">
+                        <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="check" class="w-4 h-4"></i> Guardar y Enviar Credenciales</span>
                     </button>
                 </div>
             </form>
         </div>
+        <?php endif; ?>
 
     </main>
 </div>

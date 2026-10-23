@@ -58,19 +58,22 @@ La base de datos `forestsrd_db` utiliza el motor `InnoDB`, juego de caracteres `
 ## 3. Estándares y Políticas de Seguridad
 
 - **Prevención de Inyección SQL:** 100% de las consultas a la base de datos se ejecutan a través de **Prepared Statements** de PDO con paso estricto de parámetros. Queda prohibida la concatenación de variables en sentencias SQL.
-- **Autenticación Segura:** Las contraseñas se almacenan mediante `password_hash($password, PASSWORD_BCRYPT)` con un factor de costo 10. La validación se efectúa exclusivamente con `password_verify()`.
+- **Autenticación Segura:** Las contraseñas se almacenan mediante `password_hash($password, PASSWORD_BCRYPT)` con factor de costo 12. La validación se efectúa exclusivamente con `password_verify()`; no existen credenciales en texto plano ni rehasheos automáticos.
 - **Protección contra CSRF:** Formularios críticos incluyen un campo oculto `csrf_token` generado con `bin2hex(random_bytes(32))` y validado con `hash_equals()`.
 - **Sanitización de Entradas:** Todas las entradas se procesan a través de la función `sanear()` con `htmlspecialchars(trim(), ENT_QUOTES, 'UTF-8')`.
 - **Subida Segura de Archivos:** Las imágenes cargadas se validan a través de `finfo_file(FILEINFO_MIME_TYPE)` aceptando únicamente `image/jpeg`, `image/png` y `image/webp`. Los nombres de archivo se reemplazan por un nuevo UUID para evitar ataques de sobreescritura o ejecución remota de código.
 
 ---
 
-## 4. Generador Vectorial Autónomo de Códigos QR
+## 4. Generador de Códigos QR Estándar
 
-El generador implementado en `includes/qrcode_helper.php` produce códigos QR vectoriales en formato **SVG** nativo:
-- No requiere librerías externas pesadas ni APIs de terceros.
-- Es 100% vectorial, lo que permite escalarlo a cualquier tamaño de impresión física (para placas metálicas, acrílico o laminado) sin pérdida de resolución ni pixelado.
-- Almacena automáticamente los archivos generados en `assets/qr/qr_[CODIGO_PLACA].svg`.
+El generador implementado en `includes/qrcode_helper.php` usa la librería MIT **`chillerlan/php-qrcode`** (incluida en `vendor/`) y produce códigos QR vectoriales en formato **SVG** conformes a ISO/IEC 18004:
+
+- Incluye corrección de errores (nivel M), información de formato/versión y enmascaramiento, por lo que **cualquier lector estándar puede decodificarlos** (cámaras, `html5-qrcode`, `zbar`, etc.).
+- Es 100 % vectorial, lo que permite escalarlo a cualquier tamaño de impresión física (placas metálicas, acrílico o laminado) sin pérdida de resolución.
+- Guarda automáticamente los archivos en `assets/qr/qr_[CODIGO_PLACA].svg`.
+- El contenido codificado es la URL pública de la ficha (`BASE_URL + publico/ficha.php?codigo=...`). **Al desplegar en otro dominio, regenere las placas** desde `admin/qr/index.php` para que apunten a la URL correcta.
+- Verificación recomendada antes de imprimir: `zbarimg --raw assets/qr/qr_EBG-PARQ-001.svg`.
 
 ---
 

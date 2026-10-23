@@ -60,7 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Generar código QR SVG
             $urlFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($codigo_placa);
-            $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
+            try {
+                $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
+            } catch (Throwable $e) {
+                error_log('[ForestID] Error generando QR en alta de campo: ' . $e->getMessage());
+                set_flash('error', 'No se pudo generar el código QR. Verifique los permisos de assets/qr e intente nuevamente.');
+                header('Location: ' . BASE_URL . 'operario/registrar_individuo.php');
+                exit;
+            }
 
             // Insertar espécimen
             $ins = $pdo->prepare("

@@ -1,0 +1,334 @@
+/**
+ * ForestID - Identidad Visual Emincut
+ * Paleta institucional: blanco, verde (principal) y amarillo/ámbar.
+ * Extraída del logo oficial de Emincut S.A.S. | El Bagre, Antioquia.
+ *
+ * Uso: importar en la cabecera de las páginas públicas y de acceso.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap');
+
+:root {
+    /* Verdes (principal) */
+    --emi-verde:        #5B7C3A;   /* verde colina del logo */
+    --emi-verde-claro:  #7A9B54;
+    --emi-verde-suave:  #EDF2E5;   /* fondos suaves */
+    --emi-verde-oscuro: #35502B;   /* verde casco del logo */
+    --emi-verde-noche:  #22371C;   /* fondos profundos */
+    /* Amarillos */
+    --emi-ambar:        #E9A22E;   /* tipografía del logo */
+    --emi-amarillo:     #F2B632;   /* sol del logo */
+    --emi-amarillo-suave:#FBEFD4;
+    /* Neutros */
+    --emi-blanco:       #FFFFFF;
+    --emi-hueso:        #FBFAF6;   /* fondo claro cálido, no gris puro */
+    --emi-tinta:        #23291F;   /* texto principal, verde-negro */
+    --emi-tinta-suave:  #5C6455;
+}
+
+/* ---------- Tipografía distintiva (evita Inter/Roboto/Arial) ---------- */
+.emi-display {
+    font-family: 'Chakra Petch', 'Trebuchet MS', sans-serif;
+}
+body.emi-theme,
+.emi-theme .font-heading {
+    font-family: 'Asap', 'Segoe UI', sans-serif;
+}
+
+/* ---------- Fondo con atmósfera: sol naciente sobre colinas ---------- */
+.emi-sky {
+    position: relative;
+    background-color: var(--emi-verde-oscuro);
+    background-image:
+        radial-gradient(52% 62% at 78% 18%, rgba(242, 182, 50, 0.42) 0%, transparent 62%),
+        radial-gradient(38% 46% at 80% 20%, rgba(233, 162, 46, 0.35) 0%, transparent 55%),
+        radial-gradient(70% 55% at 18% 88%, rgba(91, 124, 58, 0.85) 0%, transparent 68%),
+        radial-gradient(90% 70% at 55% 110%, rgba(34, 55, 28, 0.95) 0%, transparent 70%),
+        linear-gradient(165deg, #35502B 0%, #22371C 55%, #1A2B15 100%);
+}
+
+/* Línea de sol pulsante (micro-ambiente) */
+.emi-sunline::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--emi-amarillo), var(--emi-ambar), transparent);
+    animation: emi-sunline 6s ease-in-out infinite;
+}
+@keyframes emi-sunline {
+    0%, 100% { opacity: .35; transform: scaleX(.6); }
+    50%      { opacity: 1;  transform: scaleX(1); }
+}
+
+/* ---------- Revelaciones escalonadas en la carga ---------- */
+.emi-rise {
+    opacity: 0;
+    transform: translateY(26px);
+    animation: emi-rise .7s cubic-bezier(.22,.68,.32,1) forwards;
+}
+@keyframes emi-rise {
+    to { opacity: 1; transform: translateY(0); }
+}
+.emi-d1 { animation-delay: .08s; }
+.emi-d2 { animation-delay: .18s; }
+.emi-d3 { animation-delay: .28s; }
+.emi-d4 { animation-delay: .40s; }
+.emi-d5 { animation-delay: .54s; }
+
+/* ---------- Botones ---------- */
+.emi-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 600;
+    letter-spacing: .02em;
+    border-radius: .8rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+    cursor: pointer;
+}
+/* CTA principal: amarillo sol con texto verde oscuro */
+.emi-btn-sol {
+    background: linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-ambar) 100%);
+    color: var(--emi-verde-noche);
+    box-shadow: 0 10px 26px -8px rgba(233, 162, 46, .55);
+}
+.emi-btn-sol:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px -8px rgba(233, 162, 46, .65);
+}
+/* Efecto ripple al pasar el cursor */
+.emi-btn-sol::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .35);
+    transform: translate(-50%, -50%);
+    transition: width .55s ease, height .55s ease;
+}
+.emi-btn-sol:hover::before { width: 340px; height: 340px; }
+.emi-btn-sol > * { position: relative; z-index: 1; }
+
+/* CTA secundario: verde colina */
+.emi-btn-verde {
+    background-color: var(--emi-verde);
+    color: #fff;
+    box-shadow: 0 10px 26px -10px rgba(91, 124, 58, .6);
+}
+.emi-btn-verde:hover {
+    background-color: var(--emi-verde-oscuro);
+    transform: translateY(-2px);
+}
+
+/* Contorno claro sobre fondo oscuro */
+.emi-btn-fantasma {
+    border: 1.5px solid rgba(255, 255, 255, .45);
+    color: #fff;
+}
+.emi-btn-fantasma:hover {
+    background: rgba(255, 255, 255, .12);
+    transform: translateY(-2px);
+}
+
+/* ---------- Tarjetas ---------- */
+.emi-card {
+    background: var(--emi-blanco);
+    border: 1px solid #E7EADD;
+    border-radius: 1.25rem;
+    box-shadow: 0 6px 18px -8px rgba(34, 55, 28, .08);
+    transition: transform .35s cubic-bezier(.22,.68,.32,1), box-shadow .35s ease, border-color .35s ease;
+    position: relative;
+    overflow: hidden;
+}
+/* Barra de acento que se despliega en hover */
+.emi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--emi-verde), var(--emi-amarillo));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s ease;
+}
+.emi-card:hover::before { transform: scaleX(1); }
+.emi-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--emi-amarillo);
+    box-shadow: 0 22px 44px -14px rgba(34, 55, 28, .18);
+}
+
+/* ---------- Campos de formulario ---------- */
+.emi-input {
+    width: 100%;
+    background: var(--emi-hueso);
+    border: 1.5px solid #DDE2D2;
+    border-radius: .8rem;
+    padding: .8rem 1rem .8rem 2.75rem;
+    font-size: .925rem;
+    color: var(--emi-tinta);
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.emi-input::placeholder { color: #9AA38E; }
+.emi-input:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--emi-verde);
+    box-shadow: 0 0 0 4px rgba(91, 124, 58, .15);
+}
+
+/* ---------- Etiquetas ---------- */
+.emi-label {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--emi-tinta-suave);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emi-rise, .emi-sunline::after { animation: none !important; opacity: 1; transform: none; }
+    .emi-btn::before { display: none; }
+    .emi-card, .emi-btn { transition: none; }
+}
+
+/* ============================================================
+   DISEÑO UNIFICADO DE PANELES (navbar + sidebar + dashboards)
+   ============================================================ */
+
+/* --- Barra superior institucional (se une al sidebar) --- */
+.emi-navbar {
+    background-color: var(--emi-verde-noche);
+    border-bottom: 3px solid var(--emi-ambar);
+}
+
+/* --- Sidebar unificado con la barra superior --- */
+.emi-sidebar {
+    background-color: var(--emi-verde-noche);
+    border-right: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: none;
+}
+.emi-sidebar .emi-seccion {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--emi-amarillo);
+    padding: .9rem .875rem .4rem;
+}
+.emi-sidebar .emi-enlace {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .6rem .85rem;
+    border-radius: .7rem;
+    font-size: .875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .78);
+    transition: background-color .2s ease, color .2s ease, transform .2s ease;
+}
+.emi-sidebar .emi-enlace:hover {
+    background-color: rgba(255, 255, 255, .07);
+    color: #fff;
+    transform: translateX(3px);
+}
+.emi-sidebar .emi-enlace.activo {
+    background: linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-ambar) 100%);
+    color: var(--emi-verde-noche);
+    font-weight: 700;
+    box-shadow: 0 6px 16px -6px rgba(233, 162, 46, .55);
+}
+.emi-sidebar .emi-enlace.activo svg { color: var(--emi-verde-noche); }
+
+/* --- Drawer en móvil: el sidebar se desliza desde la izquierda --- */
+.emi-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 22, 12, .55);
+    backdrop-filter: blur(2px);
+    z-index: 55;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+}
+.emi-overlay.visible { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 767px) {
+    .emi-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 60;
+        width: 17rem;
+        min-height: 100vh;
+        transform: translateX(-100%);
+        transition: transform .32s cubic-bezier(.22,.68,.32,1);
+        overflow-y: auto;
+    }
+    .emi-sidebar.abierta { transform: translateX(0); }
+}
+
+/* --- Reveal al hacer scroll (disponible en todas las páginas) --- */
+.al-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .75s cubic-bezier(.22,.68,.32,1), transform .75s cubic-bezier(.22,.68,.32,1);
+    will-change: opacity, transform;
+}
+.al-scroll.visible { opacity: 1; transform: translateY(0); }
+.al-scroll.d1 { transition-delay: .12s; }
+.al-scroll.d2 { transition-delay: .24s; }
+.al-scroll.d3 { transition-delay: .36s; }
+
+/* Subrayado que se dibuja bajo los títulos */
+.linea-sol {
+    height: 5px;
+    width: 88px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--emi-verde), var(--emi-amarillo));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .9s cubic-bezier(.22,.68,.32,1) .2s;
+}
+.linea-sol.visible { transform: scaleX(1); }
+
+/* Contador animado */
+.cifra { font-variant-numeric: tabular-nums; }
+
+/* KPI tarjeta con acento */
+.emi-kpi {
+    background: var(--emi-blanco);
+    border: 1px solid #E7EADD;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform .35s cubic-bezier(.22,.68,.32,1), box-shadow .35s ease;
+    box-shadow: 0 6px 18px -8px rgba(34, 55, 28, .08);
+}
+.emi-kpi::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--emi-amarillo), var(--emi-verde));
+}
+.emi-kpi:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -14px rgba(34, 55, 28, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .al-scroll { opacity: 1; transform: none; transition: none; }
+    .linea-sol { transform: scaleX(1); transition: none; }
+    .emi-sidebar, .emi-overlay { transition: none; }
+}

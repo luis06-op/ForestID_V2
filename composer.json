@@ -1,0 +1,14 @@
+{
+    "name": "emincut/forestid",
+    "description": "ForestID — Identificación y gestión del inventario forestal de Emincut S.A.S.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "chillerlan/php-qrcode": "^5.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

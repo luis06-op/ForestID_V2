@@ -25,13 +25,18 @@ if (isset($_GET['regenerar_id'])) {
 
         if ($ind) {
             $urlFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($ind['codigo_placa']);
-            $nueva_ruta = QRCodeGenerator::guardarQR($ind['codigo_placa'], $urlFicha);
-            
-            $upd = $pdo->prepare("UPDATE `individuos_forestales` SET `qr_url` = :qr WHERE id_individuo = :id");
-            $upd->execute([':qr' => $nueva_ruta, ':id' => $reg_id]);
+            try {
+                $nueva_ruta = QRCodeGenerator::guardarQR($ind['codigo_placa'], $urlFicha);
 
-            registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REGENERAR_QR', 'QR', ['codigo_placa' => $ind['codigo_placa']]);
-            set_flash('success', "Código QR para la placa {$ind['codigo_placa']} regenerado correctamente.");
+                $upd = $pdo->prepare("UPDATE `individuos_forestales` SET `qr_url` = :qr WHERE id_individuo = :id");
+                $upd->execute([':qr' => $nueva_ruta, ':id' => $reg_id]);
+
+                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REGENERAR_QR', 'QR', ['codigo_placa' => $ind['codigo_placa']]);
+                set_flash('success', "Código QR para la placa {$ind['codigo_placa']} regenerado correctamente.");
+            } catch (Throwable $e) {
+                error_log('[ForestID] Error regenerando QR: ' . $e->getMessage());
+                set_flash('error', 'No se pudo regenerar el código QR. Verifique los permisos de assets/qr.');
+            }
         }
     }
     header('Location: ' . BASE_URL . 'admin/qr/index.php');

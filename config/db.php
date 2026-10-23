@@ -9,12 +9,19 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Configuración de la Base de Datos MySQL
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'forestsrd_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+// Configuración local de credenciales (archivo NO versionado).
+// Copie config/config.local.ejemplo.php como config/config.local.php.
+$config_local = __DIR__ . '/config.local.php';
+if (is_file($config_local)) {
+    require_once $config_local;
+}
+
+// Prioridad: config.local.php > variables de entorno > valores por defecto de XAMPP.
+if (!defined('DB_HOST'))    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: 'forestsrd_db');
+if (!defined('DB_USER'))    define('DB_USER', getenv('DB_USER') ?: 'root');
+if (!defined('DB_PASS'))    define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+if (!defined('DB_CHARSET')) define('DB_CHARSET', 'utf8mb4');
 
 // Constantes de la Aplicación
 define('APP_NAME', 'ForestID');
@@ -83,12 +90,15 @@ function getDBConnection(): PDO {
         try {
             $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {
-            // Manejo de error limpio sin revelar credenciales
+            // Manejo de error limpio sin revelar credenciales ni detalles internos.
             error_log("Error de conexión a la Base de Datos: " . $e->getMessage());
+            $detalle = (getenv('FORESTID_DEBUG') === '1')
+                ? "<p><small style='color:#7F1D1D;'>Detalle técnico: " . htmlspecialchars($e->getMessage()) . "</small></p>"
+                : "";
             die("<div style='font-family: sans-serif; padding: 2rem; max-width: 600px; margin: 3rem auto; background: #FEF2F2; border: 1px solid #F87171; border-radius: 8px; color: #991B1B;'>
                     <h2 style='margin-top:0;'>Error de Conexión a la Base de Datos</h2>
                     <p>No se pudo establecer conexión con MySQL. Verifique que el servicio esté activo en XAMPP y que la base de datos <strong>" . htmlspecialchars(DB_NAME) . "</strong> haya sido importada.</p>
-                    <p><small style='color:#7F1D1D;'>Detalle técnico: " . htmlspecialchars($e->getMessage()) . "</small></p>
+                    {$detalle}
                  </div>");
         }
     }
