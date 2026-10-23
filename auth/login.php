@@ -39,23 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([':correo' => $correo]);
         $usuario = $stmt->fetch();
 
-        // Validar contraseña con password_verify o fallback para contraseñas de prueba
-        $password_valida = false;
-        if ($usuario) {
-            if (password_verify($password, $usuario['password_hash'])) {
-                $password_valida = true;
-            } elseif (
-                ($correo === 'admin@emincut.com' && $password === 'Admin123*') ||
-                ($correo === 'operario@emincut.com' && $password === 'Operario123*') ||
-                ($correo === 'ciudadano@emincut.com' && $password === 'Ciudadano123*')
-            ) {
-                // Rehashear y actualizar automáticamente
-                $password_valida = true;
-                $nuevo_hash = password_hash($password, PASSWORD_BCRYPT);
-                $upd = $pdo->prepare("UPDATE `usuarios` SET `password_hash` = :hash WHERE `id_usuario` = :id");
-                $upd->execute([':hash' => $nuevo_hash, ':id' => $usuario['id_usuario']]);
-            }
-        }
+        // Validar contraseña exclusivamente contra el hash almacenado.
+        // No se permiten credenciales en texto plano ni rehasheos automáticos:
+        // los usuarios de prueba deben crearse con password_hash() real.
+        $password_valida = $usuario && password_verify($password, $usuario['password_hash']);
 
         if ($usuario && $password_valida) {
             // Iniciar sesión y guardar datos mínimos necesarios
@@ -211,25 +198,6 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             </form>
 
-            <!-- Acceso Rápido para Pruebas Locales (Seed Accounts) -->
-            <div class="mt-8 pt-6 border-t" style="border-color:#E7EADD">
-                <div class="emi-label text-center mb-3">
-                    Cuentas de Prueba Rápida (Semilla)
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="cargarCredenciales('admin@emincut.com', 'Admin123*')"
-                            class="px-3 py-2 text-xs font-semibold rounded-lg transition-colors text-left flex items-center gap-2 border"
-                            style="background:var(--emi-verde-suave); color:var(--emi-verde-oscuro); border-color:#CBD9B8">
-                        <span class="w-2 h-2 rounded-full" style="background:var(--emi-verde)"></span> AdminEmincut
-                    </button>
-                    <button type="button" onclick="cargarCredenciales('operario@emincut.com', 'Operario123*')"
-                            class="px-3 py-2 text-xs font-semibold rounded-lg transition-colors text-left flex items-center gap-2 border"
-                            style="background:var(--emi-amarillo-suave); color:#8A5E10; border-color:#F2DCAC">
-                        <span class="w-2 h-2 rounded-full" style="background:var(--emi-ambar)"></span> OperarioEmincut
-                    </button>
-                </div>
-            </div>
-
             <!-- Regresar al portal -->
             <div class="text-center pt-2">
                 <a href="<?= BASE_URL ?>publico/index.php" class="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors" style="color:var(--emi-tinta-suave)">
@@ -240,12 +208,5 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
     </div>
 </div>
-
-<script>
-    function cargarCredenciales(correo, pass) {
-        document.getElementById('correo').value = correo;
-        document.getElementById('password').value = pass;
-    }
-</script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

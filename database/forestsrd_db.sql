@@ -253,7 +253,9 @@ INSERT INTO `instituciones` (
 -- 1. Administrador (admin@emincut.com): Admin123*
 -- 2. Operario (operario@emincut.com): Operario123*
 -- 3. Ciudadano (ciudadano@emincut.com): Ciudadano123*
--- Los hashes a continuación son compatibles con password_verify() (Bcrypt cost 10)
+-- Los hashes a continuación son Bcrypt reales (cost 12), generados con
+-- password_hash() y verificados con password_verify(). CÁMBIELOS antes de
+-- cualquier despliegue real: estas contraseñas son públicas (están en el README).
 INSERT INTO `usuarios` (
     `id_usuario`, `id_rol`, `id_institucion`, `nombres`, `apellidos`, 
     `correo`, `password_hash`, `telefono`, `estado`, `ultimo_acceso`, `fecha_creacion`
@@ -265,7 +267,7 @@ INSERT INTO `usuarios` (
     'Luis Angel',
     'Muñoz Márquez',
     'admin@emincut.com',
-    '$2y$10$e8Z4wK3pQ0V1zY8eN4zZlOnJ0G6cE8m1b2c3d4e5f6g7h8i9j0k1l',
+    '$2y$12$H.2pA5GAoGuzgWCjCWRSUuvzg4wg7pN55cKZdzcqpIgrcfgR0KBX.',
     '+57 310 445 8899',
     1,
     NOW(),
@@ -278,7 +280,7 @@ INSERT INTO `usuarios` (
     'Gabriel Jaime',
     'Correa Correa',
     'operario@emincut.com',
-    '$2y$10$h9Y5xL4qR1W2aZ9fO5aAmPoK1H7dF9n2c3d4e5f6g7h8i9j0k1m',
+    '$2y$12$iYjdqdr/GyjgXVqfMGAGR.BK0S7RbLiINfuFfLRegehlFoA.GYsYK',
     '+57 311 556 7788',
     1,
     NOW(),
@@ -291,7 +293,7 @@ INSERT INTO `usuarios` (
     'Michael',
     'Rodríguez Londoño',
     'ciudadano@emincut.com',
-    '$2y$10$j0Z6yM5sS2X3bA0gP6bBnQpL2I8eG0o3d4e5f6g7h8i9j0k1n',
+    '$2y$12$cNCGEdfYqhGVAKu6QDC/uOOY1jXk.LdAdodVQ8rpdV2wb6wYpqX4i',
     '+57 314 667 9900',
     1,
     NOW(),

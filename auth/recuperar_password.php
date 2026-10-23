@@ -6,10 +6,16 @@
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
+require_once __DIR__ . '/../includes/notificaciones.php';
 
 $mensaje_exito = '';
 $mensaje_error = '';
 $enlace_simulado = '';
+
+// El enlace NUNCA se muestra en pantalla salvo que se active explícitamente
+// el modo demo local (FORESTID_MODO_DEMO=1). En producción debe quedar apagado.
+$modo_demo = (getenv('FORESTID_MODO_DEMO') === '1')
+    || (($_SERVER['FORESTID_MODO_DEMO'] ?? '') === '1');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf = $_POST['csrf_token'] ?? '';
@@ -46,12 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'correo' => $correo
             ]);
 
-            $enlace_simulado = BASE_URL . "auth/restablecer_password.php?token=" . urlencode($token);
-            $mensaje_exito = "Se han generado las instrucciones de restablecimiento para el usuario <strong>" . htmlspecialchars($usuario['nombres']) . "</strong>.";
-        } else {
-            // Por seguridad, no revelar si el correo existe o no
-            $mensaje_exito = "Si el correo ingresado se encuentra registrado en el sistema, recibirá un enlace para restablecer su contraseña.";
+            $enlace = BASE_URL . "auth/restablecer_password.php?token=" . urlencode($token);
+            $envio  = enviar_correo_recuperacion($usuario['correo'], $usuario['nombres'], $enlace);
+            if (!$envio['ok']) {
+                error_log('[ForestID] No se pudo enviar el enlace de recuperación: ' . $envio['detalle']);
+            }
+
+            // Solo en modo demo local se expone el enlace en la interfaz.
+            if ($modo_demo) {
+                $enlace_simulado = $enlace;
+            }
         }
+
+        // Mensaje genérico en todos los casos: evita revelar si el correo existe.
+        $mensaje_exito = 'Si el correo ingresado se encuentra registrado en el sistema, recibirá un enlace para restablecer su contraseña.';
     }
 }
 
@@ -84,17 +98,17 @@ require_once __DIR__ . '/../includes/header.php';
 
         <?php if (!empty($mensaje_exito)): ?>
             <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl text-xs text-emerald-900 space-y-2">
-                <p><?= $mensaje_exito ?></p>
-                <?php if (!empty($enlace_simulado)): ?>
-                    <div class="mt-3 p-3 bg-white border border-emerald-200 rounded-lg">
-                        <span class="block font-semibold text-[11px] text-emerald-800 mb-1">
-                            Simulación de Correo en Entorno Local (XAMPP):
+                <p><?= htmlspecialchars($mensaje_exito) ?></p>
+                <?php if ($modo_demo && !empty($enlace_simulado)): ?>
+                    <div class="mt-3 p-3 bg-amber-50 border border-amber-300 rounded-lg space-y-1">
+                        <span class="block font-semibold text-[11px] text-amber-800 uppercase tracking-wider">
+                            ⚠ Modo demo local activo (FORESTID_MODO_DEMO=1)
                         </span>
-                        <a href="<?= $enlace_simulado ?>" class="text-emerald-600 underline font-medium text-xs break-all hover:text-emerald-800">
-                            <?= $enlace_simulado ?>
+                        <a href="<?= htmlspecialchars($enlace_simulado) ?>" class="text-emerald-700 underline font-medium text-xs break-all hover:text-emerald-900">
+                            <?= htmlspecialchars($enlace_simulado) ?>
                         </a>
                         <div class="mt-2 text-right">
-                            <a href="<?= $enlace_simulado ?>" class="btn-forest-primary text-xs py-1.5 px-3">
+                            <a href="<?= htmlspecialchars($enlace_simulado) ?>" class="btn-forest-primary text-xs py-1.5 px-3">
                                 <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Abrir Enlace Ahora
                             </a>
                         </div>
