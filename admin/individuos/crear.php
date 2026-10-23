@@ -69,10 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id_estado    = generar_uuid();
                 $id_usuario   = $_SESSION['usuario']['id_usuario'];
 
-                // 1. Generar archivo QR Vectorial SVG apuntando a la ficha pública
+                // 1. Generar archivo QR SVG apuntando a la ficha pública
                 $urlPublicaFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($codigo_placa);
-                $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlPublicaFicha);
+                try {
+                    $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlPublicaFicha);
+                } catch (Throwable $e) {
+                    error_log('[ForestID] Error generando QR: ' . $e->getMessage());
+                    $error = 'No se pudo generar el código QR. Verifique los permisos de assets/qr e intente nuevamente.';
+                }
+            }
 
+            if (empty($error)) {
                 // 2. Insertar Individuo Forestal
                 $insIndiv = $pdo->prepare("
                     INSERT INTO `individuos_forestales` (

@@ -83,14 +83,10 @@ function cuerpo_html_credenciales(string $nombres, string $apellidos, string $co
 }
 
 /**
- * Envía las credenciales por correo electrónico.
- * Con SMTP configurado (config/mailer.php) usa PHPMailer; si no, mail() de respaldo.
+ * Envía un correo HTML usando SMTP (PHPMailer) o el respaldo mail() de PHP.
  * @return array{ok: bool, detalle: string}
  */
-function enviar_correo_credenciales(string $correo, string $nombres, string $apellidos, string $password, string $rol): array {
-    $asunto = 'ForestID — Tus credenciales de acceso';
-    $mensaje = texto_credenciales($nombres, $apellidos, $correo, $password, $rol);
-
+function enviar_correo_html(string $correo, string $nombre_destino, string $asunto, string $texto, string $html): array {
     $remitente = (defined('SMTP_USUARIO') && SMTP_USUARIO !== '') ? SMTP_USUARIO : CORREO_REMITENTE;
     $puede_smtp = defined('SMTP_HOST') && SMTP_HOST !== '' && defined('SMTP_USUARIO') && SMTP_USUARIO !== '';
 
@@ -119,10 +115,10 @@ function enviar_correo_credenciales(string $correo, string $nombres, string $ape
             }
             $mail->setFrom($remitente, 'ForestID Emincut');
             $mail->addReplyTo($remitente, 'ForestID Emincut');
-            $mail->addAddress($correo, trim($nombres . ' ' . $apellidos));
+            $mail->addAddress($correo, $nombre_destino);
             $mail->Subject = $asunto;
-            $mail->altBody = $mensaje;
-            $mail->Body    = cuerpo_html_credenciales($nombres, $apellidos, $correo, $password, $rol);
+            $mail->altBody = $texto;
+            $mail->Body    = $html;
             $mail->send();
 
             return ['ok' => true, 'detalle' => "Correo enviado por SMTP (" . SMTP_HOST . ") a {$correo}."];
@@ -134,17 +130,62 @@ function enviar_correo_credenciales(string $correo, string $nombres, string $ape
 
     $headers  = "From: ForestID Emincut <" . CORREO_REMITENTE . ">\r\n";
     $headers .= "Reply-To: " . CORREO_REMITENTE . "\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     $headers .= "X-Mailer: PHP/" . phpversion();
 
-    $resultado = @mail($correo, '=?UTF-8?B?' . base64_encode($asunto) . '?=', wordwrap($mensaje, 70), $headers);
+    $resultado = @mail($correo, '=?UTF-8?B?' . base64_encode($asunto) . '?=', $html, $headers);
 
     if ($resultado) {
         return ['ok' => true, 'detalle' => "Correo enviado a {$correo}."];
     }
 
-    error_log("[ForestID] Fallo de envío de correo de credenciales a: {$correo}");
-    return ['ok' => false, 'detalle' => 'No fue posible enviar el correo automáticamente: configure SMTP en config/mailer.php o use mailto: de respaldo.'];
+    error_log("[ForestID] Fallo de envío de correo a: {$correo}");
+    return ['ok' => false, 'detalle' => 'No fue posible enviar el correo automáticamente: configure SMTP en config/mailer.php.'];
+}
+
+/**
+ * Envía las credenciales de una cuenta nueva.
+ * @return array{ok: bool, detalle: string}
+ */
+function enviar_correo_credenciales(string $correo, string $nombres, string $apellidos, string $password, string $rol): array {
+    return enviar_correo_html(
+        $correo,
+        trim($nombres . ' ' . $apellidos),
+        'ForestID — Tus credenciales de acceso',
+        texto_credenciales($nombres, $apellidos, $correo, $password, $rol),
+        cuerpo_html_credenciales($nombres, $apellidos, $correo, $password, $rol)
+    );
+}
+
+/**
+ * Envía el enlace de restablecimiento de contraseña (válido 1 hora).
+ * @return array{ok: bool, detalle: string}
+ */
+function enviar_correo_recuperacion(string $correo, string $nombres, string $enlace): array {
+    $asunto = 'ForestID — Restablece tu contraseña';
+    $texto = "Hola {$nombres},\n\n"
+           . "Recibimos una solicitud para restablecer la contraseña de tu cuenta en ForestID.\n\n"
+           . "Abre este enlace (válido durante 1 hora y de un solo uso):\n{$enlace}\n\n"
+           . "Si no solicitaste este cambio, ignora este mensaje: tu contraseña actual seguirá funcionando.\n\n"
+           . "— ForestID | Emincut S.A.S. | El Bagre, Antioquia";
+
+    $enlace_html = htmlspecialchars($enlace, ENT_QUOTES, 'UTF-8');
+    $nombre_html = htmlspecialchars($nombres, ENT_QUOTES, 'UTF-8');
+    $html = '<!DOCTYPE html><html lang="es"><body style="margin:0;padding:24px;background:#FBFAF6;font-family:Arial,Helvetica,sans-serif;color:#22371C;">'
+          . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #E7EADD;border-radius:14px;">'
+          . '<tr><td style="padding:24px 28px;border-bottom:4px solid #E9A22E;">'
+          . '<p style="margin:0;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#E9A22E;">Emincut S.A.S. — El Bagre, Antioquia</p>'
+          . '<h1 style="margin:6px 0 0;font-size:20px;">Restablecer contraseña</h1></td></tr>'
+          . '<tr><td style="padding:24px 28px;font-size:14px;line-height:1.6;">'
+          . '<p style="margin:0 0 14px;">Hola <strong>' . $nombre_html . '</strong>,</p>'
+          . '<p style="margin:0 0 18px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en ForestID.</p>'
+          . '<p style="margin:0 0 20px;"><a href="' . $enlace_html . '" style="display:inline-block;background:#E9A22E;color:#22371C;font-weight:bold;font-size:14px;padding:10px 22px;border-radius:10px;text-decoration:none;">Crear nueva contraseña</a></p>'
+          . '<p style="margin:0;color:#5a6b4f;font-size:12px;">El enlace es válido durante 1 hora y solo puede usarse una vez. Si no solicitaste este cambio, ignora este mensaje.</p>'
+          . '</td></tr><tr><td style="padding:16px 28px;border-top:1px solid #E7EADD;background:#FBFAF6;border-radius:0 0 14px 14px;font-size:11px;color:#5a6b4f;">ForestID | Emincut S.A.S. | El Bagre, Antioquia</td></tr>'
+          . '</table></body></html>';
+
+    return enviar_correo_html($correo, $nombres, $asunto, $texto, $html);
 }
 
 /**

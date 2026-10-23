@@ -1,0 +1,6 @@
+# Impide la ejecución de scripts dentro de las imágenes subidas.
+<FilesMatch "\.(?:php|phtml|phar|php[0-9]?|cgi|pl|py|sh)$">
+    Require all denied
+</FilesMatch>
+
+Options -ExecCGI

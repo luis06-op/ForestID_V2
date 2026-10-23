@@ -39,8 +39,8 @@ $params = [];
 $where = "1=1";
 
 if (!empty($q)) {
-    $where = "(u.nombres LIKE :q OR u.apellidos LIKE :q OR u.correo LIKE :q OR r.nombre_rol LIKE :q)";
-    $params[':q'] = "%{$q}%";
+    $where = "(u.nombres LIKE :q1 OR u.apellidos LIKE :q2 OR u.correo LIKE :q3 OR r.nombre_rol LIKE :q4)";
+    $params[':q1'] = $params[':q2'] = $params[':q3'] = $params[':q4'] = "%{$q}%";
 }
 
 $stmt = $pdo->prepare("

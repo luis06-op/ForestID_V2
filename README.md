@@ -62,16 +62,17 @@ Cada individuo forestal recibe una **placa QR única**: el personal de campo la 
 <a id="instalacion"></a>
 ## ⚡ Instalación rápida
 
-Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Composer, sin Node y sin servicios de pago.
+Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y sin servicios de pago. Las dependencias PHP (PHPMailer y el generador QR) ya están incluidas en `vendor/`; Composer solo se necesita para actualizarlas.
 
 | # | Paso | Detalle |
 | :--: | :-- | :-- |
 | 1️⃣ | **Copiar el proyecto** | Llévelo a `C:\xampp\htdocs\ForestID_V2` (Windows) o `/opt/lampp/htdocs/ForestID_V2` (Linux). |
 | 2️⃣ | **Arrancar servicios** | En el panel de XAMPP active **Apache** y **MySQL**. |
 | 3️⃣ | **Importar la BD** | Abra `http://localhost/phpmyadmin`, cree `forestsrd_db` con collation `utf8mb4_spanish_ci` e importe [`database/forestsrd_db.sql`](database/forestsrd_db.sql) (DDL + DML con datos semilla). |
-| 4️⃣ | **Ajustar conexión** | Revise las constantes en [`config/db.php`](config/db.php): `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. |
-| 5️⃣ | **Correo (opcional)** | Copie `config/mailer.ejemplo.php` → `config/mailer.php` y ponga su SMTP real. Sin ese archivo el sistema usa `mail()` de respaldo y ofrece enlaces manuales de correo / WhatsApp. *(El archivo real está en `.gitignore`: nunca sube credenciales.)* |
-| 6️⃣ | **Entrar** | 👉 **`http://localhost/ForestID_V2/`** |
+| 4️⃣ | **Ajustar conexión** | Copie `config/config.local.ejemplo.php` → `config/config.local.php` y defina `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. Ese archivo está en `.gitignore`. |
+| 5️⃣ | **Permisos de Apache** | Confirme que `AllowOverride All` esté activo y que `mod_rewrite` esté habilitado; los `.htaccess` incluidos bloquean `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` por HTTP. |
+| 6️⃣ | **Correo (opcional)** | Copie `config/mailer.ejemplo.php` → `config/mailer.php` y ponga su SMTP real. Sin ese archivo el sistema usa `mail()` de respaldo y ofrece enlaces manuales de correo / WhatsApp. *(El archivo real está en `.gitignore`: nunca sube credenciales.)* |
+| 7️⃣ | **Entrar** | 👉 **`http://localhost/ForestID_V2/`** |
 
 ### 🔑 Credenciales de prueba (entorno local)
 
@@ -81,6 +82,8 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Composer
 | **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR con cámara, alta rápida con GPS y mantenimientos. |
 | **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano: ficha pública y reporte de novedades. |
 
+> ⚠️ **Solo para entorno local.** Estas cuentas vienen del script SQL con hashes Bcrypt reales, pero sus contraseñas son públicas (están en este README). **Cámbielas o elimínelas antes de publicar el sistema en Internet.** El login ya **no** acepta credenciales en texto plano ni las autocompleta.
+>
 > 💡 Al crear un usuario nuevo desde el panel, el sistema **envía sus credenciales automáticamente por correo** (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**.
 
 ---
@@ -260,7 +263,7 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 | 🔑 **Autenticación** | `password_hash()` / `password_verify()` | Bcrypt + control de acceso por sesión y roles. |
 | 🎨 **Frontend** | HTML5 semántico · **Tailwind CSS** (CDN) · JavaScript ES6+ | Interfaz responsive con **Lucide Icons** e identidad *Amarillo Sol*. |
 | 🗺️ **Georreferenciación** | **Leaflet.js** + OpenStreetMap | Cartografía 100 % libre, sin APIs de pago. |
-| 🏷️ **Códigos QR** | Generador SVG propio + `html5-qrcode` | Placas vectoriales autónomas y escaneo con cámara en vivo. |
+| 🏷️ **Códigos QR** | `chillerlan/php-qrcode` + `html5-qrcode` | QR estándar ISO/IEC 18004 en SVG, verificables con cualquier lector, y escaneo con cámara en vivo. |
 | 📊 **Analítica** | **Chart.js** | Tableros dasométricos y fitosanitarios. |
 | ✉️ **Correos** | **PHPMailer** (SMTP) | Envío de credenciales con respaldo `mail()` y enlaces manuales de WhatsApp. |
 
@@ -270,11 +273,13 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 ## 🔐 Seguridad
 
 - ✅ **Inyección SQL imposible:** el 100 % de las consultas usan *Prepared Statements* de PDO con paso estricto de parámetros (concatenar variables en SQL está prohibido por convención).
-- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (costo 10).
+- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (coste 12), sin credenciales en texto plano ni rehasheos automáticos.
 - ✅ **Control de acceso por roles** con el middleware `includes/auth_check.php`.
-- ✅ **Tokens de recuperación** criptográficos, de un solo uso y con validez de 1 hora.
+- ✅ **Tokens de recuperación** criptográficos, de un solo uso y con validez de 1 hora; el enlace se envía por correo y **nunca se muestra en pantalla** (salvo modo demo local explícito con `FORESTID_MODO_DEMO=1`).
 - ✅ **Auditoría inmutable** en `logs_sistema` con estructura JSON e IP de origen.
-- ✅ **Credenciales fuera de Git:** `config/mailer.php` está en `.gitignore`; solo se versiona la plantilla `config/mailer.ejemplo.php`.
+- ✅ **Credenciales fuera de Git:** `config/mailer.php` y `config/config.local.php` están en `.gitignore`; solo se versionan las plantillas.
+- ✅ **Rutas sensibles bloqueadas por HTTP:** `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` devuelven 404 gracias a los `.htaccess`.
+- ✅ **QR verificados:** los SVG se comprobaron con `zbarimg`; codifican la URL pública de cada ficha.
 
 ---
 
