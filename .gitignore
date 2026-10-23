@@ -1,5 +1,13 @@
 # Credenciales locales (no subir al repositorio)
 config/mailer.php
+config/config.local.php
+.env
+.env.*
+
+# Logs y respaldos
+*.log
+*.bak
+*.sql.gz
 
 # Sistema / editor
 Thumbs.db

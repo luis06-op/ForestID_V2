@@ -1,0 +1,25 @@
+# ForestID - Protección de archivos y directorios sensibles
+# Requiere Apache con mod_rewrite, mod_authz_core y AllowOverride All.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Carpetas internas: no accesibles por HTTP (sí por include de PHP).
+    RewriteRule ^(?:\.git|\.opencode|database|docs|includes|config|vendor)(?:/|$) - [R=404,L]
+
+    # Archivos de desarrollo, documentación y configuración.
+    RewriteRule ^(?:composer\.(?:json|lock)|README\.md|test[0-9]*\.(?:html|js))$ - [R=404,L]
+</IfModule>
+
+<FilesMatch "\.(?:sql|md|log|ini|sh|bak|env)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(self), camera=(self), microphone=()"
+</IfModule>
