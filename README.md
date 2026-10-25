@@ -93,7 +93,7 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 <a id="acerca"></a>
 ## 🌳 Acerca del proyecto
 
-ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar atrás las listas en papel y las planillas dispersas para tener un inventario vivo, georreferenciado y auditable del arbolado de El Bagre. Hoy funciona como una aplicación web modular en **PHP puro + MySQL**, pensada para correr en servidores locales XAMPP y en entornos LAMP/LEMP de producción, sin dependencias de compilación ni servicios de pago. El proyecto también acompaña el cumplimiento de la **Ley 2173 de 2021** (restauración posminerera).
+ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar atrás las listas en papel y las planillas dispersas para tener un inventario vivo, georreferenciado y auditable del arbolado de El Bagre. Hoy funciona como una aplicación web modular en **PHP puro + MySQL**, pensada para correr en servidores locales XAMPP y en entornos LAMP/LEMP de producción, sin dependencias de compilación ni servicios de pago.
 
 |  |  |
 | :-- | :-- |
@@ -101,7 +101,6 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 | 📍 **Sede / cobertura** | El Bagre, Antioquia (Bajo Cauca antioqueño) |
 | 🎓 **Origen** | SENA Regional Antioquia – iRed Innovacción |
 | 🎯 **Objeto** | Catalogación, monitoreo fitosanitario y trazabilidad histórica del arbolado |
-| 📜 **Norma** | Ley 2173 de 2021 — restauración posminerera |
 | 👥 **Usuarios** | Administradores, operarios de campo y ciudadanía en general |
 | 💻 **Despliegue** | XAMPP (desarrollo local) · LAMP / LEMP (producción) |
 

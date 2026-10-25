@@ -7,8 +7,7 @@ Copia y pega este texto al iniciar una sesión nueva con el agente:
 Vas a trabajar en el proyecto **ForestID V2**, ubicado en `/home/luis/Proyectos/github/ForestID_V2` (Linux) o `C:\xampp\htdocs\ForestID_V2` (Windows), servido con XAMPP en `http://localhost/ForestID_V2/`.
 
 ## Qué es el proyecto
-
-Aplicación web **exclusiva de Emincut S.A.S.** (El Bagre, Antioquia, Colombia) para gestionar el inventario forestal —árboles y plantas ornamentales— y el cumplimiento de la Ley 2173 de 2021 (restauración posminería). Cada árbol tiene una **placa física con código QR** que el público puede escanear y consultar **sin iniciar sesión**.
+Aplicación web **exclusiva de Emincut S.A.S.** (El Bagre, Antioquia, Colombia) para gestionar el inventario forestal —árboles y plantas ornamentales—. Cada árbol tiene una **placa física con código QR** que el público puede escanear y consultar **sin iniciar sesión**.
 
 **Decisión vigente:** la aplicación ya **no es multi-entidad ni multi-institución**. No existen instituciones, entidades administradoras ni clientes externos. Todos los usuarios, zonas e individuos pertenecen a Emincut. Las **zonas** se conservan como áreas internas de Emincut (parques, campus, rondas hídricas, etc.).
 
