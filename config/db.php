@@ -37,8 +37,8 @@ define('APP_VERSION', '1.0.0');
 // Créditos del Proyecto
 define('TEAM_LEAD', 'Luis Angel Muñoz Márquez (Líder de Arquitectura)');
 define('TEAM_BACKEND', 'Gabriel Jaime Correa Correa (Desarrollador Backend)');
-define('TEAM_UI_QA', 'Michael Rodríguez Londoño (Desarrollador UI / QA)');
 define('TEAM_QA_SUPERVISOR', 'Valentina (Supervisor / Verificador de Calidad)');
+// In memoriam: Michael Rodríguez Londoño (Desarrollador UI / QA)
 
 define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 

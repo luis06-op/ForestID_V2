@@ -364,7 +364,6 @@ Los banners de este README **no son imágenes estáticas**: son escenas 3D reale
 | **Luis Angel Muñoz Márquez** | 🏗️ Líder de Arquitectura |
 | **Gabriel Jaime Correa Correa** | ⚙️ Desarrollador Backend |
 | **Valentina Hernández Zapata** | ✅ Supervisor / Verificador de Calidad |
-| **Michael Rodríguez Londoño** 💐 | 🎨 Desarrollador UI / QA *(In memoriam)* |
 
 Todos formados en el **Centro de Formación Minero Ambiental de El Bagre** — SENA Regional Antioquia.
 
