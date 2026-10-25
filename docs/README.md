@@ -8,7 +8,7 @@ El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed
 
 ## 👥 Equipo de Proyecto
 
-- **Luis Angel Muñoz Márquez** — Líder de Arquitectura
+- **Luis Angel Muñoz Márquez** — Líder de Arquitectura & frontend
 - **Gabriel Jaime Correa Correa** — Desarrollador Backend
 - **Michael Rodríguez Londoño** — Desarrollador UI / QA
 - **Valentina** — Supervisor / Verificador de Calidad
