@@ -63,7 +63,7 @@ $es_autenticado = esta_autenticado();
                             </span>
                         </div>
                         <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm" style="background:var(--emi-amarillo); color:var(--emi-verde-noche)">
-                            <?= strtoupper(substr($usuario_actual['nombres'], 0, 1) . substr($usuario_actual['apellidos'], 0, 1)) ?>
+                            <?= htmlspecialchars(strtoupper(substr($usuario_actual['nombres'], 0, 1) . substr($usuario_actual['apellidos'], 0, 1))) ?>
                         </div>
                     </div>
 

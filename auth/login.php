@@ -16,6 +16,12 @@ if (esta_autenticado()) {
 $error_login = '';
 $correo_previo = '';
 
+// Aviso si se llegó aquí por expiración de la sesión.
+if (!empty($_SESSION['sesion_expirada'])) {
+    unset($_SESSION['sesion_expirada']);
+    $error_login = 'Su sesión expiró por inactividad. Vuelva a iniciar sesión.';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf = $_POST['csrf_token'] ?? '';
     $correo     = sanear($_POST['correo'] ?? '');
@@ -59,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 session_regenerate_id(true);
                 $_SESSION['ultima_actividad'] = time();
                 $_SESSION['iniciada_en']      = time();
+                unset($_SESSION['sesion_expirada']);
 
                 // Iniciar sesión y guardar datos mínimos necesarios
                 $_SESSION['usuario'] = [
@@ -79,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'correo' => $usuario['correo']
                 ]);
 
-                set_flash('success', '¡Bienvenido(a), ' . htmlspecialchars($usuario['nombres']) . '!');
+                set_flash('success', '¡Bienvenido(a), ' . $usuario['nombres'] . '!');
                 redirigir_segun_rol();
             } else {
                 $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';

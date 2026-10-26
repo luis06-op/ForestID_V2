@@ -3,8 +3,9 @@
  * ForestID / ForestSRD - Notificaciones de Credenciales (Correo y WhatsApp)
  * Empresa: Emincut S.A.S. | El Bagre, Antioquia
  *
- * Envía al usuario nuevo su contraseña de acceso por correo electrónico
- * y por WhatsApp (número móvil registrado).
+ * Envía al usuario nuevo un enlace de activación de un solo uso por correo
+ * electrónico y por WhatsApp (número móvil registrado). Nunca se envían
+ * contraseñas en texto plano (A7).
  *
  * Configuración (véase config/mailer.ejemplo.php):
  *  - CORREO_REMITENTE: dirección desde la que se envían los correos.
@@ -36,50 +37,42 @@ if (!defined('WHATSAPP_API_PHONE_ID')) {
 }
 
 /**
- * Construye el texto de credenciales compartido para correo y WhatsApp
+ * Texto del enlace de activación (nunca incluye contraseñas).
  */
-function texto_credenciales(string $nombres, string $apellidos, string $correo, string $password, string $rol): string {
+function texto_activacion(string $nombres, string $apellidos, string $enlace, int $horas): string {
     return "Hola {$nombres} {$apellidos},\n\n"
-         . "Tu cuenta en ForestID (Emincut S.A.S.) ha sido creada.\n\n"
-         . "Correo: {$correo}\n"
-         . "Contraseña: {$password}\n"
-         . "Rol: {$rol}\n\n"
-         . "Ingresa en: " . BASE_URL . "auth/login.php\n\n"
-         . "Por seguridad, cambia tu contraseña después del primer ingreso.\n"
+         . "Se creó tu cuenta en ForestID (Emincut S.A.S.).\n\n"
+         . "Para activarla y crear tu contraseña, abre este enlace (válido durante {$horas} horas y de un solo uso):\n"
+         . "{$enlace}\n\n"
+         . "Si no esperabas este mensaje, comunícate con el administrador de ForestID.\n"
          . "— ForestID | Emincut S.A.S. | El Bagre, Antioquia";
 }
 
 /**
- * Cuerpo HTML del correo de credenciales (identidad visual Emincut)
+ * Cuerpo HTML del correo de activación (identidad visual Emincut).
  */
-function cuerpo_html_credenciales(string $nombres, string $apellidos, string $correo, string $password, string $rol): string {
-    $url_login = BASE_URL . 'auth/login.php';
-    $html = '<!DOCTYPE html>
+function cuerpo_html_activacion(string $nombres, string $apellidos, string $enlace, int $horas): string {
+    $nombre_html = htmlspecialchars(trim($nombres . ' ' . $apellidos), ENT_QUOTES, 'UTF-8');
+    $enlace_html = htmlspecialchars($enlace, ENT_QUOTES, 'UTF-8');
+
+    return '<!DOCTYPE html>
 <html lang="es"><body style="margin:0;padding:24px;background:#FBFAF6;font-family:Arial,Helvetica,sans-serif;color:#22371C;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #E7EADD;border-radius:14px;">
     <tr><td style="padding:24px 28px;border-bottom:4px solid #E9A22E;">
       <p style="margin:0;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#E9A22E;">Emincut S.A.S. — El Bagre, Antioquia</p>
-      <h1 style="margin:6px 0 0;font-size:20px;">Credenciales de acceso ForestID</h1>
+      <h1 style="margin:6px 0 0;font-size:20px;">Activa tu cuenta ForestID</h1>
     </td></tr>
     <tr><td style="padding:24px 28px;font-size:14px;line-height:1.6;">
-      <p style="margin:0 0 14px;">Hola <strong>' . htmlspecialchars($nombres . ' ' . $apellidos) . '</strong>,</p>
-      <p style="margin:0 0 16px;">Tu cuenta ha sido creada. Estos son tus datos para ingresar:</p>
-      <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;background:#F2B63222;border:1px solid #F2DCAC;border-radius:10px;">
-        <tr><td style="padding:14px 18px;font-size:14px;">
-          <p style="margin:0 0 6px;"><strong>Correo:</strong> ' . htmlspecialchars($correo) . '</p>
-          <p style="margin:0 0 6px;"><strong>Contraseña:</strong> <span style="font-family:Consolas,monospace;background:#fff;border:1px solid #F2DCAC;border-radius:4px;padding:2px 8px;">' . htmlspecialchars($password) . '</span></p>
-          <p style="margin:0;"><strong>Rol:</strong> ' . htmlspecialchars($rol) . '</p>
-        </td></tr>
-      </table>
-      <p style="margin:20px 0;"><a href="' . $url_login . '" style="display:inline-block;background:#E9A22E;color:#22371C;font-weight:bold;font-size:14px;padding:10px 22px;border-radius:10px;text-decoration:none;">Ingresar a la plataforma</a></p>
-      <p style="margin:0;color:#5a6b4f;font-size:12px;">Por seguridad, cambia tu contraseña después del primer ingreso.</p>
+      <p style="margin:0 0 14px;">Hola <strong>' . $nombre_html . '</strong>,</p>
+      <p style="margin:0 0 18px;">Tu cuenta ha sido creada. Para activarla, crea tu propia contraseña con el siguiente botón:</p>
+      <p style="margin:0 0 20px;"><a href="' . $enlace_html . '" style="display:inline-block;background:#E9A22E;color:#22371C;font-weight:bold;font-size:14px;padding:10px 22px;border-radius:10px;text-decoration:none;">Crear mi contraseña</a></p>
+      <p style="margin:0;color:#5a6b4f;font-size:12px;">El enlace es válido durante ' . (int)$horas . ' horas y solo puede usarse una vez. Si no esperabas este mensaje, ignóralo o comunícate con el administrador.</p>
     </td></tr>
     <tr><td style="padding:16px 28px;border-top:1px solid #E7EADD;background:#FBFAF6;border-radius:0 0 14px 14px;font-size:11px;color:#5a6b4f;">
       ForestID | Emincut S.A.S. | El Bagre, Antioquia
     </td></tr>
   </table>
 </body></html>';
-    return $html;
 }
 
 /**
@@ -145,16 +138,16 @@ function enviar_correo_html(string $correo, string $nombre_destino, string $asun
 }
 
 /**
- * Envía las credenciales de una cuenta nueva.
+ * Envía el enlace de activación de una cuenta nueva (A7).
  * @return array{ok: bool, detalle: string}
  */
-function enviar_correo_credenciales(string $correo, string $nombres, string $apellidos, string $password, string $rol): array {
+function enviar_correo_activacion(string $correo, string $nombres, string $apellidos, string $enlace, int $horas): array {
     return enviar_correo_html(
         $correo,
         trim($nombres . ' ' . $apellidos),
-        'ForestID — Tus credenciales de acceso',
-        texto_credenciales($nombres, $apellidos, $correo, $password, $rol),
-        cuerpo_html_credenciales($nombres, $apellidos, $correo, $password, $rol)
+        'ForestID — Activa tu cuenta',
+        texto_activacion($nombres, $apellidos, $enlace, $horas),
+        cuerpo_html_activacion($nombres, $apellidos, $enlace, $horas)
     );
 }
 
@@ -208,20 +201,20 @@ function normalizar_telefono_whatsapp(string $telefono): string {
 }
 
 /**
- * Enlace wa.me con el mensaje pre-cargado (respaldo manual / automático si no hay API)
+ * Enlace wa.me con el mensaje de activación pre-cargado.
  */
-function enlace_whatsapp_credenciales(string $telefono, string $nombres, string $apellidos, string $correo, string $password, string $rol): ?string {
+function enlace_whatsapp_activacion(string $telefono, string $nombres, string $apellidos, string $enlace, int $horas): ?string {
     $numero = normalizar_telefono_whatsapp($telefono);
     if ($numero === '') return null;
-    $texto = str_replace("\n", "%0A", texto_credenciales($nombres, $apellidos, $correo, $password, $rol));
+    $texto = rawurlencode(texto_activacion($nombres, $apellidos, $enlace, $horas));
     return "https://wa.me/{$numero}?text={$texto}";
 }
 
 /**
- * Envío automático por WhatsApp Business Cloud API (solo si hay token configurado).
+ * Envío automático del enlace de activación por WhatsApp Business Cloud API.
  * @return array{ok: bool, detalle: string}
  */
-function enviar_whatsapp_credenciales(string $telefono, string $nombres, string $apellidos, string $correo, string $password, string $rol): array {
+function enviar_whatsapp_activacion(string $telefono, string $nombres, string $apellidos, string $enlace, int $horas): array {
     $numero = normalizar_telefono_whatsapp($telefono);
     if ($numero === '') {
         return ['ok' => false, 'detalle' => 'El usuario no tiene número de WhatsApp registrado.'];
@@ -236,7 +229,7 @@ function enviar_whatsapp_credenciales(string $telefono, string $nombres, string 
         'messaging_product' => 'whatsapp',
         'to'                => $numero,
         'type'              => 'text',
-        'text'              => ['body' => texto_credenciales($nombres, $apellidos, $correo, $password, $rol)]
+        'text'              => ['body' => texto_activacion($nombres, $apellidos, $enlace, $horas)]
     ];
 
     $ch = curl_init($url);

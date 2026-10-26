@@ -7,7 +7,9 @@
 require_once __DIR__ . '/../config/db.php';
 
 /**
- * Sanitiza recursivamente cadenas de texto y arrays para prevenir XSS
+ * Normaliza una entrada de texto: elimina bytes nulos, garantiza UTF-8 válido
+ * y recorta espacios. NO escapa HTML: el escape se hace siempre al generar la
+ * salida con htmlspecialchars() (A4).
  */
 function sanear($dato) {
     if (is_array($dato)) {
@@ -16,7 +18,12 @@ function sanear($dato) {
     if (is_null($dato)) {
         return null;
     }
-    return htmlspecialchars(trim((string)$dato), ENT_QUOTES, 'UTF-8');
+
+    $texto = str_replace("\0", '', (string)$dato);
+    if (!mb_check_encoding($texto, 'UTF-8')) {
+        $texto = mb_convert_encoding($texto, 'UTF-8', 'UTF-8');
+    }
+    return trim($texto);
 }
 
 /**

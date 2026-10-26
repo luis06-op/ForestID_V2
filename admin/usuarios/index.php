@@ -128,7 +128,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                     <td class="p-4 font-semibold text-gray-900">
                                         <div class="flex items-center gap-2.5">
                                             <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[11px]">
-                                                <?= strtoupper(substr($u['nombres'], 0, 1) . substr($u['apellidos'], 0, 1)) ?>
+                                                <?= htmlspecialchars(strtoupper(substr($u['nombres'], 0, 1) . substr($u['apellidos'], 0, 1))) ?>
                                             </div>
                                             <span><?= htmlspecialchars($u['nombres'] . ' ' . $u['apellidos']) ?></span>
                                         </div>

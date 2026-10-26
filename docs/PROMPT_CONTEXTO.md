@@ -72,7 +72,7 @@ Los datos de la empresa viven en `config/empresa.php` (`EMINCUT_NOMBRE`, `EMINCU
 
 ## Reglas de código
 
-- **Seguridad:** toda página privada debe empezar con `requerir_rol([...])`. Solo `AdminEmincut` entra a `admin/*`; `operario/*` permite `OperarioEmincut` y `AdminEmincut`. Usar `sanear()`, `validar_token_csrf()` y `htmlspecialchars()` como ya se hace.
+- **Seguridad:** toda página privada debe empezar con `requerir_rol([...])`. Solo `AdminEmincut` entra a `admin/*`; `operario/*` permite `OperarioEmincut` y `AdminEmincut`. Usar `sanear()` para normalizar la entrada (no escapa HTML), `htmlspecialchars()` en toda salida y `validar_token_csrf()` en formularios POST.
 - Mantener el estilo visual y los includes existentes; no duplicar CSS ya presente en `emincut.css`.
 - Verificar siempre la sintaxis con `& "C:\xampp\php\php.exe" -l <archivo>` (Windows) o `php -l <archivo>` (Linux) antes de confirmar.
 - No incluir referencias a instituciones, entidades administradoras ni clientes externos: el proyecto es **exclusivo de Emincut**.

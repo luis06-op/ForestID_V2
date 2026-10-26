@@ -10,6 +10,9 @@ require_once __DIR__ . '/../includes/funciones.php';
 $token = $_GET['token'] ?? $_POST['token'] ?? '';
 $token = trim($token);
 
+// Un enlace de activación (?nuevo=1) usa el mismo formulario que la recuperación.
+$es_activacion = (($_GET['nuevo'] ?? $_POST['nuevo'] ?? '') === '1');
+
 $error_token = '';
 $error_form = '';
 $token_valido = false;
@@ -34,7 +37,9 @@ if (empty($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
     if ($usuario_encontrado) {
         $token_valido = true;
     } else {
-        $error_token = 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado.';
+        $error_token = $es_activacion
+            ? 'El enlace de activación es inválido, ya fue utilizado o ha expirado (validez de 48 horas).'
+            : 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de 1 hora).';
     }
 }
 
@@ -71,14 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
             'correo' => $usuario_encontrado['correo']
         ]);
 
-        set_flash('success', '¡Su contraseña ha sido actualizada con éxito! Ya puede iniciar sesión.');
+        set_flash('success', $es_activacion
+            ? '¡Su contraseña ha sido creada con éxito! Ya puede iniciar sesión.'
+            : '¡Su contraseña ha sido actualizada con éxito! Ya puede iniciar sesión.');
         header('Location: ' . BASE_URL . 'auth/login.php');
         exit;
     }
 }
 
 $csrf_token = crear_token_csrf();
-$titulo_pagina = 'Restablecer Contraseña — ' . APP_NAME;
+$titulo_pagina = ($es_activacion ? 'Activar Cuenta' : 'Restablecer Contraseña') . ' — ' . APP_NAME;
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
@@ -90,7 +97,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <i data-lucide="shield-check" class="w-6 h-6"></i>
             </div>
             <h2 class="font-heading font-bold text-2xl text-gray-900">
-                Nueva Contraseña
+                <?= $es_activacion ? 'Activa tu cuenta' : 'Nueva Contraseña' ?>
             </h2>
             <p class="text-xs text-gray-500 mt-1">
                 Emincut • Sistema ForestID
@@ -110,7 +117,7 @@ require_once __DIR__ . '/../includes/header.php';
         <?php else: ?>
 
             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-800">
-                Restableciendo contraseña para: <strong><?= htmlspecialchars($usuario_encontrado['nombres'] . ' ' . $usuario_encontrado['apellidos']) ?></strong> (<?= htmlspecialchars($usuario_encontrado['correo']) ?>)
+                <?= $es_activacion ? 'Creando acceso para' : 'Restableciendo contraseña para' ?>: <strong><?= htmlspecialchars($usuario_encontrado['nombres'] . ' ' . $usuario_encontrado['apellidos']) ?></strong> (<?= htmlspecialchars($usuario_encontrado['correo']) ?>)
             </div>
 
             <?php if (!empty($error_form)): ?>
@@ -123,6 +130,7 @@ require_once __DIR__ . '/../includes/header.php';
             <form method="POST" action="restablecer_password.php" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+                <input type="hidden" name="nuevo" value="<?= $es_activacion ? '1' : '0' ?>">
 
                 <div>
                     <label for="password_nueva" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">

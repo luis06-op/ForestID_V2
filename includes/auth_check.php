@@ -25,8 +25,9 @@ function esta_autenticado(): bool {
     $ultima = (int)($_SESSION['ultima_actividad'] ?? $ahora);
 
     if (($ahora - $ultima) > SESSION_IDLE_TIMEOUT) {
+        // Se vacía la sesión sin regenerar el ID: esta función puede invocarse
+        // después de enviar HTML (navbar) y la regeneración requiere cabeceras.
         $_SESSION = [];
-        session_regenerate_id(true);
         $_SESSION['sesion_expirada'] = true;
         return false;
     }

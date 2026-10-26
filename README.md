@@ -86,7 +86,7 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 
 > ⚠️ **Solo para entorno local.** Estas cuentas vienen del script SQL con hashes Bcrypt reales, pero sus contraseñas son públicas (están en este README). **Cámbielas o elimínelas antes de publicar el sistema en Internet.** El login ya **no** acepta credenciales en texto plano ni las autocompleta.
 >
-> 💡 Al crear un usuario nuevo desde el panel, el sistema **envía sus credenciales automáticamente por correo** (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**.
+> 💡 Al crear un usuario nuevo desde el panel, el sistema **envía un enlace de activación de un solo uso** por correo (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**. El administrador nunca define ni ve la contraseña.
 
 ---
 
@@ -143,8 +143,8 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 | 🧑‍💼 **Administrador** | `/admin/` | `AdminEmincut` | Dashboard de indicadores, gestión de individuos y zonas internas de Emincut, generación e impresión masiva de placas QR, reportes con exportación, administración de usuarios y bitácora de logs. |
 | 🌿 **Operario de campo** | `/operario/` | `OperarioEmincut` | Escaneo QR con la cámara, alta rápida de individuos con GPS, registro de mantenimientos y actualización del estado fitosanitario. |
 | 🌐 **Portal ciudadano** | `/publico/` | Sin login | Ficha técnica pública por QR, explorador y buscador de árboles y reporte de novedades con evidencia fotográfica. |
-| 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, y recuperación de contraseña mediante token criptográfico de un solo uso (válido 1 hora). |
-| ✉️ **Notificaciones** | `includes/` | — | Envío de credenciales por correo y WhatsApp al crear cuentas, con plantilla HTML institucional. |
+| 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, activación de cuentas y recuperación de contraseña mediante token criptográfico de un solo uso (recuperación: 1 hora; activación: 48 horas). |
+| ✉️ **Notificaciones** | `includes/` | — | Envío de enlaces de activación por correo y WhatsApp al crear cuentas, con plantilla HTML institucional. |
 
 ---
 
@@ -247,7 +247,7 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 
 | Capa lógica | Tablas | Contenido |
 | :-- | :-- | :-- |
-| 🔐 **Acceso y seguridad** | `roles` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, cuentas del personal de Emincut con Bcrypt y tokens temporales de 1 hora. |
+| 🔐 **Acceso y seguridad** | `roles` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, cuentas del personal de Emincut con Bcrypt y tokens temporales hasheados (1 hora / 48 horas). |
 | 🗺️ **Territorial** | `zonas` | Parques, campus y sectores internos de Emincut, georreferenciados. |
 | 🌳 **Núcleo dendrológico** | `individuos_forestales` · `estados_fitosanitarios` | Registro maestro (placa, DAP, altura, copa, siembra, GPS, foto) e historial de salud inmutable. |
 | 🕵️ **Actividad y auditoría** | `actividades_mantenimiento` · `logs_sistema` | Labores silviculturales y reportes ciudadanos, más bitácora de eventos con IP y detalles JSON. |
@@ -266,7 +266,7 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 | 🗺️ **Georreferenciación** | **Leaflet.js** + OpenStreetMap | Cartografía 100 % libre, sin APIs de pago. |
 | 🏷️ **Códigos QR** | `chillerlan/php-qrcode` + `html5-qrcode` | QR estándar ISO/IEC 18004 en SVG, verificables con cualquier lector, y escaneo con cámara en vivo. |
 | 📊 **Analítica** | **Chart.js** | Tableros dasométricos y fitosanitarios. |
-| ✉️ **Correos** | **PHPMailer** (SMTP) | Envío de credenciales con respaldo `mail()` y enlaces manuales de WhatsApp. |
+| ✉️ **Correos** | **PHPMailer** (SMTP) | Envío de enlaces de activación y recuperación con respaldo `mail()` y enlaces manuales de WhatsApp. |
 
 ---
 
@@ -274,9 +274,12 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 ## 🔐 Seguridad
 
 - ✅ **Inyección SQL imposible:** el 100 % de las consultas usan *Prepared Statements* de PDO con paso estricto de parámetros (concatenar variables en SQL está prohibido por convención).
-- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (coste 12), sin credenciales en texto plano ni rehasheos automáticos.
+- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (coste 12), sin credenciales en texto plano ni rehasheos automáticos. Las cuentas nuevas se activan con un enlace de un solo uso: el administrador nunca define la contraseña.
 - ✅ **Control de acceso por roles** con el middleware `includes/auth_check.php`.
-- ✅ **Tokens de recuperación** criptográficos, de un solo uso y con validez de 1 hora; el enlace se envía por correo y **nunca se muestra en pantalla** (salvo modo demo local explícito con `FORESTID_MODO_DEMO=1`).
+- ✅ **Sesiones endurecidas:** cookies `HttpOnly`/`SameSite`, regeneración de ID al entrar y expiración por inactividad (30 min).
+- ✅ **Límite de intentos** en login y recuperación, con retardo progresivo.
+- ✅ **Tokens de recuperación y activación** guardados como hash SHA-256, de un solo uso y con validez limitada (1 hora / 48 horas); el enlace se envía por correo y **nunca se muestra en pantalla** (salvo modo demo local explícito con `FORESTID_MODO_DEMO=1`).
+- ✅ **Acciones destructivas por POST** con token CSRF (baja lógica, logout, activación de usuarios y regeneración de QR).
 - ✅ **Auditoría inmutable** en `logs_sistema` con estructura JSON e IP de origen.
 - ✅ **Credenciales fuera de Git:** `config/mailer.php` y `config/config.local.php` están en `.gitignore`; solo se versionan las plantillas.
 - ✅ **Rutas sensibles bloqueadas por HTTP:** `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` devuelven 404 gracias a los `.htaccess`.
@@ -304,7 +307,7 @@ ForestID_V2/
 ├── assets/        # CSS institucional, JS, imágenes, QR SVG generados y subidas
 ├── error/         # Páginas de error 403, 404 y 500
 ├── database/      # Script DDL + DML completo para MySQL 8.0
-├── vendor/        # PHPMailer (envío de credenciales por SMTP)
+├── vendor/        # PHPMailer (envío de enlaces por SMTP)
 └── docs/          # Manuales, diccionario de datos, diagramas y prompt de contexto
 ```
 

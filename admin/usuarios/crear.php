@@ -14,7 +14,7 @@ requerir_rol(['AdminEmincut']);
 $pdo = getDBConnection();
 $error = '';
 
-// Resultado del envío de credenciales (correo / WhatsApp)
+// Resultado del envío del enlace de activación (correo / WhatsApp)
 $envio = null;
 $usuario_nuevo = null;
 
@@ -27,16 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo         = sanear($_POST['correo'] ?? '');
     $telefono       = sanear($_POST['telefono'] ?? '');
     $id_rol         = $_POST['id_rol'] ?? '';
-    $password       = $_POST['password'] ?? '';
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($nombres) || empty($apellidos) || empty($correo) || empty($id_rol) || empty($password)) {
+    } elseif (empty($nombres) || empty($apellidos) || empty($correo) || empty($id_rol)) {
         $error = 'Todos los campos marcados con (*) son obligatorios.';
     } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $error = 'El correo electrónico ingresado no tiene un formato válido.';
-    } elseif (strlen($password) < 6) {
-        $error = 'La contraseña debe tener al menos 6 caracteres.';
     } else {
         // Verificar correo único
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `usuarios` WHERE correo = :correo");
@@ -44,65 +41,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ((int)$chk->fetchColumn() > 0) {
             $error = 'Ya existe un usuario registrado con este correo electrónico.';
         } else {
-            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+            // A7: el administrador no define la contraseña. Se guarda un hash
+            // aleatorio inutilizable y el usuario crea la suya con un enlace.
+            $password_hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT);
             $id_nuevo = generar_uuid();
+            $token_activacion = bin2hex(random_bytes(32));
+            $horas_activacion = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
+            $expira_activacion = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_ACTIVACION);
+            $enlace_activacion = BASE_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
 
-            $stmt = $pdo->prepare("
-                INSERT INTO `usuarios` (
-                    `id_usuario`, `id_rol`, `nombres`, `apellidos`, 
-                    `correo`, `password_hash`, `telefono`, `estado`, `fecha_creacion`
-                ) VALUES (
-                    :id, :id_rol, :nombres, :apellidos,
-                    :correo, :hash, :telefono, 1, NOW()
-                )
-            ");
-            $stmt->execute([
-                ':id'             => $id_nuevo,
-                ':id_rol'         => $id_rol,
-                ':nombres'        => $nombres,
-                ':apellidos'      => $apellidos,
-                ':correo'         => $correo,
-                ':hash'           => $password_hash,
-                ':telefono'       => $telefono
-            ]);
+            try {
+                $pdo->beginTransaction();
 
-            registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'CREAR_USUARIO', 'USUARIOS', [
-                'id_usuario_creado' => $id_nuevo,
-                'correo'            => $correo
-            ]);
+                $stmt = $pdo->prepare("
+                    INSERT INTO `usuarios` (
+                        `id_usuario`, `id_rol`, `nombres`, `apellidos`, 
+                        `correo`, `password_hash`, `telefono`, `estado`, `fecha_creacion`
+                    ) VALUES (
+                        :id, :id_rol, :nombres, :apellidos,
+                        :correo, :hash, :telefono, 1, NOW()
+                    )
+                ");
+                $stmt->execute([
+                    ':id'             => $id_nuevo,
+                    ':id_rol'         => $id_rol,
+                    ':nombres'        => $nombres,
+                    ':apellidos'      => $apellidos,
+                    ':correo'         => $correo,
+                    ':hash'           => $password_hash,
+                    ':telefono'       => $telefono
+                ]);
 
-            // Nombre del rol seleccionado (para las notificaciones)
-            $nombre_rol = '';
-            foreach ($roles as $r) {
-                if ((string)$r['id_rol'] === (string)$id_rol) { $nombre_rol = $r['nombre_rol']; break; }
+                // Token de activación de un solo uso (en BD solo el hash).
+                $insToken = $pdo->prepare("
+                    INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`)
+                    VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())
+                ");
+                $insToken->execute([
+                    ':id_usuario' => $id_nuevo,
+                    ':token'      => hash_token($token_activacion),
+                    ':expiracion' => $expira_activacion
+                ]);
+
+                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'CREAR_USUARIO', 'USUARIOS', [
+                    'id_usuario_creado' => $id_nuevo,
+                    'correo'            => $correo
+                ]);
+
+                $pdo->commit();
+            } catch (Throwable $e) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                error_log('[ForestID] Error al crear usuario: ' . $e->getMessage());
+                $error = 'No se pudo crear el usuario. Intente nuevamente.';
             }
 
-            // --- Envío de credenciales por correo y WhatsApp ---
-            $res_correo = enviar_correo_credenciales($correo, $nombres, $apellidos, $password, $nombre_rol);
-            $res_wa = enviar_whatsapp_credenciales($telefono, $nombres, $apellidos, $correo, $password, $nombre_rol);
-            $enlace_wa = enlace_whatsapp_credenciales($telefono, $nombres, $apellidos, $correo, $password, $nombre_rol);
+            if (empty($error)) {
+                // Nombre del rol seleccionado (para la notificación)
+                $nombre_rol = '';
+                foreach ($roles as $r) {
+                    if ((string)$r['id_rol'] === (string)$id_rol) { $nombre_rol = $r['nombre_rol']; break; }
+                }
 
-            registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'ENVIAR_CREDENCIALES', 'USUARIOS', [
-                'id_usuario_creado' => $id_nuevo,
-                'correo_ok'         => $res_correo['ok'],
-                'whatsapp_ok'       => $res_wa['ok']
-            ]);
+                // --- Envío del enlace de activación por correo y WhatsApp (A7) ---
+                $res_correo = enviar_correo_activacion($correo, $nombres, $apellidos, $enlace_activacion, $horas_activacion);
+                $res_wa = enviar_whatsapp_activacion($telefono, $nombres, $apellidos, $enlace_activacion, $horas_activacion);
+                $enlace_wa = enlace_whatsapp_activacion($telefono, $nombres, $apellidos, $enlace_activacion, $horas_activacion);
 
-            $envio = [
-                'correo'       => $res_correo,
-                'whatsapp'     => $res_wa,
-                'enlace_wa'    => $enlace_wa,
-                'enlace_mail'  => 'mailto:' . $correo . '?subject=' . rawurlencode('ForestID — Tus credenciales de acceso') . '&body=' . rawurlencode(texto_credenciales($nombres, $apellidos, $correo, $password, $nombre_rol)),
-            ];
-            $usuario_nuevo = [
-                'nombres'   => $nombres,
-                'apellidos' => $apellidos,
-                'correo'    => $correo,
-                'password'  => $password,
-                'rol'       => $nombre_rol,
-                'telefono'  => $telefono,
-            ];
-            // No redirige: muestra el panel de estado de envío con los botones de respaldo
+                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'ENVIAR_ACTIVACION', 'USUARIOS', [
+                    'id_usuario_creado' => $id_nuevo,
+                    'correo_ok'         => $res_correo['ok'],
+                    'whatsapp_ok'       => $res_wa['ok']
+                ]);
+
+                $envio = [
+                    'correo'            => $res_correo,
+                    'whatsapp'          => $res_wa,
+                    'enlace_wa'         => $enlace_wa,
+                    'enlace_activacion' => $enlace_activacion,
+                    'enlace_mail'       => 'mailto:' . $correo . '?subject=' . rawurlencode('ForestID — Activa tu cuenta') . '&body=' . rawurlencode(texto_activacion($nombres, $apellidos, $enlace_activacion, $horas_activacion)),
+                ];
+                $usuario_nuevo = [
+                    'nombres'           => $nombres,
+                    'apellidos'         => $apellidos,
+                    'correo'            => $correo,
+                    'rol'               => $nombre_rol,
+                    'telefono'          => $telefono,
+                    'enlace_activacion' => $enlace_activacion,
+                ];
+                // No redirige: muestra el panel de estado de envío con los botones de respaldo
+            }
         }
     }
 }
@@ -137,7 +166,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
         <?php endif; ?>
 
         <?php if ($usuario_nuevo !== null && $envio !== null): ?>
-        <!-- ===== Panel de resultado: envío de credenciales ===== -->
+        <!-- ===== Panel de resultado: envío del enlace de activación ===== -->
         <div class="emi-card p-6 sm:p-8 max-w-2xl al-scroll">
             <div class="flex items-center gap-3 mb-1">
                 <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
@@ -153,12 +182,17 @@ require_once __DIR__ . '/../../includes/navbar.php';
 
             <div class="linea-sol mt-3 mb-5"></div>
 
-            <!-- Credenciales -->
+            <!-- Enlace de activación -->
             <div class="rounded-xl p-4 border mb-5" style="background:var(--emi-amarillo-suave); border-color:#F2DCAC">
-                <span class="emi-label block mb-2">Credenciales de acceso</span>
+                <span class="emi-label block mb-2">Enlace de activación (un solo uso)</span>
                 <p class="text-sm" style="color:var(--emi-tinta)">
-                    <strong>Correo:</strong> <?= htmlspecialchars($usuario_nuevo['correo']) ?><br>
-                    <strong>Contraseña:</strong> <code class="px-1.5 py-0.5 rounded bg-white border border-[#F2DCAC]"><?= htmlspecialchars($usuario_nuevo['password']) ?></code>
+                    <strong>Correo:</strong> <?= htmlspecialchars($usuario_nuevo['correo']) ?>
+                </p>
+                <a href="<?= htmlspecialchars($usuario_nuevo['enlace_activacion']) ?>" class="block mt-2 text-xs break-all font-medium" style="color:var(--emi-verde)">
+                    <?= htmlspecialchars($usuario_nuevo['enlace_activacion']) ?>
+                </a>
+                <p class="text-[11px] mt-2" style="color:var(--emi-tinta-suave)">
+                    El usuario debe abrir este enlace para crear su propia contraseña. Caduca en 48 horas.
                 </p>
             </div>
 
@@ -171,7 +205,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                         <span class="font-bold block">Correo electrónico</span>
                         <span style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($envio['correo']['detalle']) ?></span>
                         <?php if (!$envio['correo']['ok']): ?>
-                            <a href="<?= $envio['enlace_mail'] ?>" class="block mt-1.5 font-semibold" style="color:var(--emi-verde)">Abrir en el cliente de correo →</a>
+                            <a href="<?= htmlspecialchars($envio['enlace_mail']) ?>" class="block mt-1.5 font-semibold" style="color:var(--emi-verde)">Abrir en el cliente de correo →</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -184,7 +218,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                         <span style="color:var(--emi-tinta-suave)"><?= htmlspecialchars($envio['whatsapp']['detalle']) ?></span>
                         <?php if (!$envio['whatsapp']['ok'] && !empty($envio['enlace_wa'])): ?>
                             <a href="<?= htmlspecialchars($envio['enlace_wa']) ?>" target="_blank" rel="noopener" class="emi-btn emi-btn-sol text-[11px] py-2 px-3 mt-2 inline-flex">
-                                <span class="inline-flex items-center gap-1.5 relative z-10"><i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar credenciales por WhatsApp</span>
+                                <span class="inline-flex items-center gap-1.5 relative z-10"><i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar enlace por WhatsApp</span>
                             </a>
                         <?php endif; ?>
                         <?php if (empty($envio['enlace_wa'])): ?>
@@ -243,17 +277,16 @@ require_once __DIR__ . '/../../includes/navbar.php';
                 </div>
 
                 <div>
-                    <label for="password" class="emi-label block mb-1">Contraseña Inicial *</label>
-                    <input type="password" name="password" id="password" required minlength="6" placeholder="Mínimo 6 caracteres" class="emi-input" style="padding-left:.75rem">
-                    <p class="text-[11px] mt-1.5" style="color:var(--emi-tinta-suave)">
-                        <i data-lucide="info" class="w-3 h-3 inline"></i> Se enviará al correo y al WhatsApp del usuario al guardar.
+                    <label class="emi-label block mb-1">Activación de la cuenta</label>
+                    <p class="text-[11px]" style="color:var(--emi-tinta-suave)">
+                        <i data-lucide="info" class="w-3 h-3 inline"></i> Al guardar se envía al usuario un enlace de un solo uso (48 horas) para que cree su propia contraseña. El administrador nunca define ni ve la contraseña.
                     </p>
                 </div>
 
                 <div class="pt-4 border-t border-[#E7EADD] flex justify-end gap-2">
                     <a href="<?= BASE_URL ?>admin/usuarios/index.php" class="emi-btn text-xs py-2.5 px-4" style="background:#fff; color:var(--emi-verde-oscuro); border:1px solid #CBD9B8">Cancelar</a>
                     <button type="submit" class="emi-btn emi-btn-sol text-xs py-2.5 px-5">
-                        <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="check" class="w-4 h-4"></i> Guardar y Enviar Credenciales</span>
+                        <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="check" class="w-4 h-4"></i> Guardar y Enviar Enlace</span>
                     </button>
                 </div>
             </form>
