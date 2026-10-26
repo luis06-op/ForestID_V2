@@ -17,10 +17,10 @@ $usuario_encontrado = null;
 
 $pdo = getDBConnection();
 
-if (empty($token)) {
-    $error_token = 'No se proporcionó ningún token de recuperación.';
+if (empty($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
+    $error_token = 'No se proporcionó un token de recuperación válido.';
 } else {
-    // Validar token en la BD
+    // Validar token en la BD comparando su hash SHA-256 (A3).
     $stmt = $pdo->prepare("
         SELECT tr.*, u.id_usuario, u.nombres, u.apellidos, u.correo
         FROM `tokens_recuperacion` tr
@@ -28,13 +28,13 @@ if (empty($token)) {
         WHERE tr.token = :token AND tr.usado = 0 AND tr.fecha_expiracion > NOW()
         LIMIT 1
     ");
-    $stmt->execute([':token' => $token]);
+    $stmt->execute([':token' => hash_token($token)]);
     $usuario_encontrado = $stmt->fetch();
 
     if ($usuario_encontrado) {
         $token_valido = true;
     } else {
-        $error_token = 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de 1 hora).';
+        $error_token = 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado.';
     }
 }
 
@@ -44,10 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
     $password_nueva = $_POST['password_nueva'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
+    $error_password = validar_password_fuerte($password_nueva);
+
     if (!validar_token_csrf($token_csrf)) {
         $error_form = 'Token de seguridad inválido. Intente nuevamente.';
-    } elseif (strlen($password_nueva) < 6) {
-        $error_form = 'La contraseña debe contener al menos 6 caracteres.';
+    } elseif ($error_password !== null) {
+        $error_form = $error_password;
     } elseif ($password_nueva !== $password_confirm) {
         $error_form = 'Las contraseñas no coinciden.';
     } else {
@@ -61,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
             ':id'   => $usuario_encontrado['id_usuario']
         ]);
 
-        // Marcar token como usado
-        $updToken = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_token` = :id_token");
-        $updToken->execute([':id_token' => $usuario_encontrado['id_token']]);
+        // Invalidar todos los tokens pendientes del usuario.
+        $updToken = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_usuario` = :id_usuario");
+        $updToken->execute([':id_usuario' => $usuario_encontrado['id_usuario']]);
 
         registrar_log($pdo, $usuario_encontrado['id_usuario'], 'RESTABLECIMIENTO_PASSWORD', 'AUTENTICACION', [
             'correo' => $usuario_encontrado['correo']
@@ -130,10 +132,13 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </div>
-                        <input type="password" id="password_nueva" name="password_nueva" required minlength="6"
-                               placeholder="Mínimo 6 caracteres"
+                        <input type="password" id="password_nueva" name="password_nueva" required minlength="10"
+                               placeholder="Mínimo 10 caracteres"
                                class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none">
                     </div>
+                    <p class="text-[11px] mt-1.5 text-gray-500">
+                        Debe incluir al menos una mayúscula, una minúscula y un número.
+                    </p>
                 </div>
 
                 <div>
@@ -144,7 +149,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <i data-lucide="check" class="w-4 h-4"></i>
                         </div>
-                        <input type="password" id="password_confirm" name="password_confirm" required minlength="6"
+                        <input type="password" id="password_confirm" name="password_confirm" required minlength="10"
                                placeholder="Repita la contraseña"
                                class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none">
                     </div>

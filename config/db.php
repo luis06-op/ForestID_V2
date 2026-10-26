@@ -4,7 +4,30 @@
  * Empresa: Emincut S.A.S. | El Bagre, Antioquia
  */
 
+// Endurecimiento de la sesión (A1): cookies HttpOnly + SameSite, modo estricto
+// y nombre propio de sesión. Debe ejecutarse siempre antes de session_start().
 if (session_status() === PHP_SESSION_NONE) {
+    $sesion_https = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
+        || (($_SERVER['SERVER_PORT'] ?? null) == 443)
+        || (strtolower((string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https');
+
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.cookie_httponly', '1');
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.cookie_secure', $sesion_https ? '1' : '0');
+    ini_set('session.gc_maxlifetime', '1800');
+
+    session_name('FORESTID_SESSID');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'domain'   => '',
+        'secure'   => $sesion_https,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+
     session_start();
 }
 
@@ -33,6 +56,16 @@ define('APP_LOCATION', EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', ' . 
 define('APP_REGION', 'Bajo Cauca Antioqueño');
 define('APP_INITIATIVE', EMINCUT_NOMBRE);
 define('APP_VERSION', '1.0.0');
+
+// Parámetros de seguridad (A1/A2). Se pueden sobrescribir en config/config.local.php.
+if (!defined('SESSION_IDLE_TIMEOUT'))     define('SESSION_IDLE_TIMEOUT', 1800);      // 30 min de inactividad
+if (!defined('LOGIN_MAX_INTENTOS'))       define('LOGIN_MAX_INTENTOS', 5);           // fallos por ventana
+if (!defined('LOGIN_VENTANA_MIN'))        define('LOGIN_VENTANA_MIN', 15);           // ventana en minutos
+if (!defined('RECUPERACION_MAX_INTENTOS')) define('RECUPERACION_MAX_INTENTOS', 3);
+
+// Token de activación/recuperación (A3/A7)
+if (!defined('TOKEN_VIGENCIA_RECUPERACION')) define('TOKEN_VIGENCIA_RECUPERACION', 3600);      // 1 hora
+if (!defined('TOKEN_VIGENCIA_ACTIVACION'))   define('TOKEN_VIGENCIA_ACTIVACION', 172800);     // 48 horas
 
 // Créditos del Proyecto
 define('TEAM_LEAD', 'Luis Angel Muñoz Márquez (Líder de Arquitectura)');

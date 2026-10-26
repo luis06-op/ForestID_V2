@@ -27,40 +27,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensaje_error = 'Por favor ingrese un correo electrónico válido.';
     } else {
         $pdo = getDBConnection();
-        $stmt = $pdo->prepare("SELECT id_usuario, nombres, correo FROM `usuarios` WHERE correo = :correo AND estado = 1");
-        $stmt->execute([':correo' => $correo]);
-        $usuario = $stmt->fetch();
 
-        if ($usuario) {
-            // Generar token único seguro
-            $token = bin2hex(random_bytes(32));
-            // Expiración en 1 hora
-            $expiracion = date('Y-m-d H:i:s', time() + 3600);
+        // A2: límite de solicitudes por IP para evitar spam de correos.
+        if (recuperacion_bloqueada($pdo)) {
+            registrar_log($pdo, null, 'SOLICITUD_RECUPERACION_BLOQUEADA', 'AUTENTICACION', [
+                'correo_intentado' => $correo
+            ]);
+        } else {
+            $stmt = $pdo->prepare("SELECT id_usuario, nombres, correo FROM `usuarios` WHERE correo = :correo AND estado = 1");
+            $stmt->execute([':correo' => $correo]);
+            $usuario = $stmt->fetch();
 
-            // Guardar en tabla tokens_recuperacion
-            $ins = $pdo->prepare("
-                INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`)
-                VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())
-            ");
-            $ins->execute([
-                ':id_usuario'  => $usuario['id_usuario'],
-                ':token'       => $token,
-                ':expiracion'  => $expiracion
+            // Se registra todo intento válido (exista o no la cuenta) para poder
+            // limitar por IP sin revelar qué correos están registrados.
+            registrar_log($pdo, $usuario['id_usuario'] ?? null, 'SOLICITUD_RECUPERACION_PASSWORD', 'AUTENTICACION', [
+                'correo_intentado' => $correo
             ]);
 
-            registrar_log($pdo, $usuario['id_usuario'], 'SOLICITUD_RECUPERACION_PASSWORD', 'AUTENTICACION', [
-                'correo' => $correo
-            ]);
+            if ($usuario) {
+                // Generar token único seguro; en BD solo se guarda su hash (A3).
+                $token  = bin2hex(random_bytes(32));
+                $expira = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_RECUPERACION);
 
-            $enlace = BASE_URL . "auth/restablecer_password.php?token=" . urlencode($token);
-            $envio  = enviar_correo_recuperacion($usuario['correo'], $usuario['nombres'], $enlace);
-            if (!$envio['ok']) {
-                error_log('[ForestID] No se pudo enviar el enlace de recuperación: ' . $envio['detalle']);
-            }
+                // Invalidar tokens anteriores del mismo usuario.
+                $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_usuario` = :id AND `usado` = 0")
+                    ->execute([':id' => $usuario['id_usuario']]);
 
-            // Solo en modo demo local se expone el enlace en la interfaz.
-            if ($modo_demo) {
-                $enlace_simulado = $enlace;
+                $ins = $pdo->prepare("
+                    INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`)
+                    VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())
+                ");
+                $ins->execute([
+                    ':id_usuario' => $usuario['id_usuario'],
+                    ':token'      => hash_token($token),
+                    ':expiracion' => $expira
+                ]);
+
+                $enlace = BASE_URL . "auth/restablecer_password.php?token=" . urlencode($token);
+                $envio  = enviar_correo_recuperacion($usuario['correo'], $usuario['nombres'], $enlace);
+                if (!$envio['ok']) {
+                    error_log('[ForestID] No se pudo enviar el enlace de recuperación: ' . $envio['detalle']);
+                }
+
+                // Solo en modo demo local se expone el enlace en la interfaz.
+                if ($modo_demo) {
+                    $enlace_simulado = $enlace;
+                }
             }
         }
 

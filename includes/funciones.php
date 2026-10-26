@@ -20,6 +20,127 @@ function sanear($dato) {
 }
 
 /**
+ * Retorna la IP del cliente que realiza la petición.
+ * No se confía en X-Forwarded-For: solo se usa REMOTE_ADDR.
+ */
+function obtener_ip_cliente(): string {
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+/**
+ * Cuenta registros de una acción en logs_sistema dentro de los últimos N minutos.
+ * Permite filtrar por IP y/o por el correo guardado en `detalle.correo_intentado`.
+ */
+function contar_intentos_recientes(PDO $pdo, string $accion, int $minutos, ?string $ip = null, ?string $correo = null): int {
+    $minutos = max(1, min(1440, $minutos));
+    $sql = "SELECT COUNT(*) FROM `logs_sistema`
+            WHERE `accion` = :accion
+              AND `fecha_registro` >= DATE_SUB(NOW(), INTERVAL {$minutos} MINUTE)";
+    $params = [':accion' => $accion];
+
+    if ($ip !== null) {
+        $sql .= " AND `ip_origen` = :ip";
+        $params[':ip'] = $ip;
+    }
+    if ($correo !== null) {
+        $sql .= " AND JSON_UNQUOTE(JSON_EXTRACT(`detalle`, '$.correo_intentado')) = :correo";
+        $params[':correo'] = $correo;
+    }
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int)$stmt->fetchColumn();
+    } catch (PDOException $e) {
+        error_log('Error al contar intentos de acceso: ' . $e->getMessage());
+        return 0;
+    }
+}
+
+/**
+ * Cantidad de fallos de login recientes para una IP o un correo (el mayor de ambos).
+ */
+function intentos_login_fallidos(PDO $pdo, string $correo): int {
+    return max(
+        contar_intentos_recientes($pdo, 'INTENTO_FALLIDO_LOGIN', LOGIN_VENTANA_MIN, obtener_ip_cliente(), null),
+        contar_intentos_recientes($pdo, 'INTENTO_FALLIDO_LOGIN', LOGIN_VENTANA_MIN, null, $correo)
+    );
+}
+
+/**
+ * Indica si el login está temporalmente bloqueado por demasiados fallos.
+ */
+function login_bloqueado(PDO $pdo, string $correo): bool {
+    return intentos_login_fallidos($pdo, $correo) >= LOGIN_MAX_INTENTOS;
+}
+
+/**
+ * Retardo progresivo para frenar la fuerza bruta (máximo 1 segundo).
+ */
+function retardo_progresivo(int $intentos): void {
+    if ($intentos > 0) {
+        usleep(min(1000000, 200000 * $intentos));
+    }
+}
+
+/**
+ * Indica si la solicitud de recuperación está limitada para esta IP.
+ */
+function recuperacion_bloqueada(PDO $pdo): bool {
+    return contar_intentos_recientes($pdo, 'SOLICITUD_RECUPERACION_PASSWORD', LOGIN_VENTANA_MIN, obtener_ip_cliente())
+        >= RECUPERACION_MAX_INTENTOS;
+}
+
+/**
+ * Valida la política mínima de contraseñas. Retorna null si es válida
+ * o el mensaje de error correspondiente.
+ */
+function validar_password_fuerte(string $password): ?string {
+    if (mb_strlen($password, 'UTF-8') < 10) {
+        return 'La contraseña debe tener al menos 10 caracteres.';
+    }
+    if (strlen($password) > 72) {
+        return 'La contraseña no puede superar los 72 caracteres.';
+    }
+    if (!preg_match('/[a-z]/u', $password)) {
+        return 'La contraseña debe incluir al menos una letra minúscula.';
+    }
+    if (!preg_match('/[A-Z]/u', $password)) {
+        return 'La contraseña debe incluir al menos una letra mayúscula.';
+    }
+    if (!preg_match('/\d/', $password)) {
+        return 'La contraseña debe incluir al menos un número.';
+    }
+    return null;
+}
+
+/**
+ * Hash determinista para almacenar tokens de un solo uso (A3).
+ */
+function hash_token(string $token): string {
+    return hash('sha256', $token);
+}
+
+/**
+ * Destruye por completo la sesión y su cookie.
+ */
+function cerrar_sesion_actual(): void {
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires'  => time() - 42000,
+            'path'     => $params['path'],
+            'domain'   => $params['domain'],
+            'secure'   => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax',
+        ]);
+    }
+    session_destroy();
+}
+
+/**
  * Genera un UUID v4 seguro en PHP
  */
 function generar_uuid(): string {

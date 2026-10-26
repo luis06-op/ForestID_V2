@@ -12,10 +12,27 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 /**
- * Retorna true si existe una sesión activa y válida
+ * Retorna true si existe una sesión activa y válida.
+ * Aplica expiración por inactividad (A1): si se supera SESSION_IDLE_TIMEOUT
+ * se limpian los datos de sesión y se marca `sesion_expirada` para avisar.
  */
 function esta_autenticado(): bool {
-    return !empty($_SESSION['usuario']) && !empty($_SESSION['usuario']['id_usuario']);
+    if (empty($_SESSION['usuario']) || empty($_SESSION['usuario']['id_usuario'])) {
+        return false;
+    }
+
+    $ahora  = time();
+    $ultima = (int)($_SESSION['ultima_actividad'] ?? $ahora);
+
+    if (($ahora - $ultima) > SESSION_IDLE_TIMEOUT) {
+        $_SESSION = [];
+        session_regenerate_id(true);
+        $_SESSION['sesion_expirada'] = true;
+        return false;
+    }
+
+    $_SESSION['ultima_actividad'] = $ahora;
+    return true;
 }
 
 /**
@@ -58,7 +75,12 @@ function es_publico(): bool {
  */
 function requerir_autenticacion(): void {
     if (!esta_autenticado()) {
-        set_flash('warning', 'Debe iniciar sesión para acceder a este módulo.');
+        if (!empty($_SESSION['sesion_expirada'])) {
+            unset($_SESSION['sesion_expirada']);
+            set_flash('warning', 'Su sesión expiró por inactividad. Vuelva a iniciar sesión.');
+        } else {
+            set_flash('warning', 'Debe iniciar sesión para acceder a este módulo.');
+        }
         header('Location: ' . BASE_URL . 'auth/login.php');
         exit;
     }

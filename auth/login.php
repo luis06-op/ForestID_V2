@@ -28,48 +28,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_login = 'Por favor ingrese su correo electrónico y contraseña.';
     } else {
         $pdo = getDBConnection();
-        $stmt = $pdo->prepare("
-            SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol
-            FROM `usuarios` u
-            INNER JOIN `roles` r ON u.id_rol = r.id_rol
-            WHERE u.correo = :correo AND u.estado = 1
-            LIMIT 1
-        ");
-        $stmt->execute([':correo' => $correo]);
-        $usuario = $stmt->fetch();
 
-        // Validar contraseña exclusivamente contra el hash almacenado.
-        // No se permiten credenciales en texto plano ni rehasheos automáticos:
-        // los usuarios de prueba deben crearse con password_hash() real.
-        $password_valida = $usuario && password_verify($password, $usuario['password_hash']);
-
-        if ($usuario && $password_valida) {
-            // Iniciar sesión y guardar datos mínimos necesarios
-            $_SESSION['usuario'] = [
-                'id_usuario'         => $usuario['id_usuario'],
-                'nombres'            => $usuario['nombres'],
-                'apellidos'          => $usuario['apellidos'],
-                'correo'             => $usuario['correo'],
-                'id_rol'             => $usuario['id_rol'],
-                'nombre_rol'         => $usuario['nombre_rol']
-            ];
-
-            // Registrar acceso en BD y logs
-            $updAcceso = $pdo->prepare("UPDATE `usuarios` SET `ultimo_acceso` = NOW() WHERE `id_usuario` = :id");
-            $updAcceso->execute([':id' => $usuario['id_usuario']]);
-
-            registrar_log($pdo, $usuario['id_usuario'], 'INICIO_SESION', 'AUTENTICACION', [
-                'rol'    => $usuario['nombre_rol'],
-                'correo' => $usuario['correo']
-            ]);
-
-            set_flash('success', '¡Bienvenido(a), ' . htmlspecialchars($usuario['nombres']) . '!');
-            redirigir_segun_rol();
-        } else {
-            $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';
-            registrar_log($pdo, null, 'INTENTO_FALLIDO_LOGIN', 'AUTENTICACION', [
+        // A2: bloqueo temporal tras varios fallos por IP o por correo.
+        if (login_bloqueado($pdo, $correo)) {
+            $error_login = 'Demasiados intentos fallidos. Espere ' . LOGIN_VENTANA_MIN . ' minutos e intente nuevamente.';
+            registrar_log($pdo, null, 'LOGIN_BLOQUEADO', 'AUTENTICACION', [
                 'correo_intentado' => $correo
             ]);
+        } else {
+            $fallos_previos = intentos_login_fallidos($pdo, $correo);
+            retardo_progresivo($fallos_previos);
+
+            $stmt = $pdo->prepare("
+                SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol
+                FROM `usuarios` u
+                INNER JOIN `roles` r ON u.id_rol = r.id_rol
+                WHERE u.correo = :correo AND u.estado = 1
+                LIMIT 1
+            ");
+            $stmt->execute([':correo' => $correo]);
+            $usuario = $stmt->fetch();
+
+            // Validar contraseña exclusivamente contra el hash almacenado.
+            // No se permiten credenciales en texto plano ni rehasheos automáticos:
+            // los usuarios de prueba deben crearse con password_hash() real.
+            $password_valida = $usuario && password_verify($password, $usuario['password_hash']);
+
+            if ($usuario && $password_valida) {
+                // A1: nuevo ID de sesión tras autenticar (evita fijación de sesión).
+                session_regenerate_id(true);
+                $_SESSION['ultima_actividad'] = time();
+                $_SESSION['iniciada_en']      = time();
+
+                // Iniciar sesión y guardar datos mínimos necesarios
+                $_SESSION['usuario'] = [
+                    'id_usuario'         => $usuario['id_usuario'],
+                    'nombres'            => $usuario['nombres'],
+                    'apellidos'          => $usuario['apellidos'],
+                    'correo'             => $usuario['correo'],
+                    'id_rol'             => $usuario['id_rol'],
+                    'nombre_rol'         => $usuario['nombre_rol']
+                ];
+
+                // Registrar acceso en BD y logs
+                $updAcceso = $pdo->prepare("UPDATE `usuarios` SET `ultimo_acceso` = NOW() WHERE `id_usuario` = :id");
+                $updAcceso->execute([':id' => $usuario['id_usuario']]);
+
+                registrar_log($pdo, $usuario['id_usuario'], 'INICIO_SESION', 'AUTENTICACION', [
+                    'rol'    => $usuario['nombre_rol'],
+                    'correo' => $usuario['correo']
+                ]);
+
+                set_flash('success', '¡Bienvenido(a), ' . htmlspecialchars($usuario['nombres']) . '!');
+                redirigir_segun_rol();
+            } else {
+                $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';
+                registrar_log($pdo, null, 'INTENTO_FALLIDO_LOGIN', 'AUTENTICACION', [
+                    'correo_intentado' => $correo
+                ]);
+            }
         }
     }
 }
