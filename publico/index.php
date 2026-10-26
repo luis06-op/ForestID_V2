@@ -204,19 +204,16 @@ require_once __DIR__ . '/../includes/header.php';
         </p>
 
         <h1 class="emi-rise emi-d2 font-heading font-extrabold text-4xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-tight max-w-4xl text-[#22371C]">
-            Cada árbol sembrado,<br>contado y <span class="text-white" style="text-shadow:0 4px 18px rgba(34,55,28,.35)">verificado</span>.
+            Cada árbol cuenta, ahora <span class="text-white" style="text-shadow:0 4px 18px rgba(34,55,28,.35)">también se cuenta</span>.
         </h1>
 
         <p class="emi-rise emi-d3 mt-6 text-lg max-w-2xl leading-relaxed text-[#22371C]/85">
-            ForestID le permite a Emincut llevar el registro de los árboles que siembra y de las hectáreas forestadas después de la minería, con evidencia para sustentar el cumplimiento de la Ley 2173 de 2021.
+            ForestID le permite a Emincut llevar el registro de los árboles que siembra y de las hectáreas forestadas después de la minería.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center gap-4 emi-rise emi-d4">
             <a href="<?= BASE_URL ?>auth/login.php" class="emi-btn barra-brillo rounded-full px-8 py-3.5 text-sm shadow-xl" style="background:#22371C; color:var(--emi-amarillo)">
                 <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="log-in" class="w-4 h-4"></i> Ingresar al sistema</span>
-            </a>
-            <a href="https://www.minambiente.gov.co/wp-content/uploads/2024/07/LEY-2173-DEL-30-DE-DICIEMBRE-DE-2021.pdf" target="_blank" rel="noopener noreferrer" class="emi-btn rounded-full px-8 py-3.5 text-sm border-2 border-[#22371C]/40 text-[#22371C] hover:bg-[#22371C]/10 transition-colors">
-                <span class="inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i> Leer la Ley 2173 de 2021</span>
             </a>
         </div>
         <p class="mt-4 text-xs text-[#22371C]/65 emi-rise emi-d4">Acceso solo para personal autorizado de Emincut.</p>

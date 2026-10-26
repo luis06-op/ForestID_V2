@@ -5,8 +5,8 @@
 -- Equipo de Desarrollo:
 --   - Luis Angel Muñoz Márquez (Líder de Arquitectura)
 --   - Gabriel Jaime Correa Correa (Desarrollador Backend)
---   - Michael Rodríguez Londoño (Desarrollador UI / QA)
 --   - Valentina (Supervisor / Verificador de Calidad)
+--   In memoriam: Michael Rodríguez Londoño (Desarrollador UI / QA)
 -- Base de Datos: MySQL 8.0 / MariaDB 10.3+ (Soporte UUID() por defecto)
 -- Collation: utf8mb4_spanish_ci | Motor: InnoDB
 -- =============================================================================
@@ -244,8 +244,8 @@ INSERT INTO `usuarios` (
 (
     '33333333-3333-3333-3333-333333333303',
     '11111111-1111-1111-1111-111111111103', -- UsuarioPublico
-    'Michael',
-    'Rodríguez Londoño',
+    'Ciudadano',
+    'de Prueba',
     'ciudadano@emincut.com',
     '$2y$12$cNCGEdfYqhGVAKu6QDC/uOOY1jXk.LdAdodVQ8rpdV2wb6wYpqX4i',
     '+57 314 667 9900',
