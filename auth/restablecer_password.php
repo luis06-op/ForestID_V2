@@ -13,6 +13,10 @@ $token = trim($token);
 // Un enlace de activación (?nuevo=1) usa el mismo formulario que la recuperación.
 $es_activacion = (($_GET['nuevo'] ?? $_POST['nuevo'] ?? '') === '1');
 
+// Vigencia en horas, tomada de las constantes para no duplicar el dato en los textos.
+$horas_activacion   = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
+$horas_recuperacion = max(1, (int)round(TOKEN_VIGENCIA_RECUPERACION / 3600));
+
 $error_token = '';
 $error_form = '';
 $token_valido = false;
@@ -38,8 +42,8 @@ if (empty($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
         $token_valido = true;
     } else {
         $error_token = $es_activacion
-            ? 'El enlace de activación es inválido, ya fue utilizado o ha expirado (validez de 48 horas).'
-            : 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de 1 hora).';
+            ? 'El enlace de activación es inválido, ya fue utilizado o ha expirado (validez de ' . $horas_activacion . ' horas).'
+            : 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de ' . $horas_recuperacion . ' hora' . ($horas_recuperacion === 1 ? '' : 's') . ').';
     }
 }
 

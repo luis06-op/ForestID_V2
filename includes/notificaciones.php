@@ -152,14 +152,15 @@ function enviar_correo_activacion(string $correo, string $nombres, string $apell
 }
 
 /**
- * Envía el enlace de restablecimiento de contraseña (válido 1 hora).
+ * Envía el enlace de restablecimiento de contraseña (vigencia de TOKEN_VIGENCIA_RECUPERACION).
  * @return array{ok: bool, detalle: string}
  */
 function enviar_correo_recuperacion(string $correo, string $nombres, string $enlace): array {
     $asunto = 'ForestID — Restablece tu contraseña';
+    $horas  = max(1, (int)round(TOKEN_VIGENCIA_RECUPERACION / 3600));
     $texto = "Hola {$nombres},\n\n"
            . "Recibimos una solicitud para restablecer la contraseña de tu cuenta en ForestID.\n\n"
-           . "Abre este enlace (válido durante 1 hora y de un solo uso):\n{$enlace}\n\n"
+           . "Abre este enlace (válido durante {$horas} hora" . ($horas === 1 ? '' : 's') . " y de un solo uso):\n{$enlace}\n\n"
            . "Si no solicitaste este cambio, ignora este mensaje: tu contraseña actual seguirá funcionando.\n\n"
            . "— ForestID | Emincut S.A.S. | El Bagre, Antioquia";
 
@@ -174,7 +175,7 @@ function enviar_correo_recuperacion(string $correo, string $nombres, string $enl
           . '<p style="margin:0 0 14px;">Hola <strong>' . $nombre_html . '</strong>,</p>'
           . '<p style="margin:0 0 18px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en ForestID.</p>'
           . '<p style="margin:0 0 20px;"><a href="' . $enlace_html . '" style="display:inline-block;background:#E9A22E;color:#22371C;font-weight:bold;font-size:14px;padding:10px 22px;border-radius:10px;text-decoration:none;">Crear nueva contraseña</a></p>'
-          . '<p style="margin:0;color:#5a6b4f;font-size:12px;">El enlace es válido durante 1 hora y solo puede usarse una vez. Si no solicitaste este cambio, ignora este mensaje.</p>'
+          . '<p style="margin:0;color:#5a6b4f;font-size:12px;">El enlace es válido durante ' . $horas . ' hora' . ($horas === 1 ? '' : 's') . ' y solo puede usarse una vez. Si no solicitaste este cambio, ignora este mensaje.</p>'
           . '</td></tr><tr><td style="padding:16px 28px;border-top:1px solid #E7EADD;background:#FBFAF6;border-radius:0 0 14px 14px;font-size:11px;color:#5a6b4f;">ForestID | Emincut S.A.S. | El Bagre, Antioquia</td></tr>'
           . '</table></body></html>';
 

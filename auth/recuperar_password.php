@@ -40,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Se registra todo intento válido (exista o no la cuenta) para poder
             // limitar por IP sin revelar qué correos están registrados.
-            registrar_log($pdo, $usuario['id_usuario'] ?? null, 'SOLICITUD_RECUPERACION_PASSWORD', 'AUTENTICACION', [
+            $id_usuario_intento = is_array($usuario) ? $usuario['id_usuario'] : null;
+            registrar_log($pdo, $id_usuario_intento, 'SOLICITUD_RECUPERACION_PASSWORD', 'AUTENTICACION', [
                 'correo_intentado' => $correo
             ]);
 
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':expiracion' => $expira
                 ]);
 
-                $enlace = BASE_URL . "auth/restablecer_password.php?token=" . urlencode($token);
+                $enlace = APP_URL . "auth/restablecer_password.php?token=" . urlencode($token);
                 $envio  = enviar_correo_recuperacion($usuario['correo'], $usuario['nombres'], $enlace);
                 if (!$envio['ok']) {
                     error_log('[ForestID] No se pudo enviar el enlace de recuperación: ' . $envio['detalle']);

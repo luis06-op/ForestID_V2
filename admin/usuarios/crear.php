@@ -18,6 +18,9 @@ $error = '';
 $envio = null;
 $usuario_nuevo = null;
 
+// Vigencia del enlace de activación en horas (definida en config/db.php).
+$horas_activacion = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
+
 $roles = $pdo->query("SELECT id_rol, nombre_rol, descripcion FROM `roles` ORDER BY nombre_rol ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,9 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $password_hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT);
             $id_nuevo = generar_uuid();
             $token_activacion = bin2hex(random_bytes(32));
-            $horas_activacion = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
             $expira_activacion = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_ACTIVACION);
-            $enlace_activacion = BASE_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
+            $enlace_activacion = APP_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
 
             try {
                 $pdo->beginTransaction();
@@ -192,7 +194,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <?= htmlspecialchars($usuario_nuevo['enlace_activacion']) ?>
                 </a>
                 <p class="text-[11px] mt-2" style="color:var(--emi-tinta-suave)">
-                    El usuario debe abrir este enlace para crear su propia contraseña. Caduca en 48 horas.
+                    El usuario debe abrir este enlace para crear su propia contraseña. Caduca en <?= $horas_activacion ?> horas.
                 </p>
             </div>
 
@@ -279,7 +281,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                 <div>
                     <label class="emi-label block mb-1">Activación de la cuenta</label>
                     <p class="text-[11px]" style="color:var(--emi-tinta-suave)">
-                        <i data-lucide="info" class="w-3 h-3 inline"></i> Al guardar se envía al usuario un enlace de un solo uso (48 horas) para que cree su propia contraseña. El administrador nunca define ni ve la contraseña.
+                        <i data-lucide="info" class="w-3 h-3 inline"></i> Al guardar se envía al usuario un enlace de un solo uso (<?= $horas_activacion ?> horas) para que cree su propia contraseña. El administrador nunca define ni ve la contraseña.
                     </p>
                 </div>
 
