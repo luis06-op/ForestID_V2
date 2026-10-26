@@ -13,10 +13,10 @@ requerir_rol(['AdminEmincut']);
 
 $pdo = getDBConnection();
 
-// Acción de regenerar QR individual
-if (isset($_GET['regenerar_id'])) {
-    $reg_id = $_GET['regenerar_id'];
-    $csrf = $_GET['csrf'] ?? '';
+// Acción de regenerar QR individual (A6: solo POST con CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['regenerar_id'])) {
+    $reg_id = $_POST['regenerar_id'];
+    $csrf = $_POST['csrf_token'] ?? '';
 
     if (validar_token_csrf($csrf)) {
         $stmt = $pdo->prepare("SELECT codigo_placa FROM `individuos_forestales` WHERE id_individuo = :id");
@@ -277,9 +277,13 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                 <i data-lucide="printer" class="w-3 h-3"></i> Imprimir
                             </span>
                         <?php endif; ?>
-                        <a href="<?= BASE_URL ?>admin/qr/index.php?regenerar_id=<?= $arbol['id_individuo'] ?>&csrf=<?= $csrf_token ?>" class="p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
-                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
-                        </a>
+                        <form method="POST" action="<?= BASE_URL ?>admin/qr/index.php" class="inline">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                            <input type="hidden" name="regenerar_id" value="<?= htmlspecialchars($arbol['id_individuo']) ?>">
+                            <button type="submit" class="p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
+                            </button>
+                        </form>
                     </div>
 
                 </div>

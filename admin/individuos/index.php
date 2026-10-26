@@ -187,11 +187,13 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                         <a href="<?= BASE_URL ?>admin/individuos/editar.php?id=<?= $arbol['id_individuo'] ?>" class="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 inline-flex" title="Editar">
                                             <i data-lucide="edit-3" class="w-4 h-4"></i>
                                         </a>
-                                        <a href="<?= BASE_URL ?>admin/individuos/eliminar.php?id=<?= $arbol['id_individuo'] ?>&csrf=<?= $csrf_token ?>"
-                                           data-confirm="¿Está seguro de dar de baja lógica a este espécimen forestal?"
-                                           class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 inline-flex" title="Dar de baja">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </a>
+                                        <form method="POST" action="<?= BASE_URL ?>admin/individuos/eliminar.php" class="inline" onsubmit="return confirm('¿Está seguro de dar de baja lógica a este espécimen forestal?');">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                            <input type="hidden" name="id" value="<?= htmlspecialchars($arbol['id_individuo']) ?>">
+                                            <button type="submit" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 inline-flex" title="Dar de baja">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

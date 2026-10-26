@@ -68,9 +68,12 @@ $es_autenticado = esta_autenticado();
                     </div>
 
                     <!-- Botón Salir -->
-                    <a href="<?= BASE_URL ?>auth/logout.php" title="Cerrar Sesión" class="p-2 rounded-xl transition-colors border" style="color:rgba(255,255,255,.7); border-color:rgba(255,255,255,.2)">
-                        <i data-lucide="log-out" class="w-5 h-5"></i>
-                    </a>
+                    <form method="POST" action="<?= BASE_URL ?>auth/logout.php" class="inline-flex">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(crear_token_csrf()) ?>">
+                        <button type="submit" title="Cerrar Sesión" class="p-2 rounded-xl transition-colors border" style="color:rgba(255,255,255,.7); border-color:rgba(255,255,255,.2)">
+                            <i data-lucide="log-out" class="w-5 h-5"></i>
+                        </button>
+                    </form>
                 <?php else: ?>
                     <a href="<?= BASE_URL ?>publico/buscar.php" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-xl transition-all text-white/85 hover:bg-white/10 border" style="border-color:rgba(255,255,255,.2)">
                         <i data-lucide="search" class="w-4 h-4" style="color:var(--emi-amarillo)"></i> Buscar Árbol
