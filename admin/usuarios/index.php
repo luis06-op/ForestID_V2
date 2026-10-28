@@ -12,10 +12,10 @@ requerir_rol(['AdminEmincut']);
 
 $pdo = getDBConnection();
 
-// Acción de activar/desactivar usuario vía GET con CSRF
-if (isset($_GET['toggle_id'])) {
-    $toggle_id = $_GET['toggle_id'];
-    $csrf = $_GET['csrf'] ?? '';
+// Acción de activar/desactivar usuario (A6: solo POST con CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_id'])) {
+    $toggle_id = $_POST['toggle_id'];
+    $csrf = $_POST['csrf_token'] ?? '';
     
     if (validar_token_csrf($csrf)) {
         // Evitar que el admin se desactive a sí mismo
@@ -44,10 +44,9 @@ if (!empty($q)) {
 }
 
 $stmt = $pdo->prepare("
-    SELECT u.*, r.nombre_rol, i.nombre_institucion
+    SELECT u.*, r.nombre_rol
     FROM `usuarios` u
     INNER JOIN `roles` r ON u.id_rol = r.id_rol
-    LEFT JOIN `instituciones` i ON u.id_institucion = i.id_institucion
     WHERE {$where}
     ORDER BY u.fecha_creacion DESC
 ");
@@ -111,7 +110,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <th class="p-4">Usuario</th>
                             <th class="p-4">Correo</th>
                             <th class="p-4">Rol</th>
-                            <th class="p-4">Institución</th>
                             <th class="p-4">Estado</th>
                             <th class="p-4">Último Acceso</th>
                             <th class="p-4 text-right">Acciones</th>
@@ -120,7 +118,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     <tbody class="divide-y divide-gray-100">
                         <?php if (empty($usuarios)): ?>
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-gray-400 italic">
+                                <td colspan="6" class="p-8 text-center text-gray-400 italic">
                                     No se encontraron usuarios registrados con los criterios indicados.
                                 </td>
                             </tr>
@@ -130,7 +128,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                     <td class="p-4 font-semibold text-gray-900">
                                         <div class="flex items-center gap-2.5">
                                             <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[11px]">
-                                                <?= strtoupper(substr($u['nombres'], 0, 1) . substr($u['apellidos'], 0, 1)) ?>
+                                                <?= htmlspecialchars(strtoupper(substr($u['nombres'], 0, 1) . substr($u['apellidos'], 0, 1))) ?>
                                             </div>
                                             <span><?= htmlspecialchars($u['nombres'] . ' ' . $u['apellidos']) ?></span>
                                         </div>
@@ -142,7 +140,6 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                             <?= htmlspecialchars($u['nombre_rol']) ?>
                                         </span>
                                     </td>
-                                    <td class="p-4"><?= htmlspecialchars($u['nombre_institucion'] ?? 'Emincut S.A.S.') ?></td>
                                     <td class="p-4">
                                         <?php if ($u['estado'] == 1): ?>
                                             <span class="inline-flex items-center gap-1 text-emerald-700 font-semibold">
@@ -162,12 +159,16 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                             <i data-lucide="edit-3" class="w-4 h-4"></i>
                                         </a>
                                         <?php if ($u['id_usuario'] !== $_SESSION['usuario']['id_usuario']): ?>
-                                            <a href="<?= BASE_URL ?>admin/usuarios/index.php?toggle_id=<?= $u['id_usuario'] ?>&csrf=<?= $csrf_token ?>" 
-                                               data-confirm="¿Está seguro de cambiar el estado de este usuario?"
-                                               class="p-1.5 rounded-lg <?= ($u['estado'] == 1) ? 'bg-rose-50 text-rose-600 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' ?> inline-flex" 
-                                               title="<?= ($u['estado'] == 1) ? 'Desactivar' : 'Activar' ?>">
-                                                <i data-lucide="<?= ($u['estado'] == 1) ? 'user-x' : 'user-check' ?>" class="w-4 h-4"></i>
-                                            </a>
+                                            <form method="POST" action="<?= BASE_URL ?>admin/usuarios/index.php" class="inline">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                                <input type="hidden" name="toggle_id" value="<?= htmlspecialchars($u['id_usuario']) ?>">
+                                                <button type="submit"
+                                                   onclick="return confirm('¿Está seguro de cambiar el estado de este usuario?');"
+                                                   class="p-1.5 rounded-lg <?= ($u['estado'] == 1) ? 'bg-rose-50 text-rose-600 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' ?> inline-flex" 
+                                                   title="<?= ($u['estado'] == 1) ? 'Desactivar' : 'Activar' ?>">
+                                                    <i data-lucide="<?= ($u['estado'] == 1) ? 'user-x' : 'user-check' ?>" class="w-4 h-4"></i>
+                                                </button>
+                                            </form>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

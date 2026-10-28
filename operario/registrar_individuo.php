@@ -14,8 +14,7 @@ requerir_rol(['OperarioEmincut', 'AdminEmincut']);
 $pdo = getDBConnection();
 $error = '';
 
-$zonas = $pdo->query("SELECT id_zona, id_institucion, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
+$zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
 
 $codigo_sugerido = generar_codigo_placa($pdo, 'EBG');
 
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
     $codigo_placa       = strtoupper(sanear($_POST['codigo_placa'] ?? ''));
     $id_zona            = $_POST['id_zona'] ?? '';
-    $id_institucion     = $_POST['id_institucion'] ?? '';
     $nombre_comun       = sanear($_POST['nombre_comun'] ?? '');
     $nombre_cientifico  = sanear($_POST['nombre_cientifico'] ?? '');
     $familia_botanica   = sanear($_POST['familia_botanica'] ?? '');
@@ -36,10 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion        = sanear($_POST['descripcion_general'] ?? '');
     $estado_salud       = $_POST['estado_salud'] ?? 'Sano';
 
+    // M3: normalizar enums y validar la zona en servidor.
+    $tipo_individuo = normalizar_enum($tipo_individuo, TIPOS_INDIVIDUO_VALIDOS, 'Árbol');
+    $estado_salud   = normalizar_enum($estado_salud, ESTADOS_FITOSANITARIOS_VALIDOS, 'Sano');
+
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
-    } elseif (empty($codigo_placa) || empty($id_zona) || empty($id_institucion) || empty($nombre_comun)) {
+    } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
+    } elseif (!zona_activa($pdo, (string)$id_zona)) {
+        $error = 'La zona seleccionada no es válida o está inactiva.';
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
         $chk->execute([':cod' => $codigo_placa]);
@@ -51,84 +55,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sub = subir_imagen_segura($_FILES['foto_principal'], 'individuos');
                 if ($sub['ok']) {
                     $foto_url = $sub['ruta'];
+                } else {
+                    $error = $sub['error'];
                 }
             }
 
-            $id_individuo = generar_uuid();
-            $id_estado = generar_uuid();
-            $id_usuario = $_SESSION['usuario']['id_usuario'];
+            if (empty($error)) {
+                $id_individuo = generar_uuid();
+                $id_estado = generar_uuid();
+                $id_usuario = $_SESSION['usuario']['id_usuario'];
+                $qr_relativo = null;
 
-            // Generar código QR SVG
-            $urlFicha = BASE_URL . "publico/ficha.php?codigo=" . urlencode($codigo_placa);
-            try {
-                $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
-            } catch (Throwable $e) {
-                error_log('[ForestID] Error generando QR en alta de campo: ' . $e->getMessage());
-                set_flash('error', 'No se pudo generar el código QR. Verifique los permisos de assets/qr e intente nuevamente.');
-                header('Location: ' . BASE_URL . 'operario/registrar_individuo.php');
-                exit;
+                // Generar código QR SVG
+                $urlFicha = QRCodeGenerator::urlFicha($codigo_placa);
+                try {
+                    $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
+                } catch (Throwable $e) {
+                    error_log('[ForestID] Error generando QR en alta de campo: ' . $e->getMessage());
+                    set_flash('error', 'No se pudo generar el código QR. Verifique los permisos de assets/qr e intente nuevamente.');
+                    header('Location: ' . BASE_URL . 'operario/registrar_individuo.php');
+                    exit;
+                }
+
+                try {
+                    // A5: alta completa en una sola transacción.
+                    $pdo->beginTransaction();
+
+                    // Insertar espécimen
+                    $ins = $pdo->prepare("
+                        INSERT INTO `individuos_forestales` (
+                            `id_individuo`, `codigo_placa`, `id_zona`,
+                            `nombre_comun`, `nombre_cientifico`, `familia_botanica`, `tipo_individuo`,
+                            `latitud`, `longitud`, `dap_cm`, `altura_total_m`, `diametro_copa_m`,
+                            `foto_principal_url`, `descripcion_general`, `qr_url`, `registrado_por`, `estado_registro`, `fecha_registro`
+                        ) VALUES (
+                            :id, :cod, :zona,
+                            :com, :cie, :fam, :tipo,
+                            :lat, :lng, :dap, :alt, :copa,
+                            :foto, :desc, :qr, :user, 1, NOW()
+                        )
+                    ");
+                    $ins->execute([
+                        ':id'   => $id_individuo,
+                        ':cod'  => $codigo_placa,
+                        ':zona' => $id_zona,
+                        ':com'  => $nombre_comun,
+                        ':cie'  => $nombre_cientifico ?: $nombre_comun,
+                        ':fam'  => $familia_botanica ?: 'No especificada',
+                        ':tipo' => $tipo_individuo,
+                        ':lat'  => $latitud,
+                        ':lng'  => $longitud,
+                        ':dap'  => $dap_cm,
+                        ':alt'  => $altura_total_m,
+                        ':copa' => $diametro_copa_m,
+                        ':foto' => $foto_url,
+                        ':desc' => $descripcion,
+                        ':qr'   => $qr_relativo,
+                        ':user' => $id_usuario
+                    ]);
+
+                    // Insertar estado
+                    $insEst = $pdo->prepare("
+                        INSERT INTO `estados_fitosanitarios` (
+                            `id_estado`, `id_individuo`, `estado`, `diagnostico`, `recomendacion`, `evaluado_por`, `fecha_evaluacion`
+                        ) VALUES (
+                            :id_est, :id_ind, :estado, 'Alta en campo por operario', 'Seguimiento programado', :user, NOW()
+                        )
+                    ");
+                    $insEst->execute([
+                        ':id_est' => $id_estado,
+                        ':id_ind' => $id_individuo,
+                        ':estado' => $estado_salud,
+                        ':user'   => $id_usuario
+                    ]);
+
+                    $pdo->prepare("UPDATE `individuos_forestales` SET `id_estado_fitosanitario_actual` = :id_est WHERE `id_individuo` = :id_ind")
+                        ->execute([':id_est' => $id_estado, ':id_ind' => $id_individuo]);
+
+                    registrar_log($pdo, $id_usuario, 'ALTA_CAMPO_OPERARIO', 'INDIVIDUOS_FORESTALES', [
+                        'codigo_placa' => $codigo_placa,
+                        'nombre_comun' => $nombre_comun
+                    ]);
+
+                    $pdo->commit();
+
+                    set_flash('success', "Árbol {$nombre_comun} ({$codigo_placa}) registrado exitosamente.");
+                    header('Location: ' . BASE_URL . 'operario/individuos/detalle.php?id=' . $id_individuo);
+                    exit;
+                } catch (Throwable $e) {
+                    if ($pdo->inTransaction()) {
+                        $pdo->rollBack();
+                    }
+                    error_log('[ForestID] Error en alta de campo: ' . $e->getMessage());
+
+                    foreach ([$foto_url, $qr_relativo] as $archivo) {
+                        if (!empty($archivo)) {
+                            $ruta = ROOT_PATH . str_replace('/', DIRECTORY_SEPARATOR, $archivo);
+                            if (is_file($ruta)) {
+                                @unlink($ruta);
+                            }
+                        }
+                    }
+
+                    $error = 'No se pudo registrar el individuo. Intente nuevamente.';
+                }
             }
-
-            // Insertar espécimen
-            $ins = $pdo->prepare("
-                INSERT INTO `individuos_forestales` (
-                    `id_individuo`, `codigo_placa`, `id_zona`, `id_institucion`,
-                    `nombre_comun`, `nombre_cientifico`, `familia_botanica`, `tipo_individuo`,
-                    `latitud`, `longitud`, `dap_cm`, `altura_total_m`, `diametro_copa_m`,
-                    `foto_principal_url`, `descripcion_general`, `qr_url`, `registrado_por`, `estado_registro`, `fecha_registro`
-                ) VALUES (
-                    :id, :cod, :zona, :inst,
-                    :com, :cie, :fam, :tipo,
-                    :lat, :lng, :dap, :alt, :copa,
-                    :foto, :desc, :qr, :user, 1, NOW()
-                )
-            ");
-            $ins->execute([
-                ':id'   => $id_individuo,
-                ':cod'  => $codigo_placa,
-                ':zona' => $id_zona,
-                ':inst' => $id_institucion,
-                ':com'  => $nombre_comun,
-                ':cie'  => $nombre_cientifico ?: $nombre_comun,
-                ':fam'  => $familia_botanica ?: 'No especificada',
-                ':tipo' => $tipo_individuo,
-                ':lat'  => $latitud,
-                ':lng'  => $longitud,
-                ':dap'  => $dap_cm,
-                ':alt'  => $altura_total_m,
-                ':copa' => $diametro_copa_m,
-                ':foto' => $foto_url,
-                ':desc' => $descripcion,
-                ':qr'   => $qr_relativo,
-                ':user' => $id_usuario
-            ]);
-
-            // Insertar estado
-            $insEst = $pdo->prepare("
-                INSERT INTO `estados_fitosanitarios` (
-                    `id_estado`, `id_individuo`, `estado`, `diagnostico`, `recomendacion`, `evaluado_por`, `fecha_evaluacion`
-                ) VALUES (
-                    :id_est, :id_ind, :estado, 'Alta en campo por operario', 'Seguimiento programado', :user, NOW()
-                )
-            ");
-            $insEst->execute([
-                ':id_est' => $id_estado,
-                ':id_ind' => $id_individuo,
-                ':estado' => $estado_salud,
-                ':user'   => $id_usuario
-            ]);
-
-            $pdo->prepare("UPDATE `individuos_forestales` SET `id_estado_fitosanitario_actual` = :id_est WHERE `id_individuo` = :id_ind")
-                ->execute([':id_est' => $id_estado, ':id_ind' => $id_individuo]);
-
-            registrar_log($pdo, $id_usuario, 'ALTA_CAMPO_OPERARIO', 'INDIVIDUOS_FORESTALES', [
-                'codigo_placa' => $codigo_placa,
-                'nombre_comun' => $nombre_comun
-            ]);
-
-            set_flash('success', "Árbol {$nombre_comun} ({$codigo_placa}) registrado exitosamente.");
-            header('Location: ' . BASE_URL . 'operario/individuos/detalle.php?id=' . $id_individuo);
-            exit;
         }
     }
 }
@@ -194,8 +225,6 @@ require_once __DIR__ . '/../includes/navbar.php';
                         </select>
                     </div>
                 </div>
-
-                <input type="hidden" name="id_institucion" value="<?= !empty($instituciones[0]['id_institucion']) ? $instituciones[0]['id_institucion'] : '22222222-2222-2222-2222-222222222201' ?>">
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>

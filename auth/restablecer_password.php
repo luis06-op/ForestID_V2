@@ -10,6 +10,13 @@ require_once __DIR__ . '/../includes/funciones.php';
 $token = $_GET['token'] ?? $_POST['token'] ?? '';
 $token = trim($token);
 
+// Un enlace de activación (?nuevo=1) usa el mismo formulario que la recuperación.
+$es_activacion = (($_GET['nuevo'] ?? $_POST['nuevo'] ?? '') === '1');
+
+// Vigencia en horas, tomada de las constantes para no duplicar el dato en los textos.
+$horas_activacion   = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
+$horas_recuperacion = max(1, (int)round(TOKEN_VIGENCIA_RECUPERACION / 3600));
+
 $error_token = '';
 $error_form = '';
 $token_valido = false;
@@ -17,10 +24,10 @@ $usuario_encontrado = null;
 
 $pdo = getDBConnection();
 
-if (empty($token)) {
-    $error_token = 'No se proporcionó ningún token de recuperación.';
+if (empty($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
+    $error_token = 'No se proporcionó un token de recuperación válido.';
 } else {
-    // Validar token en la BD
+    // Validar token en la BD comparando su hash SHA-256 (A3).
     $stmt = $pdo->prepare("
         SELECT tr.*, u.id_usuario, u.nombres, u.apellidos, u.correo
         FROM `tokens_recuperacion` tr
@@ -28,13 +35,15 @@ if (empty($token)) {
         WHERE tr.token = :token AND tr.usado = 0 AND tr.fecha_expiracion > NOW()
         LIMIT 1
     ");
-    $stmt->execute([':token' => $token]);
+    $stmt->execute([':token' => hash_token($token)]);
     $usuario_encontrado = $stmt->fetch();
 
     if ($usuario_encontrado) {
         $token_valido = true;
     } else {
-        $error_token = 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de 1 hora).';
+        $error_token = $es_activacion
+            ? 'El enlace de activación es inválido, ya fue utilizado o ha expirado (validez de ' . $horas_activacion . ' horas).'
+            : 'El enlace de recuperación es inválido, ya fue utilizado o ha expirado (validez de ' . $horas_recuperacion . ' hora' . ($horas_recuperacion === 1 ? '' : 's') . ').';
     }
 }
 
@@ -44,10 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
     $password_nueva = $_POST['password_nueva'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
+    $error_password = validar_password_fuerte($password_nueva);
+
     if (!validar_token_csrf($token_csrf)) {
         $error_form = 'Token de seguridad inválido. Intente nuevamente.';
-    } elseif (strlen($password_nueva) < 6) {
-        $error_form = 'La contraseña debe contener al menos 6 caracteres.';
+    } elseif ($error_password !== null) {
+        $error_form = $error_password;
     } elseif ($password_nueva !== $password_confirm) {
         $error_form = 'Las contraseñas no coinciden.';
     } else {
@@ -61,22 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
             ':id'   => $usuario_encontrado['id_usuario']
         ]);
 
-        // Marcar token como usado
-        $updToken = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_token` = :id_token");
-        $updToken->execute([':id_token' => $usuario_encontrado['id_token']]);
+        // Invalidar todos los tokens pendientes del usuario.
+        $updToken = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_usuario` = :id_usuario");
+        $updToken->execute([':id_usuario' => $usuario_encontrado['id_usuario']]);
 
         registrar_log($pdo, $usuario_encontrado['id_usuario'], 'RESTABLECIMIENTO_PASSWORD', 'AUTENTICACION', [
             'correo' => $usuario_encontrado['correo']
         ]);
 
-        set_flash('success', '¡Su contraseña ha sido actualizada con éxito! Ya puede iniciar sesión.');
+        set_flash('success', $es_activacion
+            ? '¡Su contraseña ha sido creada con éxito! Ya puede iniciar sesión.'
+            : '¡Su contraseña ha sido actualizada con éxito! Ya puede iniciar sesión.');
         header('Location: ' . BASE_URL . 'auth/login.php');
         exit;
     }
 }
 
 $csrf_token = crear_token_csrf();
-$titulo_pagina = 'Restablecer Contraseña — ' . APP_NAME;
+$titulo_pagina = ($es_activacion ? 'Activar Cuenta' : 'Restablecer Contraseña') . ' — ' . APP_NAME;
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
@@ -88,7 +101,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <i data-lucide="shield-check" class="w-6 h-6"></i>
             </div>
             <h2 class="font-heading font-bold text-2xl text-gray-900">
-                Nueva Contraseña
+                <?= $es_activacion ? 'Activa tu cuenta' : 'Nueva Contraseña' ?>
             </h2>
             <p class="text-xs text-gray-500 mt-1">
                 Emincut • Sistema ForestID
@@ -108,7 +121,7 @@ require_once __DIR__ . '/../includes/header.php';
         <?php else: ?>
 
             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-800">
-                Restableciendo contraseña para: <strong><?= htmlspecialchars($usuario_encontrado['nombres'] . ' ' . $usuario_encontrado['apellidos']) ?></strong> (<?= htmlspecialchars($usuario_encontrado['correo']) ?>)
+                <?= $es_activacion ? 'Creando acceso para' : 'Restableciendo contraseña para' ?>: <strong><?= htmlspecialchars($usuario_encontrado['nombres'] . ' ' . $usuario_encontrado['apellidos']) ?></strong> (<?= htmlspecialchars($usuario_encontrado['correo']) ?>)
             </div>
 
             <?php if (!empty($error_form)): ?>
@@ -121,6 +134,7 @@ require_once __DIR__ . '/../includes/header.php';
             <form method="POST" action="restablecer_password.php" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+                <input type="hidden" name="nuevo" value="<?= $es_activacion ? '1' : '0' ?>">
 
                 <div>
                     <label for="password_nueva" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -130,10 +144,13 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </div>
-                        <input type="password" id="password_nueva" name="password_nueva" required minlength="6"
-                               placeholder="Mínimo 6 caracteres"
+                        <input type="password" id="password_nueva" name="password_nueva" required minlength="10"
+                               placeholder="Mínimo 10 caracteres"
                                class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none">
                     </div>
+                    <p class="text-[11px] mt-1.5 text-gray-500">
+                        Debe incluir al menos una mayúscula, una minúscula y un número.
+                    </p>
                 </div>
 
                 <div>
@@ -144,7 +161,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                             <i data-lucide="check" class="w-4 h-4"></i>
                         </div>
-                        <input type="password" id="password_confirm" name="password_confirm" required minlength="6"
+                        <input type="password" id="password_confirm" name="password_confirm" required minlength="10"
                                placeholder="Repita la contraseña"
                                class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none">
                     </div>

@@ -15,12 +15,11 @@ $pdo = getDBConnection();
 
 // Cargar individuo
 $stmt = $pdo->prepare("
-    SELECT i.*, z.nombre_zona, z.municipio AS zona_municipio, inst.nombre_institucion,
+    SELECT i.*, z.nombre_zona, z.municipio AS zona_municipio,
            e.estado AS estado_salud, e.diagnostico AS diagnostico_salud, e.recomendacion AS recomendacion_salud, e.fecha_evaluacion,
            u_reg.nombres AS reg_nombres, u_reg.apellidos AS reg_apellidos
     FROM `individuos_forestales` i
     INNER JOIN `zonas` z ON i.id_zona = z.id_zona
-    INNER JOIN `instituciones` inst ON i.id_institucion = inst.id_institucion
     LEFT JOIN `estados_fitosanitarios` e ON i.id_estado_fitosanitario_actual = e.id_estado
     LEFT JOIN `usuarios` u_reg ON i.registrado_por = u_reg.id_usuario
     WHERE i.id_individuo = :id
@@ -39,7 +38,8 @@ if (!$arbol) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_evaluacion'])) {
     $csrf = $_POST['csrf_token'] ?? '';
     if (validar_token_csrf($csrf)) {
-        $nuevo_estado = $_POST['estado_nuevo'] ?? 'Sano';
+        // M3: el estado debe pertenecer al ENUM del esquema.
+        $nuevo_estado = normalizar_enum((string)($_POST['estado_nuevo'] ?? 'Sano'), ESTADOS_FITOSANITARIOS_VALIDOS, 'Sano');
         $diag = sanear($_POST['diagnostico_nuevo'] ?? '');
         $recom = sanear($_POST['recomendacion_nueva'] ?? '');
         $id_nuevo_estado = generar_uuid();
@@ -80,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_evaluacion']))
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_mantenimiento'])) {
     $csrf = $_POST['csrf_token'] ?? '';
     if (validar_token_csrf($csrf)) {
-        $tipo_act = $_POST['tipo_actividad'] ?? 'Poda';
+        // M3: el tipo de intervención también pertenece a un ENUM del esquema.
+        $tipo_act = normalizar_enum((string)($_POST['tipo_actividad'] ?? 'Poda'), TIPOS_ACTIVIDAD_VALIDOS, 'Otro');
         $desc = sanear($_POST['descripcion_actividad'] ?? '');
         $id_usuario = $_SESSION['usuario']['id_usuario'];
 
@@ -253,8 +254,8 @@ require_once __DIR__ . '/../../includes/navbar.php';
                             <span>📍 <?= htmlspecialchars($arbol['nombre_zona']) ?> (<?= htmlspecialchars($arbol['zona_municipio']) ?>)</span>
                         </div>
                         <div>
-                            <span class="block font-semibold text-gray-700">Institución Administradora:</span>
-                            <span>🏢 <?= htmlspecialchars($arbol['nombre_institucion']) ?></span>
+                            <span class="block font-semibold text-gray-700">Empresa Responsable:</span>
+                            <span>🏢 <?= htmlspecialchars(EMINCUT_NOMBRE) ?></span>
                         </div>
                         <div>
                             <span class="block font-semibold text-gray-700">Coordenadas GPS:</span>

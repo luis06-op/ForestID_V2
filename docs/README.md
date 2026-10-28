@@ -8,10 +8,11 @@ El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed
 
 ## 👥 Equipo de Proyecto
 
-- **Luis Angel Muñoz Márquez** — Líder de Arquitectura
+- **Luis Angel Muñoz Márquez** — Líder de Arquitectura & frontend
 - **Gabriel Jaime Correa Correa** — Desarrollador Backend
-- **Michael Rodríguez Londoño** — Desarrollador UI / QA
 - **Valentina** — Supervisor / Verificador de Calidad
+
+> 💐 **In memoriam:** **Michael Rodríguez Londoño** — Desarrollador UI / QA, cuyo sello quedó en cada pantalla de ForestID.
 
 ---
 
@@ -33,7 +34,7 @@ El proyecto nace en el marco de la iniciativa **SENA Regional Antioquia – iRed
 
 | Rol | Correo Electrónico | Contraseña | Alcance / Permisos |
 | :--- | :--- | :--- | :--- |
-| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total, usuarios, zonas, instituciones, QR masivo, logs. |
+| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total, usuarios, zonas internas, QR masivo, logs. |
 | **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR en campo, alta rápida con GPS, mantenimientos y salud. |
 | **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano, ficha pública sin login, reporte de novedades. |
 

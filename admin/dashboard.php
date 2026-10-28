@@ -266,7 +266,7 @@ require_once __DIR__ . '/../includes/navbar.php';
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Gráfico Doughnut: Estado Fitosanitario
-    const datosSalud = <?= json_encode($distribucion_salud) ?>;
+    const datosSalud = <?= json_encode($distribucion_salud, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
     const etiquetasSalud = datosSalud.map(d => d.estado);
     const valoresSalud = datosSalud.map(d => parseInt(d.cantidad));
 
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 2. Gráfico Bar: Individuos por Zona
-    const datosZonas = <?= json_encode($individuos_por_zona) ?>;
+    const datosZonas = <?= json_encode($individuos_por_zona, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
     const etiquetasZonas = datosZonas.map(z => z.nombre_zona);
     const valoresZonas = datosZonas.map(z => parseInt(z.total_arboles));
 

@@ -25,7 +25,6 @@ if (!$usuario) {
 
 $error = '';
 $roles = $pdo->query("SELECT id_rol, nombre_rol, descripcion FROM `roles` ORDER BY nombre_rol ASC")->fetchAll();
-$instituciones = $pdo->query("SELECT id_institucion, nombre_institucion FROM `instituciones` WHERE estado = 1 ORDER BY nombre_institucion ASC")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf     = $_POST['csrf_token'] ?? '';
@@ -34,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo         = sanear($_POST['correo'] ?? '');
     $telefono       = sanear($_POST['telefono'] ?? '');
     $id_rol         = $_POST['id_rol'] ?? '';
-    $id_institucion = !empty($_POST['id_institucion']) ? $_POST['id_institucion'] : null;
     $estado         = isset($_POST['estado']) ? 1 : 0;
     $password_nueva = $_POST['password_nueva'] ?? '';
 
@@ -44,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Todos los campos obligatorios (*) deben ser completados.';
     } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $error = 'El correo electrónico no tiene un formato válido.';
+    } elseif (!empty($password_nueva) && ($error_password = validar_password_fuerte($password_nueva)) !== null) {
+        $error = $error_password;
     } else {
         // Verificar correo único excluyendo al usuario actual
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `usuarios` WHERE correo = :correo AND id_usuario != :id");
@@ -57,26 +57,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtUpd = $pdo->prepare("
                     UPDATE `usuarios` 
                     SET `nombres` = :nombres, `apellidos` = :apellidos, `correo` = :correo, 
-                        `telefono` = :telefono, `id_rol` = :id_rol, `id_institucion` = :id_institucion,
+                        `telefono` = :telefono, `id_rol` = :id_rol,
                         `estado` = :estado, `password_hash` = :hash
                     WHERE `id_usuario` = :id
                 ");
                 $stmtUpd->execute([
                     ':nombres' => $nombres, ':apellidos' => $apellidos, ':correo' => $correo,
-                    ':telefono' => $telefono, ':id_rol' => $id_rol, ':id_institucion' => $id_institucion,
+                    ':telefono' => $telefono, ':id_rol' => $id_rol,
                     ':estado' => $estado, ':hash' => $hash, ':id' => $id
                 ]);
             } else {
                 $stmtUpd = $pdo->prepare("
                     UPDATE `usuarios` 
                     SET `nombres` = :nombres, `apellidos` = :apellidos, `correo` = :correo, 
-                        `telefono` = :telefono, `id_rol` = :id_rol, `id_institucion` = :id_institucion,
+                        `telefono` = :telefono, `id_rol` = :id_rol,
                         `estado` = :estado
                     WHERE `id_usuario` = :id
                 ");
                 $stmtUpd->execute([
                     ':nombres' => $nombres, ':apellidos' => $apellidos, ':correo' => $correo,
-                    ':telefono' => $telefono, ':id_rol' => $id_rol, ':id_institucion' => $id_institucion,
+                    ':telefono' => $telefono, ':id_rol' => $id_rol,
                     ':estado' => $estado, ':id' => $id
                 ]);
             }
@@ -147,28 +147,15 @@ require_once __DIR__ . '/../../includes/navbar.php';
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="id_rol" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Rol en el Sistema *</label>
-                        <select name="id_rol" id="id_rol" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                            <?php foreach ($roles as $r): ?>
-                                <option value="<?= $r['id_rol'] ?>" <?= ($usuario['id_rol'] === $r['id_rol']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($r['nombre_rol']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="id_institucion" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Institución</label>
-                        <select name="id_institucion" id="id_institucion" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
-                            <option value="">Ninguna / Independiente</option>
-                            <?php foreach ($instituciones as $inst): ?>
-                                <option value="<?= $inst['id_institucion'] ?>" <?= ($usuario['id_institucion'] === $inst['id_institucion']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($inst['nombre_institucion']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div>
+                    <label for="id_rol" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Rol en el Sistema *</label>
+                    <select name="id_rol" id="id_rol" required class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <?php foreach ($roles as $r): ?>
+                            <option value="<?= $r['id_rol'] ?>" <?= ($usuario['id_rol'] === $r['id_rol']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($r['nombre_rol']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="pt-2">
@@ -180,7 +167,8 @@ require_once __DIR__ . '/../../includes/navbar.php';
 
                 <div class="pt-4 border-t border-gray-100 space-y-1">
                     <label for="password_nueva" class="block text-xs font-semibold text-gray-700 uppercase">Cambiar Contraseña (Opcional)</label>
-                    <input type="password" name="password_nueva" id="password_nueva" minlength="6" placeholder="Dejar en blanco para mantener la contraseña actual" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                    <input type="password" name="password_nueva" id="password_nueva" minlength="10" placeholder="Dejar en blanco para mantener la contraseña actual" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                    <p class="text-[11px] mt-1.5 text-gray-500">Mínimo 10 caracteres, con mayúscula, minúscula y número.</p>
                 </div>
 
                 <div class="pt-4 border-t border-gray-100 flex justify-end gap-2">

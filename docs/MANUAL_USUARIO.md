@@ -85,16 +85,16 @@ Destinado a la gerencia técnica y directiva de Emincut.
 - Ficha técnica administrativa con historial de auditoría y bajas lógicas.
 
 ### 3.3 Gestor e Impresión de Placas Físicas QR (`admin/qr/`)
-- Muestra la galería de códigos QR vectoriales generados.
+- Muestra la galería de códigos QR vectoriales generados y el estado de los archivos faltantes.
+- Permite **regenerar un QR individual o todo el inventario** con la URL canónica configurada en `APP_URL`.
 - Permite **imprimir individualmente o en lote** las placas listas con formato de corte y perforación para instalar físicamente en los árboles de cada zona de El Bagre.
 
 ### 3.4 Reportes y Exportación a CSV / Excel (`admin/reportes/`)
 - Tablero de métricas dasométricas promedio (DAP promedio, Altura promedio, Diámetro de copa).
 - Botón **"Exportar Datos a CSV"** para descargar todo el censo estructurado y analizarlo en Microsoft Excel o software GIS.
 
-### 3.5 Gestión de Zonas, Instituciones y Usuarios
-- Alta y edición de sectores y zonas territoriales en El Bagre.
-- Administración de entidades clientes.
+### 3.5 Gestión de Zonas y Usuarios
+- Alta y edición de sectores y zonas internas de Emincut en El Bagre.
 - Control de usuarios: creación de cuentas, asignación de roles (`AdminEmincut`, `OperarioEmincut`, `UsuarioPublico`), reseteo de contraseñas y activación/desactivación.
 
 ### 3.6 Auditoría y Bitácora de Logs (`admin/logs/`)

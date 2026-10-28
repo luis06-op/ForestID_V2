@@ -18,7 +18,7 @@ $meta_descripcion = $meta_descripcion ?? 'Sistema integral de gestión, identifi
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= htmlspecialchars($meta_descripcion) ?>">
-    <meta name="author" content="Emincut S.A.S. - SENA Regional Antioquia">
+    <meta name="author" content="Emincut S.A.S.">
     <title><?= htmlspecialchars($titulo_pagina) ?></title>
 
     <!-- Google Fonts: Poppins (Títulos) & Inter (Lectura) -->

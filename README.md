@@ -69,29 +69,31 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 | 1️⃣ | **Copiar el proyecto** | Llévelo a `C:\xampp\htdocs\ForestID_V2` (Windows) o `/opt/lampp/htdocs/ForestID_V2` (Linux). |
 | 2️⃣ | **Arrancar servicios** | En el panel de XAMPP active **Apache** y **MySQL**. |
 | 3️⃣ | **Importar la BD** | Abra `http://localhost/phpmyadmin`, cree `forestsrd_db` con collation `utf8mb4_spanish_ci` e importe [`database/forestsrd_db.sql`](database/forestsrd_db.sql) (DDL + DML con datos semilla). |
-| 4️⃣ | **Ajustar conexión** | Copie `config/config.local.ejemplo.php` → `config/config.local.php` y defina `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. Ese archivo está en `.gitignore`. |
+| 4️⃣ | **Ajustar conexión y URL** | Copie `config/config.local.ejemplo.php` → `config/config.local.php` y defina `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`. En producción defina también `APP_URL` con el dominio real (ej. `https://forestid.emincut.com/`), porque ese valor se codifica en los QR. Ese archivo está en `.gitignore`. |
 | 5️⃣ | **Permisos de Apache** | Confirme que `AllowOverride All` esté activo y que `mod_rewrite` esté habilitado; los `.htaccess` incluidos bloquean `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` por HTTP. |
 | 6️⃣ | **Correo (opcional)** | Copie `config/mailer.ejemplo.php` → `config/mailer.php` y ponga su SMTP real. Sin ese archivo el sistema usa `mail()` de respaldo y ofrece enlaces manuales de correo / WhatsApp. *(El archivo real está en `.gitignore`: nunca sube credenciales.)* |
 | 7️⃣ | **Entrar** | 👉 **`http://localhost/ForestID_V2/`** |
+
+> **QR y dominio:** si cambia de servidor o dominio, configure `APP_URL` y entre a **Admin → Gestor QR** para regenerar las placas (individual o masivamente). Los QR semilla apuntan a `http://localhost/ForestID_V2/` y deben regenerarse en producción.
 
 ### 🔑 Credenciales de prueba (entorno local)
 
 | Rol | Correo | Contraseña | Alcance |
 | :-- | :-- | :-- | :-- |
-| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total: usuarios, zonas, instituciones, QR masivo, reportes y logs. |
+| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total: usuarios, zonas, QR masivo, reportes y logs. |
 | **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR con cámara, alta rápida con GPS y mantenimientos. |
 | **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano: ficha pública y reporte de novedades. |
 
 > ⚠️ **Solo para entorno local.** Estas cuentas vienen del script SQL con hashes Bcrypt reales, pero sus contraseñas son públicas (están en este README). **Cámbielas o elimínelas antes de publicar el sistema en Internet.** El login ya **no** acepta credenciales en texto plano ni las autocompleta.
 >
-> 💡 Al crear un usuario nuevo desde el panel, el sistema **envía sus credenciales automáticamente por correo** (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**.
+> 💡 Al crear un usuario nuevo desde el panel, el sistema **envía un enlace de activación de un solo uso** por correo (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**. El administrador nunca define ni ve la contraseña.
 
 ---
 
 <a id="acerca"></a>
 ## 🌳 Acerca del proyecto
 
-ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar atrás las listas en papel y las planillas dispersas para tener un inventario vivo, georreferenciado y auditable del arbolado de El Bagre. Hoy funciona como una aplicación web modular en **PHP puro + MySQL**, pensada para correr en servidores locales XAMPP y en entornos LAMP/LEMP de producción, sin dependencias de compilación ni servicios de pago. El proyecto también acompaña el cumplimiento de la **Ley 2173 de 2021** (restauración posminerera).
+ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar atrás las listas en papel y las planillas dispersas para tener un inventario vivo, georreferenciado y auditable del arbolado de El Bagre. Hoy funciona como una aplicación web modular en **PHP puro + MySQL**, pensada para correr en servidores locales XAMPP y en entornos LAMP/LEMP de producción, sin dependencias de compilación ni servicios de pago.
 
 |  |  |
 | :-- | :-- |
@@ -99,7 +101,6 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 | 📍 **Sede / cobertura** | El Bagre, Antioquia (Bajo Cauca antioqueño) |
 | 🎓 **Origen** | SENA Regional Antioquia – iRed Innovacción |
 | 🎯 **Objeto** | Catalogación, monitoreo fitosanitario y trazabilidad histórica del arbolado |
-| 📜 **Norma** | Ley 2173 de 2021 — restauración posminerera |
 | 👥 **Usuarios** | Administradores, operarios de campo y ciudadanía en general |
 | 💻 **Despliegue** | XAMPP (desarrollo local) · LAMP / LEMP (producción) |
 
@@ -138,11 +139,11 @@ ForestID nació como respuesta a una necesidad real de **Emincut S.A.S.**: dejar
 
 | Módulo | Ruta | Rol | Qué puedes hacer |
 | :-- | :--: | :-- | :-- |
-| 🧑‍💼 **Administrador** | `/admin/` | `AdminEmincut` | Dashboard de indicadores, gestión de individuos, zonas e instituciones, generación e impresión masiva de placas QR, reportes con exportación, administración de usuarios y bitácora de logs. |
+| 🧑‍💼 **Administrador** | `/admin/` | `AdminEmincut` | Dashboard de indicadores, gestión de individuos y zonas internas de Emincut, generación e impresión masiva de placas QR, reportes con exportación, administración de usuarios y bitácora de logs. |
 | 🌿 **Operario de campo** | `/operario/` | `OperarioEmincut` | Escaneo QR con la cámara, alta rápida de individuos con GPS, registro de mantenimientos y actualización del estado fitosanitario. |
 | 🌐 **Portal ciudadano** | `/publico/` | Sin login | Ficha técnica pública por QR, explorador y buscador de árboles y reporte de novedades con evidencia fotográfica. |
-| 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, y recuperación de contraseña mediante token criptográfico de un solo uso (válido 1 hora). |
-| ✉️ **Notificaciones** | `includes/` | — | Envío de credenciales por correo y WhatsApp al crear cuentas, con plantilla HTML institucional. |
+| 🔑 **Autenticación** | `/auth/` | — | Inicio y cierre de sesión, activación de cuentas y recuperación de contraseña mediante token criptográfico de un solo uso (recuperación: 1 hora; activación: 48 horas). |
+| ✉️ **Notificaciones** | `includes/` | — | Envío de enlaces de activación por correo y WhatsApp al crear cuentas, con plantilla HTML institucional. |
 
 ---
 
@@ -184,7 +185,6 @@ flowchart TD
     RouterRoles -- "AdminEmincut" --> AdminDash[Dashboard Admin: admin/dashboard.php]
     AdminDash --> AdminIndiv[Individuos: admin/individuos/]
     AdminDash --> AdminZonas[Zonas: admin/zonas/]
-    AdminDash --> AdminInst[Instituciones: admin/instituciones/]
     AdminDash --> AdminUsers[Usuarios: admin/usuarios/]
     AdminDash --> AdminQR[Gestor e Impresión QR: admin/qr/]
     AdminDash --> AdminRep[Reportes y CSV: admin/reportes/]
@@ -246,8 +246,8 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 
 | Capa lógica | Tablas | Contenido |
 | :-- | :-- | :-- |
-| 🏛️ **Institucional** | `roles` · `instituciones` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, clientes, cuentas con Bcrypt y tokens temporales de 1 hora. |
-| 🗺️ **Territorial** | `zonas` | Parques, campus y sectores georreferenciados. |
+| 🔐 **Acceso y seguridad** | `roles` · `usuarios` · `tokens_recuperacion` | Catálogo de perfiles, cuentas del personal de Emincut con Bcrypt y tokens temporales hasheados (1 hora / 48 horas). |
+| 🗺️ **Territorial** | `zonas` | Parques, campus y sectores internos de Emincut, georreferenciados. |
 | 🌳 **Núcleo dendrológico** | `individuos_forestales` · `estados_fitosanitarios` | Registro maestro (placa, DAP, altura, copa, siembra, GPS, foto) e historial de salud inmutable. |
 | 🕵️ **Actividad y auditoría** | `actividades_mantenimiento` · `logs_sistema` | Labores silviculturales y reportes ciudadanos, más bitácora de eventos con IP y detalles JSON. |
 
@@ -265,7 +265,7 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 | 🗺️ **Georreferenciación** | **Leaflet.js** + OpenStreetMap | Cartografía 100 % libre, sin APIs de pago. |
 | 🏷️ **Códigos QR** | `chillerlan/php-qrcode` + `html5-qrcode` | QR estándar ISO/IEC 18004 en SVG, verificables con cualquier lector, y escaneo con cámara en vivo. |
 | 📊 **Analítica** | **Chart.js** | Tableros dasométricos y fitosanitarios. |
-| ✉️ **Correos** | **PHPMailer** (SMTP) | Envío de credenciales con respaldo `mail()` y enlaces manuales de WhatsApp. |
+| ✉️ **Correos** | **PHPMailer** (SMTP) | Envío de enlaces de activación y recuperación con respaldo `mail()` y enlaces manuales de WhatsApp. |
 
 ---
 
@@ -273,9 +273,12 @@ La base de datos `forestsrd_db` corre sobre **MySQL 8.0** con motor **InnoDB**, 
 ## 🔐 Seguridad
 
 - ✅ **Inyección SQL imposible:** el 100 % de las consultas usan *Prepared Statements* de PDO con paso estricto de parámetros (concatenar variables en SQL está prohibido por convención).
-- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (coste 12), sin credenciales en texto plano ni rehasheos automáticos.
+- ✅ **Contraseñas con Bcrypt** mediante `password_hash()` / `password_verify()` (coste 12), sin credenciales en texto plano ni rehasheos automáticos. Las cuentas nuevas se activan con un enlace de un solo uso: el administrador nunca define la contraseña.
 - ✅ **Control de acceso por roles** con el middleware `includes/auth_check.php`.
-- ✅ **Tokens de recuperación** criptográficos, de un solo uso y con validez de 1 hora; el enlace se envía por correo y **nunca se muestra en pantalla** (salvo modo demo local explícito con `FORESTID_MODO_DEMO=1`).
+- ✅ **Sesiones endurecidas:** cookies `HttpOnly`/`SameSite`, regeneración de ID al entrar y expiración por inactividad (30 min).
+- ✅ **Límite de intentos** en login y recuperación, con retardo progresivo.
+- ✅ **Tokens de recuperación y activación** guardados como hash SHA-256, de un solo uso y con validez limitada (1 hora / 48 horas); el enlace se envía por correo y **nunca se muestra en pantalla** (salvo modo demo local explícito con `FORESTID_MODO_DEMO=1`).
+- ✅ **Acciones destructivas por POST** con token CSRF (baja lógica, logout, activación de usuarios y regeneración de QR).
 - ✅ **Auditoría inmutable** en `logs_sistema` con estructura JSON e IP de origen.
 - ✅ **Credenciales fuera de Git:** `config/mailer.php` y `config/config.local.php` están en `.gitignore`; solo se versionan las plantillas.
 - ✅ **Rutas sensibles bloqueadas por HTTP:** `.git`, `database/`, `docs/`, `config/`, `includes/` y `vendor/` devuelven 404 gracias a los `.htaccess`.
@@ -303,7 +306,7 @@ ForestID_V2/
 ├── assets/        # CSS institucional, JS, imágenes, QR SVG generados y subidas
 ├── error/         # Páginas de error 403, 404 y 500
 ├── database/      # Script DDL + DML completo para MySQL 8.0
-├── vendor/        # PHPMailer (envío de credenciales por SMTP)
+├── vendor/        # PHPMailer (envío de enlaces por SMTP)
 └── docs/          # Manuales, diccionario de datos, diagramas y prompt de contexto
 ```
 
@@ -364,7 +367,6 @@ Los banners de este README **no son imágenes estáticas**: son escenas 3D reale
 | **Luis Angel Muñoz Márquez** | 🏗️ Líder de Arquitectura |
 | **Gabriel Jaime Correa Correa** | ⚙️ Desarrollador Backend |
 | **Valentina Hernández Zapata** | ✅ Supervisor / Verificador de Calidad |
-| **Michael Rodríguez Londoño** 💐 | 🎨 Desarrollador UI / QA *(In memoriam)* |
 
 Todos formados en el **Centro de Formación Minero Ambiental de El Bagre** — SENA Regional Antioquia.
 
