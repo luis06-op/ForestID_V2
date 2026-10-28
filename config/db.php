@@ -77,7 +77,62 @@ define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 // Cálculo dinámico de la URL base
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$host_raw = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+// M2: validar el host de la petición contra una lista blanca para evitar
+// Host Header Injection. La URL canónica puede venir de APP_URL (constante en
+// config/config.local.php o variable de entorno) o de FORESTID_HOSTS (hosts
+// separados por coma). Si el host recibido no es de confianza se usa el
+// canónico (nunca se refleja en los enlaces) y, en su defecto, localhost.
+$app_url_canonica = defined('APP_URL')
+    ? (string)APP_URL
+    : (string)(getenv('APP_URL') ?: '');
+$partes_app = $app_url_canonica !== '' ? parse_url($app_url_canonica) : [];
+if (!is_array($partes_app)) {
+    $partes_app = [];
+}
+
+$host_permitidos = ['localhost', '127.0.0.1', '::1', '[::1]'];
+$host_canonico = '';
+$host_app = $partes_app['host'] ?? '';
+if (is_string($host_app) && $host_app !== '') {
+    $host_canonico = $host_app;
+    $host_permitidos[] = $host_app;
+    if (!empty($partes_app['port'])) {
+        // Se admite tanto "host" como "host:puerto" en la lista blanca.
+        $host_canonico .= ':' . $partes_app['port'];
+        $host_permitidos[] = $host_canonico;
+    }
+}
+// Permite probar desde la LAN usando la IP del propio servidor (no es
+// manipulable por el cliente, a diferencia de HTTP_HOST).
+if (!empty($_SERVER['SERVER_ADDR'])) {
+    $host_permitidos[] = (string)$_SERVER['SERVER_ADDR'];
+}
+$env_hosts = getenv('FORESTID_HOSTS');
+if ($env_hosts !== false && $env_hosts !== '') {
+    foreach (explode(',', $env_hosts) as $h) {
+        $h = trim($h);
+        if ($h !== '') {
+            $host_permitidos[] = $h;
+        }
+    }
+}
+$host_permitidos = array_map('strtolower', $host_permitidos);
+$host_sin_puerto = preg_replace('/:\d+$/', '', $host_raw);
+$host_valido = in_array(strtolower($host_raw), $host_permitidos, true)
+    || in_array(strtolower($host_sin_puerto), $host_permitidos, true);
+
+if ($host_valido) {
+    $host = $host_raw;
+} elseif ($host_canonico !== '') {
+    $host = $host_canonico;
+    if (!empty($partes_app['scheme'])) {
+        $protocol = $partes_app['scheme'] . '://';
+    }
+} else {
+    $host = 'localhost';
+}
 $script_name = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
 
 $base_path = '';

@@ -35,6 +35,12 @@ if (!empty($codigo) || !empty($id)) {
     $stmt->execute([':codigo' => $codigo, ':id' => $id]);
     $arbol = $stmt->fetch();
 
+    // M5: ofuscar coordenadas GPS en la ficha pública (~100 m).
+    if ($arbol) {
+        $arbol['latitud_pub']  = round((float)$arbol['latitud'], 3);
+        $arbol['longitud_pub'] = round((float)$arbol['longitud'], 3);
+    }
+
     if ($arbol) {
         // Cargar historial de estados fitosanitarios
         $stmtEval = $pdo->prepare("
@@ -269,8 +275,8 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <div id="mapa-individuo" class="w-full h-64 rounded-xl border border-gray-200 z-0"></div>
 
                 <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
-                    <span>Lat: <?= htmlspecialchars($arbol['latitud']) ?> | Lng: <?= htmlspecialchars($arbol['longitud']) ?></span>
-                    <a href="https://www.google.com/maps/search/?api=1&query=<?= $arbol['latitud'] ?>,<?= $arbol['longitud'] ?>" target="_blank" class="text-emerald-700 hover:underline inline-flex items-center gap-1 font-medium">
+                    <span>Lat: <?= htmlspecialchars($arbol['latitud_pub']) ?> | Lng: <?= htmlspecialchars($arbol['longitud_pub']) ?></span>
+                    <a href="https://www.google.com/maps/search/?api=1&query=<?= $arbol['latitud_pub'] ?>,<?= $arbol['longitud_pub'] ?>" target="_blank" class="text-emerald-700 hover:underline inline-flex items-center gap-1 font-medium">
                         Abrir en Google Maps <i data-lucide="external-link" class="w-3 h-3"></i>
                     </a>
                 </div>
@@ -414,8 +420,8 @@ require_once __DIR__ . '/../includes/navbar.php';
 <!-- Inicialización de mapa individual -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const lat = <?= (float)$arbol['latitud'] ?>;
-    const lng = <?= (float)$arbol['longitud'] ?>;
+    const lat = <?= (float)$arbol['latitud_pub'] ?>;
+    const lng = <?= (float)$arbol['longitud_pub'] ?>;
 
     const mapIndiv = L.map('mapa-individuo').setView([lat, lng], 16);
 

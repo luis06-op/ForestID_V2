@@ -78,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_evaluacion']))
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_mantenimiento'])) {
     $csrf = $_POST['csrf_token'] ?? '';
     if (validar_token_csrf($csrf)) {
-        $tipo_act = $_POST['tipo_actividad'] ?? 'Poda';
+        // M3: el tipo de intervención también pertenece a un ENUM del esquema.
+        $tipo_act = normalizar_enum((string)($_POST['tipo_actividad'] ?? 'Poda'), TIPOS_ACTIVIDAD_VALIDOS, 'Otro');
         $desc = sanear($_POST['descripcion_actividad'] ?? '');
         $id_usuario = $_SESSION['usuario']['id_usuario'];
 

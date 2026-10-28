@@ -85,10 +85,11 @@ function enviar_correo_html(string $correo, string $nombre_destino, string $asun
 
     if ($puede_smtp) {
         try {
-            $base = __DIR__ . '/../vendor/phpmailer/src';
-            require_once $base . '/Exception.php';
-            require_once $base . '/PHPMailer.php';
-            require_once $base . '/SMTP.php';
+            // M8: PHPMailer se instala y versiona con Composer.
+            require_once __DIR__ . '/../vendor/autoload.php';
+            if (!class_exists(\PHPMailer\PHPMailer\PHPMailer::class)) {
+                throw new RuntimeException('PHPMailer no está instalado: ejecute "composer install".');
+            }
 
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();

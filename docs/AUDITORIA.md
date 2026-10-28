@@ -6,7 +6,7 @@
 > **Rama de correcciones:** `fix/auditoria-p0`
 > **Alcance:** 51 archivos PHP propios (~8.400 líneas), esquema SQL, `.htaccess`, documentación y assets QR.
 > **Método:** revisión estática + pruebas de humo reales con PHP 8.2.12, MariaDB 10.4, Apache/XAMPP y `zbarimg`.
-> **Estado:** los hallazgos **P0 y P1 están corregidos**. Quedan pendientes los P2/P3 documentados al final.
+> **Estado:** los hallazgos **P0 y P1 están corregidos**, igual que M1–M3 y M5–M6. Quedan parcialmente abiertos M4, M7 y M8, además de los P3 documentados al final.
 
 ---
 
@@ -26,7 +26,7 @@
 |---|---:|---:|---:|
 | Crítico (P0) | 6 | **6** | 0 |
 | Alto (P1) | 7 | **7** | 0 |
-| Medio (P2) | 8 | 3 (parciales) | 5 |
+| Medio (P2) | 8 | 5 | 3 (parciales: M4, M7, M8) |
 | Bajo (P3) | 5 | 1 | 4 |
 
 ---
@@ -116,13 +116,13 @@
 | ID | Hallazgo | Ubicación | Estado |
 |---|---|---|---|
 | M1 | El error de conexión imprimía `$e->getMessage()` | `config/db.php` | ✅ Corregido: solo con `FORESTID_DEBUG=1`. |
-| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php:45` | ⏳ Validar contra `APP_URL` o lista blanca. |
-| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ⏳ Validar contra listas permitidas y verificar FK activas. |
-| M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: cabeceras añadidas en `.htaccess`; falta CSP/HSTS y quitar CDNs sin SRI. |
-| M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php:274-275` | ⏳ Ofuscar (~100 m) o mostrar solo a autenticados; riesgo de extracción de especies. |
-| M6 | CSV sin protección contra inyección de fórmulas | `admin/reportes/index.php:39-60` | ⏳ Prefijar `'` a valores que empiecen por `= + - @`. |
-| M7 | Sin pruebas automatizadas; `test*.html/js` de depuración versionados | raíz | ⏳ Mover a `tests/` o eliminar; añadir smoke tests. |
-| M8 | `vendor/phpmailer` copiado a mano, sin Composer ni versión fijada; `.opencode/` versionado | raíz | ⏳ Gestionar PHPMailer con Composer; excluir herramientas de desarrollo del release. |
+| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php` | ✅ Corregido: lista blanca con `APP_URL` (constante o variable de entorno), `FORESTID_HOSTS` y la IP del servidor; un host no confiable se sustituye por la URL canónica, no por `localhost`. |
+| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ✅ Corregido: `normalizar_enum()` y `zona_activa()` en `includes/funciones.php`, aplicadas en altas, evaluaciones y actividades (incluido `tipo_actividad`). |
+| M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: CSP y HSTS añadidos en `.htaccess`, pero la CSP mantiene `'unsafe-inline'`/`'unsafe-eval'` y los CDNs siguen sin SRI. |
+| M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php` | ✅ Corregido: la ficha pública redondea latitud/longitud a 3 decimales (~111 m); el admin conserva la precisión. |
+| M6 | CSV sin protección contra inyección de fórmulas | `admin/reportes/index.php` | ✅ Corregido: prefijo `'` en valores que empiezan por `= + - @`, tabulador o salto de línea. |
+| M7 | Sin pruebas automatizadas; `test*.html/js` de depuración versionados | raíz | ⏳ Parcial: los `test*.html/js` se eliminaron; sigue faltando una suite de smoke tests. |
+| M8 | `vendor/phpmailer` copiado a mano, sin Composer ni versión fijada; `.opencode/` versionado | raíz | ⏳ Parcial: PHPMailer ahora se gestiona con Composer (`v6.12.0`, autoload y lock); `.opencode/` sigue versionado. |
 
 ---
 
@@ -180,12 +180,12 @@ GET  /assets/uploads/shell.php               → 403
 ## 8. Plan de remediación
 
 ### Hecho en esta rama
-- C1–C6, M1 y parte de M4/M8.
+- C1–C6, M1, M2, M3, M5 y M6; parte de M4, M7 y M8.
 - P1 completo (A1–A7) el 26 de octubre de 2026.
 - Actualización de README, manual técnico y documentación de instalación.
 
 ### Antes de producción
-- Resolver M2–M8, añadir pruebas automatizadas y CI, forzar HTTPS y CSP, rotar credenciales y revisar la historia de Git (ver `docs/PLAN_PUBLICACION_GITHUB.md`).
+- Cerrar M4 (CSP estricta, SRI y HTTPS forzado), M7 (pruebas automatizadas y CI) y la parte de M8 relativa a `.opencode/`; rotar credenciales y revisar la historia de Git (ver `docs/PLAN_PUBLICACION_GITHUB.md`).
 - Ejecutar la migración `database/migraciones/2026-10-26_desescape_textos.sql` sobre bases existentes.
 
 ---

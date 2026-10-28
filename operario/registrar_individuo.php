@@ -34,10 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion        = sanear($_POST['descripcion_general'] ?? '');
     $estado_salud       = $_POST['estado_salud'] ?? 'Sano';
 
+    // M3: normalizar enums y validar la zona en servidor.
+    $tipo_individuo = normalizar_enum($tipo_individuo, TIPOS_INDIVIDUO_VALIDOS, 'Árbol');
+    $estado_salud   = normalizar_enum($estado_salud, ESTADOS_FITOSANITARIOS_VALIDOS, 'Sano');
+
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
     } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
+    } elseif (!zona_activa($pdo, (string)$id_zona)) {
+        $error = 'La zona seleccionada no es válida o está inactiva.';
     } else {
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
         $chk->execute([':cod' => $codigo_placa]);

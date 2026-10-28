@@ -44,7 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Token de seguridad inválido.';
     } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun) || empty($nombre_cientifico)) {
         $error = 'Todos los campos obligatorios (*) deben ser completados.';
+    } elseif (!zona_activa($pdo, (string)$id_zona)) {
+        $error = 'La zona seleccionada no es válida o está inactiva.';
     } else {
+        // M3: normalizar enums contra el catálogo del esquema.
+        $tipo_individuo = normalizar_enum($tipo_individuo, TIPOS_INDIVIDUO_VALIDOS, 'Árbol');
+        $estado_salud   = normalizar_enum($estado_salud, ESTADOS_FITOSANITARIOS_VALIDOS, 'Sano');
+
         // Verificar código de placa único
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
         $chk->execute([':cod' => $codigo_placa]);

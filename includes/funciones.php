@@ -27,6 +27,32 @@ function sanear($dato) {
 }
 
 /**
+ * Catálogos cerrados del esquema (M3). Deben coincidir exactamente con los
+ * ENUM de `individuos_forestales.tipo_individuo` y
+ * `estados_fitosanitarios.estado`.
+ */
+const TIPOS_INDIVIDUO_VALIDOS = ['Árbol', 'Palma', 'Arbusto', 'Planta ornamental'];
+const ESTADOS_FITOSANITARIOS_VALIDOS = ['Sano', 'En observación', 'Enfermo', 'Plagado', 'En riesgo', 'Muerto en pie', 'Talado'];
+const TIPOS_ACTIVIDAD_VALIDOS = ['Poda', 'Fumigación', 'Fertilización', 'Riego', 'Trasplante', 'Tala', 'Tutoreo', 'Reporte ciudadano', 'Otro'];
+
+/**
+ * Devuelve el valor si pertenece al catálogo; en caso contrario, el valor por
+ * defecto. Evita que un POST manipulado rompa el ENUM o la integridad de la BD.
+ */
+function normalizar_enum(string $valor, array $permitidos, string $defecto): string {
+    return in_array($valor, $permitidos, true) ? $valor : $defecto;
+}
+
+/**
+ * Comprueba que una zona exista y esté activa (M3).
+ */
+function zona_activa(PDO $pdo, string $id_zona): bool {
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM `zonas` WHERE `id_zona` = :id AND `estado` = 1");
+    $stmt->execute([':id' => $id_zona]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+/**
  * Retorna la IP del cliente que realiza la petición.
  * No se confía en X-Forwarded-For: solo se usa REMOTE_ADDR.
  */
