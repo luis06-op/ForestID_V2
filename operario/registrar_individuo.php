@@ -245,11 +245,17 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="nombre_comun" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombre Común *</label>
-                        <input type="text" name="nombre_comun" id="nombre_comun" required placeholder="ej. Guayacán Rosado" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <input type="text" name="nombre_comun" id="nombre_comun" list="nombres_comunes" required placeholder="ej. Guayacán Rosado" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                     <div>
                         <label for="nombre_cientifico" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombre Científico</label>
                         <input type="text" name="nombre_cientifico" id="nombre_cientifico" placeholder="ej. Handroanthus chrysanthus" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs italic focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="familia_botanica" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Familia Botánica</label>
+                        <input type="text" name="familia_botanica" id="familia_botanica" placeholder="ej. Bignoniaceae" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                 </div>
 
@@ -293,10 +299,15 @@ require_once __DIR__ . '/../includes/navbar.php';
                 </button>
             </div>
         </form>
+        <datalist id="nombres_comunes"></datalist>
 
     </main>
 </div>
 
+<script>
+window.BASE_URL = "<?= BASE_URL ?>";
+</script>
+<script src="<?= BASE_URL ?>assets/js/especies_autocomplete.js"></script>
 <script>
 function capturarGPS() {
     if (navigator.geolocation) {
