@@ -16,6 +16,7 @@ $id     = trim($id);
 
 $pdo = getDBConnection();
 $arbol = null;
+$placa_vacia = null;
 $evaluaciones = [];
 $actividades = [];
 
@@ -34,6 +35,12 @@ if (!empty($codigo) || !empty($id)) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':codigo' => $codigo, ':id' => $id]);
     $arbol = $stmt->fetch();
+
+    if (!$arbol && $codigo !== '' && $id === '') {
+        $stmtPlaca = $pdo->prepare("SELECT codigo_placa, estado FROM `placas_qr` WHERE codigo_placa = :codigo LIMIT 1");
+        $stmtPlaca->execute([':codigo' => $codigo]);
+        $placa_vacia = $stmtPlaca->fetch() ?: null;
+    }
 
     // M5: ofuscar coordenadas GPS en la ficha pública (~100 m).
     if ($arbol) {
@@ -66,14 +73,33 @@ if (!empty($codigo) || !empty($id)) {
     }
 }
 
-$titulo_pagina = $arbol ? "{$arbol['nombre_comun']} ({$arbol['codigo_placa']}) — Ficha ForestID" : "Individuo No Encontrado — ForestID";
+$titulo_pagina = $arbol ? "{$arbol['nombre_comun']} ({$arbol['codigo_placa']}) — Ficha ForestID" : ($placa_vacia ? "Placa Vacía — ForestID" : "Individuo No Encontrado — ForestID");
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <?php if (!$arbol): ?>
+    <?php if (!$arbol && $placa_vacia && $placa_vacia['estado'] === 'pendiente'): ?>
+        <?php $puede_activar_placa = esta_autenticado() && in_array(obtener_rol_actual(), ['OperarioEmincut', 'AdminEmincut'], true); ?>
+        <div class="forest-card p-10 text-center max-w-lg mx-auto space-y-6">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+                <i data-lucide="tag" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h2 class="font-heading font-bold text-2xl text-gray-900">Placa vacía</h2>
+                <p class="text-sm text-gray-500 mt-2">Esta placa todavía no está asociada a un individuo forestal.</p>
+                <p class="mt-4 text-3xl sm:text-4xl font-extrabold tracking-wider text-emerald-800"><?= htmlspecialchars($placa_vacia['codigo_placa'], ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+            <?php if ($puede_activar_placa): ?>
+                <a href="<?= BASE_URL ?>operario/registrar_individuo.php?codigo_placa=<?= rawurlencode($placa_vacia['codigo_placa']) ?>" class="btn-forest-primary inline-flex items-center justify-center gap-2 px-6 py-4 text-base font-bold">
+                    <i data-lucide="plus-circle" class="w-5 h-5"></i> Registrar individuo para esta placa
+                </a>
+            <?php else: ?>
+                <p class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900">La placa aún no está asignada. Contacte a un operario de campo o a un administrador de Emincut para registrarla.</p>
+            <?php endif; ?>
+        </div>
+    <?php elseif (!$arbol): ?>
         <!-- Mensaje de no encontrado -->
         <div class="forest-card p-10 text-center max-w-lg mx-auto space-y-6">
             <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">

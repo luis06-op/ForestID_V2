@@ -14,13 +14,28 @@ requerir_rol(['OperarioEmincut', 'AdminEmincut']);
 $pdo = getDBConnection();
 $error = '';
 
+$codigo_placa_fijado = null;
+$codigo_placa_solicitado = strtoupper(trim(sanear($_GET['codigo_placa'] ?? $_POST['codigo_placa_fijado'] ?? '')));
+if ($codigo_placa_solicitado !== '') {
+    $stmtPlaca = $pdo->prepare("SELECT estado FROM `placas_qr` WHERE codigo_placa = :codigo LIMIT 1");
+    $stmtPlaca->execute([':codigo' => $codigo_placa_solicitado]);
+    $estado_placa = $stmtPlaca->fetchColumn();
+    if ($estado_placa === 'pendiente') {
+        $codigo_placa_fijado = $codigo_placa_solicitado;
+    } elseif ($estado_placa === 'asignada') {
+        $error = 'Esta placa ya fue asignada a un individuo.';
+    } else {
+        set_flash('error', 'La placa indicada no existe o ya no está pendiente de asignación.');
+    }
+}
+
 $zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
 
 $codigo_sugerido = generar_codigo_placa($pdo, 'EBG');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
-    $codigo_placa       = strtoupper(sanear($_POST['codigo_placa'] ?? ''));
+    $codigo_placa       = $codigo_placa_fijado ?? strtoupper(sanear($_POST['codigo_placa'] ?? ''));
     $id_zona            = $_POST['id_zona'] ?? '';
     $nombre_comun       = sanear($_POST['nombre_comun'] ?? '');
     $nombre_cientifico  = sanear($_POST['nombre_cientifico'] ?? '');
@@ -40,6 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!validar_token_csrf($token_csrf)) {
         $error = 'Token de seguridad inválido.';
+    } elseif (!empty($error)) {
+        // Conserva el rechazo de una placa que ya fue asignada.
+    } elseif ($codigo_placa_fijado !== null && strtoupper(sanear($_POST['codigo_placa_fijado'] ?? '')) !== $codigo_placa_fijado) {
+        $error = 'La placa de activación no coincide. Vuelva a escanear el QR.';
     } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
     } elseif (!zona_activa($pdo, (string)$id_zona)) {
@@ -69,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Generar código QR SVG
                 $urlFicha = QRCodeGenerator::urlFicha($codigo_placa);
                 try {
-                    $qr_relativo = QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
+                    $qr_relativo = $codigo_placa_fijado !== null
+                        ? 'assets/qr/qr_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $codigo_placa) . '.svg'
+                        : QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
                 } catch (Throwable $e) {
                     error_log('[ForestID] Error generando QR en alta de campo: ' . $e->getMessage());
                     set_flash('error', 'No se pudo generar el código QR. Verifique los permisos de assets/qr e intente nuevamente.');
@@ -80,6 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     // A5: alta completa en una sola transacción.
                     $pdo->beginTransaction();
+
+                    if ($codigo_placa_fijado !== null) {
+                        $bloqueoPlaca = $pdo->prepare("SELECT estado FROM `placas_qr` WHERE codigo_placa = :codigo FOR UPDATE");
+                        $bloqueoPlaca->execute([':codigo' => $codigo_placa_fijado]);
+                        if ($bloqueoPlaca->fetchColumn() !== 'pendiente') {
+                            throw new RuntimeException('La placa ya fue asignada o dejó de estar pendiente.');
+                        }
+                    }
 
                     // Insertar espécimen
                     $ins = $pdo->prepare("
@@ -137,6 +166,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'nombre_comun' => $nombre_comun
                     ]);
 
+                    if ($codigo_placa_fijado !== null) {
+                        $actualizarPlaca = $pdo->prepare("UPDATE `placas_qr` SET estado = 'asignada', asignado_a = :individuo, fecha_asignacion = NOW() WHERE codigo_placa = :codigo AND estado = 'pendiente'");
+                        $actualizarPlaca->execute([':individuo' => $id_individuo, ':codigo' => $codigo_placa_fijado]);
+                        if ($actualizarPlaca->rowCount() !== 1) {
+                            throw new RuntimeException('La placa ya fue asignada a otro individuo.');
+                        }
+                        registrar_log($pdo, $id_usuario, 'ACTIVAR_PLACA', 'PLACAS_QR', [
+                            'codigo_placa' => $codigo_placa_fijado,
+                            'id_individuo' => $id_individuo,
+                        ]);
+                    }
+
                     $pdo->commit();
 
                     set_flash('success', "Árbol {$nombre_comun} ({$codigo_placa}) registrado exitosamente.");
@@ -148,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     error_log('[ForestID] Error en alta de campo: ' . $e->getMessage());
 
-                    foreach ([$foto_url, $qr_relativo] as $archivo) {
+                    foreach ([$foto_url, $codigo_placa_fijado === null ? $qr_relativo : null] as $archivo) {
                         if (!empty($archivo)) {
                             $ruta = ROOT_PATH . str_replace('/', DIRECTORY_SEPARATOR, $archivo);
                             if (is_file($ruta)) {
@@ -157,7 +198,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
 
-                    $error = 'No se pudo registrar el individuo. Intente nuevamente.';
+                    $error = str_contains($e->getMessage(), 'placa') || str_contains($e->getMessage(), 'Placa')
+                        ? $e->getMessage()
+                        : 'No se pudo registrar el individuo. Intente nuevamente.';
                 }
             }
         }
@@ -200,20 +243,28 @@ require_once __DIR__ . '/../includes/navbar.php';
 
         <form method="POST" action="registrar_individuo.php" enctype="multipart/form-data" class="space-y-6 max-w-2xl">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+            <?php if ($codigo_placa_fijado !== null): ?>
+                <input type="hidden" name="codigo_placa" value="<?= htmlspecialchars($codigo_placa_fijado, ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="codigo_placa_fijado" value="<?= htmlspecialchars($codigo_placa_fijado, ENT_QUOTES, 'UTF-8') ?>">
+                <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm font-bold text-emerald-900">
+                    Placa a activar: <span class="text-lg tracking-wider"><?= htmlspecialchars($codigo_placa_fijado, ENT_QUOTES, 'UTF-8') ?></span>
+                </div>
+            <?php endif; ?>
 
             <!-- Tarjeta 1: Placa y Geolocalización -->
             <div class="forest-card p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-2">
                     <h3 class="font-heading font-bold text-sm text-gray-900">Placa y Ubicación GPS</h3>
-                    <button type="button" onclick="capturarGPS()" class="btn-forest-secondary text-xs py-1.5 px-2.5">
-                        <i data-lucide="crosshair" class="w-3.5 h-3.5 text-emerald-600"></i> Capturar Mi GPS
+                    <button type="button" id="button-gps" onclick="capturarGPS()" class="btn-forest-secondary text-xs py-1.5 px-2.5">
+                        <i data-lucide="crosshair" class="w-3.5 h-3.5 text-emerald-600"></i> Capturar ubicación GPS
                     </button>
                 </div>
+                <p id="status-gps" class="text-xs text-gray-500" role="status" aria-live="polite"></p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="codigo_placa" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa *</label>
-                        <input type="text" name="codigo_placa" id="codigo_placa" required value="<?= htmlspecialchars($codigo_sugerido) ?>" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-bold uppercase focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <input type="text" <?= $codigo_placa_fijado === null ? 'name="codigo_placa"' : '' ?> id="codigo_placa" required value="<?= htmlspecialchars($codigo_placa_fijado ?? $codigo_sugerido, ENT_QUOTES, 'UTF-8') ?>" <?= $codigo_placa_fijado !== null ? 'readonly' : '' ?> class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-bold uppercase focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                     <div>
                         <label for="id_zona" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Zona Territorial *</label>
@@ -228,12 +279,12 @@ require_once __DIR__ . '/../includes/navbar.php';
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label for="latitud" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Latitud GPS</label>
-                        <input type="number" step="0.0000001" name="latitud" id="latitud" required value="7.6043200" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-mono">
+                        <label for="latInput" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Latitud GPS</label>
+                        <input type="number" step="0.0000001" name="latitud" id="latInput" required value="7.6043200" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-mono">
                     </div>
                     <div>
-                        <label for="longitud" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Longitud GPS</label>
-                        <input type="number" step="0.0000001" name="longitud" id="longitud" required value="-74.8091500" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-mono">
+                        <label for="lonInput" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Longitud GPS</label>
+                        <input type="number" step="0.0000001" name="longitud" id="lonInput" required value="-74.8091500" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-mono">
                     </div>
                 </div>
             </div>
@@ -313,17 +364,18 @@ function capturarGPS() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
-                document.getElementById('latitud').value = pos.coords.latitude.toFixed(7);
-                document.getElementById('longitud').value = pos.coords.longitude.toFixed(7);
+                document.getElementById('latInput').value = pos.coords.latitude.toFixed(7);
+                document.getElementById('lonInput').value = pos.coords.longitude.toFixed(7);
+                document.getElementById('status-gps').textContent = 'Ubicación capturada correctamente.';
                 alert("Coordenadas GPS capturadas con éxito: " + pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5));
             },
             err => {
-                alert("No se pudo obtener la ubicación GPS (" + err.message + "). Ingrese manualmente.");
+                document.getElementById('status-gps').textContent = "No se pudo obtener la ubicación GPS (" + err.message + "). Ingrese manualmente.";
             },
             { enableHighAccuracy: true, timeout: 10000 }
         );
     } else {
-        alert("Su dispositivo o navegador no soporta geolocalización.");
+        document.getElementById('status-gps').textContent = 'Su dispositivo o navegador no soporta geolocalización.';
     }
 }
 </script>
