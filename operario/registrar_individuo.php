@@ -255,7 +255,7 @@ require_once __DIR__ . '/../includes/navbar.php';
             <div class="forest-card p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-2">
                     <h3 class="font-heading font-bold text-sm text-gray-900">Placa y Ubicación GPS</h3>
-                    <button type="button" id="button-gps" onclick="capturarGPS()" class="btn-forest-secondary text-xs py-1.5 px-2.5">
+                    <button type="button" id="button-gps" class="btn-forest-secondary text-xs py-1.5 px-2.5">
                         <i data-lucide="crosshair" class="w-3.5 h-3.5 text-emerald-600"></i> Capturar ubicación GPS
                     </button>
                 </div>
@@ -359,25 +359,13 @@ require_once __DIR__ . '/../includes/navbar.php';
 window.BASE_URL = "<?= BASE_URL ?>";
 </script>
 <script src="<?= BASE_URL ?>assets/js/especies_autocomplete.js"></script>
+<script src="<?= BASE_URL ?>assets/js/gps_capture.js"></script>
 <script>
-function capturarGPS() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                document.getElementById('latInput').value = pos.coords.latitude.toFixed(7);
-                document.getElementById('lonInput').value = pos.coords.longitude.toFixed(7);
-                document.getElementById('status-gps').textContent = 'Ubicación capturada correctamente.';
-                alert("Coordenadas GPS capturadas con éxito: " + pos.coords.latitude.toFixed(5) + ", " + pos.coords.longitude.toFixed(5));
-            },
-            err => {
-                document.getElementById('status-gps').textContent = "No se pudo obtener la ubicación GPS (" + err.message + "). Ingrese manualmente.";
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
-    } else {
-        document.getElementById('status-gps').textContent = 'Su dispositivo o navegador no soporta geolocalización.';
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.GpsCapture) {
+        window.GpsCapture.init({ latInput: 'latInput', lonInput: 'lonInput', buttonId: 'button-gps', statusId: 'status-gps' });
     }
-}
+});
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

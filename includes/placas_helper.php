@@ -85,7 +85,7 @@ class PlacasHelper
         }
     }
 
-    public static function marcarAsignada(PDO $pdo, string $codigo, int $idIndividuo): bool
+    public static function marcarAsignada(PDO $pdo, string $codigo, string $idIndividuo): bool
     {
         $stmt = $pdo->prepare(
             "UPDATE placas_qr SET estado = 'asignada', asignado_a = :individuo, fecha_asignacion = NOW()

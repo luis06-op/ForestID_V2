@@ -5,7 +5,7 @@ CREATE TABLE `placas_qr` (
     `id_lote` CHAR(36) NOT NULL,
     `codigo_placa` VARCHAR(30) NOT NULL,
     `estado` ENUM('pendiente', 'asignada') NOT NULL DEFAULT 'pendiente',
-    `generado_por` INT NULL,
+    `generado_por` CHAR(36) NULL,
     `fecha_generacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `asignado_a` CHAR(36) NULL,
     `fecha_asignacion` DATETIME NULL,
