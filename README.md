@@ -76,6 +76,10 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 
 > **QR y dominio:** si cambia de servidor o dominio, configure `APP_URL` y entre a **Admin → Gestor QR** para regenerar las placas (individual o masivamente). Los QR semilla apuntan a `http://localhost/ForestID_V2/` y deben regenerarse en producción.
 
+> **Placas QR vacías:** en **Admin → Placas QR Vacías** se genera un lote numerado (serie `001`, `002`, `003`…) sin individuo asignado. Al escanear una de esas placas, la ficha pública invita a **iniciar sesión como operario** y, tras el login, abre el alta rápida con la placa ya seleccionada. Los códigos usan solo números, como las placas físicas del arbolado.
+
+> **Migrar códigos antiguos:** si la base ya tiene códigos como `EBG-PARQ-001`, ejecute `php database/renumerar_codigos.php "http://localhost/ForestID_V2/"`. El script renumera individuos y placas pendientes, regenera los SVG y guarda un respaldo del mapeo en la carpeta temporal.
+
 ### 🔑 Credenciales de prueba (entorno local)
 
 | Rol | Correo | Contraseña | Alcance |

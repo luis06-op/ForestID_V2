@@ -101,7 +101,7 @@ CREATE TABLE `zonas` (
 -- 3.1 Tabla: individuos_forestales
 CREATE TABLE `individuos_forestales` (
     `id_individuo` CHAR(36) NOT NULL DEFAULT (UUID()),
-    `codigo_placa` VARCHAR(30) NOT NULL UNIQUE COMMENT 'Identificador alfanumérico físico de la placa QR',
+    `codigo_placa` VARCHAR(30) NOT NULL UNIQUE COMMENT 'Serie numérica física de la placa QR (ej. 448)',
     `id_zona` CHAR(36) NOT NULL,
     `nombre_comun` VARCHAR(150) NOT NULL,
     `nombre_cientifico` VARCHAR(150) NOT NULL,
@@ -302,7 +302,7 @@ INSERT INTO `individuos_forestales` (
 ) VALUES 
 (
     '55555555-5555-5555-5555-555555555501',
-    'EBG-PARQ-001',
+    '001',
     '44444444-4444-4444-4444-444444444401',
     'Guayacán Rosado',
     'Handroanthus chrysanthus',
@@ -316,14 +316,14 @@ INSERT INTO `individuos_forestales` (
     9.50,
     'assets/uploads/individuos/guayacan_rosado.jpg',
     'Espécimen maduro ubicado en el costado noroccidental del parque principal. Floración abundante y fuste recto con buen desarrollo de dosel.',
-    'assets/qr/qr_EBG-PARQ-001.svg',
+    'assets/qr/qr_001.svg',
     '33333333-3333-3333-3333-333333333301',
     1,
     NOW()
 ),
 (
     '55555555-5555-5555-5555-555555555502',
-    'EBG-SENA-002',
+    '002',
     '44444444-4444-4444-4444-444444444402',
     'Ceiba Bruja / Bonga',
     'Ceiba pentandra',
@@ -337,14 +337,14 @@ INSERT INTO `individuos_forestales` (
     16.80,
     'assets/uploads/individuos/ceiba_pentandra.jpg',
     'Árbol emblemático de gran porte dentro del campus SENA. Excelente sombra y refugio para avifauna regional.',
-    'assets/qr/qr_EBG-SENA-002.svg',
+    'assets/qr/qr_002.svg',
     '33333333-3333-3333-3333-333333333301',
     1,
     NOW()
 ),
 (
     '55555555-5555-5555-5555-555555555503',
-    'EBG-NECH-003',
+    '003',
     '44444444-4444-4444-4444-444444444403',
     'Caracolí',
     'Anacardium excelsum',
@@ -358,14 +358,14 @@ INSERT INTO `individuos_forestales` (
     18.20,
     'assets/uploads/individuos/caracoli.jpg',
     'Individuo ribereño protector de la cuenca del Río Nechí. Raíces profundas estabilizadoras de ribera con alta captación de carbono.',
-    'assets/qr/qr_EBG-NECH-003.svg',
+    'assets/qr/qr_003.svg',
     '33333333-3333-3333-3333-333333333302',
     1,
     NOW()
 ),
 (
     '55555555-5555-5555-5555-555555555504',
-    'EBG-PARQ-004',
+    '004',
     '44444444-4444-4444-4444-444444444401',
     'Palma Real / Palma de Cera',
     'Roystonea regia',
@@ -379,7 +379,7 @@ INSERT INTO `individuos_forestales` (
     4.20,
     'assets/uploads/individuos/palma_real.jpg',
     'Palma ornamental central. Estípite limpio, copa vigorosa y buen anclaje en el suelo del parque.',
-    'assets/qr/qr_EBG-PARQ-004.svg',
+    'assets/qr/qr_004.svg',
     '33333333-3333-3333-3333-333333333302',
     1,
     NOW()
@@ -486,7 +486,7 @@ INSERT INTO `logs_sistema` (
     '33333333-3333-3333-3333-333333333301',
     'ALTA_INDIVIDUO',
     'INDIVIDUOS_FORESTALES',
-    JSON_OBJECT('codigo_placa', 'EBG-PARQ-001', 'especie', 'Guayacán Rosado', 'zona', 'Parque Principal El Bagre'),
+    JSON_OBJECT('codigo_placa', '001', 'especie', 'Guayacán Rosado', 'zona', 'Parque Principal El Bagre'),
     '127.0.0.1',
     NOW()
 );

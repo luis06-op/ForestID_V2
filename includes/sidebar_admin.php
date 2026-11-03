@@ -43,9 +43,14 @@ $dir_actual = basename(dirname($_SERVER['PHP_SELF']));
             <span>Zonas Territoriales</span>
         </a>
 
-        <a href="<?= BASE_URL ?>admin/qr/index.php" class="emi-enlace <?= ($dir_actual === 'qr') ? 'activo' : '' ?>">
+        <a href="<?= BASE_URL ?>admin/qr/index.php" class="emi-enlace <?= ($dir_actual === 'qr' && !in_array($pagina_actual, ['masivo.php', 'imprimir_masivo.php'], true)) ? 'activo' : '' ?>">
             <i data-lucide="qr-code" class="w-5 h-5"></i>
             <span>Códigos QR & Placas</span>
+        </a>
+
+        <a href="<?= BASE_URL ?>admin/qr/masivo.php" class="emi-enlace <?= in_array($pagina_actual, ['masivo.php', 'imprimir_masivo.php'], true) ? 'activo' : '' ?>">
+            <i data-lucide="tags" class="w-5 h-5"></i>
+            <span>Placas QR Vacías</span>
         </a>
 
         <div class="emi-seccion">Gestión</div>

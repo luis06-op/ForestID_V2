@@ -19,6 +19,9 @@ if (!validar_token_csrf($_POST['csrf_token'] ?? '')) {
     exit;
 }
 
+// Destino opcional tras cerrar sesión (ej. volver al login para registrarse).
+$destino_logout = destino_redireccion_valido($_POST['redirect'] ?? null);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -36,5 +39,5 @@ cerrar_sesion_actual();
 // Iniciar nueva sesión limpia para el mensaje de despedida
 session_start();
 set_flash('info', 'Ha cerrado su sesión de manera segura.');
-header('Location: ' . BASE_URL . 'publico/index.php');
+header('Location: ' . ($destino_logout ?? BASE_URL . 'publico/index.php'));
 exit;

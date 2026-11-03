@@ -16,6 +16,7 @@ $id     = trim($id);
 
 $pdo = getDBConnection();
 $arbol = null;
+$placa_vacia = null;
 $evaluaciones = [];
 $actividades = [];
 
@@ -34,6 +35,12 @@ if (!empty($codigo) || !empty($id)) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':codigo' => $codigo, ':id' => $id]);
     $arbol = $stmt->fetch();
+
+    if (!$arbol && $codigo !== '' && $id === '') {
+        $stmtPlaca = $pdo->prepare("SELECT codigo_placa, estado FROM `placas_qr` WHERE codigo_placa = :codigo LIMIT 1");
+        $stmtPlaca->execute([':codigo' => $codigo]);
+        $placa_vacia = $stmtPlaca->fetch() ?: null;
+    }
 
     // M5: ofuscar coordenadas GPS en la ficha pública (~100 m).
     if ($arbol) {
@@ -66,14 +73,75 @@ if (!empty($codigo) || !empty($id)) {
     }
 }
 
-$titulo_pagina = $arbol ? "{$arbol['nombre_comun']} ({$arbol['codigo_placa']}) — Ficha ForestID" : "Individuo No Encontrado — ForestID";
+$titulo_pagina = $arbol ? "{$arbol['nombre_comun']} ({$arbol['codigo_placa']}) — Ficha ForestID" : ($placa_vacia ? "Placa Vacía — ForestID" : "Individuo No Encontrado — ForestID");
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <?php if (!$arbol): ?>
+    <?php if (!$arbol && $placa_vacia && $placa_vacia['estado'] === 'pendiente'): ?>
+        <?php
+        $rol_actual = obtener_rol_actual();
+        $puede_activar_placa = esta_autenticado() && in_array($rol_actual, ['OperarioEmincut', 'AdminEmincut'], true);
+        $codigo_placa_vacia = (string) $placa_vacia['codigo_placa'];
+        $ruta_registro_placa = 'operario/registrar_individuo.php?codigo_placa=' . rawurlencode($codigo_placa_vacia);
+        $url_registro_placa = BASE_URL . $ruta_registro_placa;
+        $url_login_registro = BASE_URL . 'auth/login.php?redirect=' . rawurlencode($ruta_registro_placa);
+        ?>
+        <div class="forest-card overflow-hidden max-w-xl mx-auto">
+
+            <!-- Cabecera de la placa física -->
+            <div class="bg-gradient-to-r from-emerald-950 via-forest-dark to-emerald-900 text-white p-8 text-center">
+                <div class="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="qr-code" class="w-8 h-8" style="color:var(--emi-amarillo)"></i>
+                </div>
+                <span class="text-[11px] font-bold uppercase tracking-[.2em] text-emerald-200">Placa disponible</span>
+                <p class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-[.12em]"><?= htmlspecialchars($codigo_placa_vacia, ENT_QUOTES, 'UTF-8') ?></p>
+                <p class="mt-2 text-xs text-emerald-200/80">Todavía no está vinculada a un individuo forestal</p>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6 text-center">
+                <div class="space-y-2">
+                    <h2 class="font-heading font-bold text-xl text-gray-900">¿Quieres iniciar sesión para registrar este árbol?</h2>
+                    <p class="text-sm text-gray-500 leading-relaxed">
+                        Esta placa está lista para asignarse. Si eres operario de Emincut, inicia sesión y completa el alta del individuo desde tu panel de campo.
+                    </p>
+                </div>
+
+                <?php if ($puede_activar_placa): ?>
+                    <div class="space-y-3">
+                        <a href="<?= htmlspecialchars($url_registro_placa, ENT_QUOTES, 'UTF-8') ?>" class="btn-forest-primary w-full inline-flex items-center justify-center gap-2 py-3 text-sm">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Registrar individuo para esta placa
+                        </a>
+                        <p class="text-[11px] text-gray-400">La placa quedará marcada como asignada al guardar el registro.</p>
+                    </div>
+                <?php elseif (esta_autenticado()): ?>
+                    <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900 text-left">
+                        Tu cuenta actual (<strong><?= htmlspecialchars($rol_actual ?: 'invitado') ?></strong>) no tiene permisos de operario de campo.
+                    </div>
+                    <form method="POST" action="<?= BASE_URL ?>auth/logout.php" class="space-y-2">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(crear_token_csrf()) ?>">
+                        <input type="hidden" name="redirect" value="<?= htmlspecialchars($url_login_registro, ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="btn-forest-primary w-full inline-flex items-center justify-center gap-2 py-3 text-sm">
+                            <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar sesión e ingresar como operario
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <div class="space-y-3">
+                        <a href="<?= htmlspecialchars($url_login_registro, ENT_QUOTES, 'UTF-8') ?>" class="btn-forest-primary w-full inline-flex items-center justify-center gap-2 py-3 text-sm">
+                            <i data-lucide="log-in" class="w-4 h-4"></i> Iniciar sesión como operario
+                        </a>
+                        <p class="text-[11px] text-gray-400">Serás dirigido al alta rápida con la placa <strong><?= htmlspecialchars($codigo_placa_vacia, ENT_QUOTES, 'UTF-8') ?></strong> ya seleccionada.</p>
+                    </div>
+                <?php endif; ?>
+
+                <div class="pt-4 border-t border-gray-100 text-[11px] text-gray-400">
+                    ¿Solo quieres consultar? <a href="<?= BASE_URL ?>publico/buscar.php" class="font-semibold text-emerald-700 hover:underline">Explorar el inventario forestal</a>
+                </div>
+            </div>
+        </div>
+    <?php elseif (!$arbol): ?>
         <!-- Mensaje de no encontrado -->
         <div class="forest-card p-10 text-center max-w-lg mx-auto space-y-6">
             <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">

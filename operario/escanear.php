@@ -10,6 +10,15 @@ require_once __DIR__ . '/../includes/auth_check.php';
 
 requerir_rol(['OperarioEmincut', 'AdminEmincut']);
 
+$pdo = getDBConnection();
+$placas_ejemplo = $pdo->query("
+    SELECT codigo_placa
+      FROM `individuos_forestales`
+     WHERE estado_registro = 1
+     ORDER BY CAST(codigo_placa AS UNSIGNED), codigo_placa
+     LIMIT 3
+")->fetchAll(PDO::FETCH_COLUMN);
+
 $titulo_pagina = 'Escanear Placa QR — ' . APP_NAME;
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';
@@ -74,22 +83,24 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <form action="<?= BASE_URL ?>operario/individuos/detalle.php" method="GET" class="space-y-3">
                     <div>
                         <label for="codigo" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa</label>
-                        <input type="text" id="codigo" name="codigo" required placeholder="ej. EBG-PARQ-001"
-                               class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-mono font-bold uppercase focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <input type="text" id="codigo" name="codigo" required inputmode="numeric" placeholder="ej. 448"
+                               class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-sm font-mono font-bold tracking-wider focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                     <button type="submit" class="w-full btn-forest-primary text-xs py-2.5 justify-center shadow-sm">
                         <i data-lucide="search" class="w-4 h-4"></i> Abrir Ficha del Árbol
                     </button>
                 </form>
 
+                <?php if (!empty($placas_ejemplo)): ?>
                 <div class="pt-3 border-t border-gray-100 space-y-2 text-[11px] text-gray-500">
-                    <span class="block font-semibold text-gray-700">Placas de prueba rápida:</span>
+                    <span class="block font-semibold text-gray-700">Placas registradas (acceso rápido):</span>
                     <div class="flex flex-wrap gap-1.5">
-                        <a href="<?= BASE_URL ?>operario/individuos/detalle.php?codigo=EBG-PARQ-001" class="px-2 py-1 bg-gray-100 hover:bg-emerald-100 text-gray-700 rounded font-mono font-semibold">EBG-PARQ-001</a>
-                        <a href="<?= BASE_URL ?>operario/individuos/detalle.php?codigo=EBG-SENA-002" class="px-2 py-1 bg-gray-100 hover:bg-emerald-100 text-gray-700 rounded font-mono font-semibold">EBG-SENA-002</a>
-                        <a href="<?= BASE_URL ?>operario/individuos/detalle.php?codigo=EBG-NECH-003" class="px-2 py-1 bg-gray-100 hover:bg-emerald-100 text-gray-700 rounded font-mono font-semibold">EBG-NECH-003</a>
+                        <?php foreach ($placas_ejemplo as $codigo_ejemplo): ?>
+                            <a href="<?= BASE_URL ?>operario/individuos/detalle.php?codigo=<?= rawurlencode((string) $codigo_ejemplo) ?>" class="px-2 py-1 bg-gray-100 hover:bg-emerald-100 text-gray-700 rounded font-mono font-semibold"><?= htmlspecialchars((string) $codigo_ejemplo) ?></a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
 
         </div>
@@ -104,7 +115,7 @@ let html5QrCode = null;
 function onScanSuccess(decodedText, decodedResult) {
     document.getElementById('scan-msg').innerText = "¡Código detectado! Redirigiendo...";
     
-    // Si viene como URL completa (ej. http://.../ficha.php?codigo=EBG-PARQ-001)
+    // Si viene como URL completa (ej. http://.../ficha.php?codigo=448)
     let codigo = decodedText;
     if (decodedText.includes('codigo=')) {
         const urlParams = new URLSearchParams(decodedText.split('?')[1]);
