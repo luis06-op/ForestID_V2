@@ -13,6 +13,15 @@ Options -Indexes
     RewriteRule ^(?:composer\.(?:json|lock)|README\.md|test[0-9]*\.(?:html|js))$ - [R=404,L]
 </IfModule>
 
+# Detección de HTTPS compatible con Apache y LiteSpeed.
+# mod_ssl expone la variable HTTPS=on; los proxies/CDN que terminan TLS
+# suelen exponer X-Forwarded-Proto=https. No se usa la expresión <If>,
+# que LiteSpeed no garantiza soportar y puede provocar errores 500.
+<IfModule mod_setenvif.c>
+    SetEnvIf HTTPS "on" HTTPS_ON=1
+    SetEnvIf X-Forwarded-Proto "https" HTTPS_ON=1
+</IfModule>
+
 <FilesMatch "\.(?:sql|md|log|ini|sh|bak|env)$">
     Require all denied
 </FilesMatch>
@@ -24,7 +33,6 @@ Options -Indexes
     Header set Permissions-Policy "geolocation=(self), camera=(self), microphone=()"
     # M4: CSP (permite CDNs usados por el proyecto) + HSTS bajo HTTPS.
     Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'self'"
-    <If "%{HTTPS} == 'on'">
-        Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-    </If>
+    # HSTS solo bajo HTTPS (LiteSpeed/Apache): SetEnvIf arriba marca HTTPS_ON.
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS_ON
 </IfModule>
