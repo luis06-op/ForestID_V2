@@ -1,0 +1,4 @@
+# Denegar acceso web a los scripts CLI (verificaciones y mantenimiento).
+<RequireAll>
+    Require all denied
+</RequireAll>

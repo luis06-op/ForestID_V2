@@ -7,7 +7,7 @@ Options -Indexes
     RewriteEngine On
 
     # Carpetas internas: no accesibles por HTTP (sí por include de PHP).
-    RewriteRule ^(?:\.git|\.opencode|database|docs|includes|config|vendor)(?:/|$) - [R=404,L]
+    RewriteRule ^(?:\.git|\.opencode|database|docs|includes|config|vendor|scripts)(?:/|$) - [R=404,L]
 
     # Archivos de desarrollo, documentación y configuración.
     RewriteRule ^(?:composer\.(?:json|lock)|README\.md|test[0-9]*\.(?:html|js))$ - [R=404,L]
