@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_id'])) {
     exit;
 }
 
-// Acción de reenviar enlace de activación de usuario inactivo (AdminEmincut)
+// Acción de reenviar enlace de activación (AdminEmincut).
+// Tras el envío se muestra el mismo panel de resultado que al crear un usuario.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_id'])) {
     $reenviar_id = $_POST['reenviar_activacion_id'];
     $csrf = $_POST['csrf_token'] ?? '';
@@ -45,7 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_i
         if ($reenviar_id === $_SESSION['usuario']['id_usuario']) {
             set_flash('error', 'No se puede reenviar la activación de su propia cuenta.');
         } else {
-            $stmtU = $pdo->prepare("SELECT id_usuario, nombres, apellidos, correo, telefono, estado FROM `usuarios` WHERE `id_usuario` = :id");
+            $stmtU = $pdo->prepare("
+                SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, u.telefono, u.estado, r.nombre_rol
+                FROM `usuarios` u
+                INNER JOIN `roles` r ON u.id_rol = r.id_rol
+                WHERE u.`id_usuario` = :id
+            ");
             $stmtU->execute([':id' => $reenviar_id]);
             $usuario = $stmtU->fetch(PDO::FETCH_ASSOC);
             if (!$usuario) {
@@ -58,11 +64,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_i
                 $enlace_activacion = APP_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
                 $insToken = $pdo->prepare("INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`) VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())");
                 $insToken->execute([':id_usuario' => $usuario['id_usuario'], ':token' => hash_token($token_activacion), ':expiracion' => $expira_activacion]);
+
                 $res_correo = enviar_correo_activacion($usuario['correo'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
                 $res_wa = enviar_whatsapp_activacion($usuario['telefono'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
                 $enlace_wa = enlace_whatsapp_activacion($usuario['telefono'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
-                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REENVIAR_ACTIVACION', 'USUARIOS', ['id_usuario_afectado' => $usuario['id_usuario'], 'correo_ok' => $res_correo['ok'], 'whatsapp_ok' => $res_wa['ok']]);
-                set_flash('success', 'Enlace de activación reenviado correctamente. Verifique correo y WhatsApp.');
+
+                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REENVIAR_ACTIVACION', 'USUARIOS', [
+                    'id_usuario_afectado' => $usuario['id_usuario'],
+                    'correo_ok'           => $res_correo['ok'],
+                    'whatsapp_ok'         => $res_wa['ok']
+                ]);
+
+                // Datos para el panel de resultado (mismo formato que crear.php).
+                $_SESSION['panel_envio_activacion'] = [
+                    'horas_activacion' => $horas_activacion,
+                    'usuario' => [
+                        'nombres'           => $usuario['nombres'],
+                        'apellidos'         => $usuario['apellidos'],
+                        'correo'            => $usuario['correo'],
+                        'rol'               => $usuario['nombre_rol'],
+                        'telefono'          => $usuario['telefono'],
+                        'enlace_activacion' => $enlace_activacion,
+                    ],
+                    'envio' => [
+                        'correo'            => $res_correo,
+                        'whatsapp'          => $res_wa,
+                        'enlace_wa'         => $enlace_wa,
+                        'enlace_activacion' => $enlace_activacion,
+                        'enlace_mail'       => 'mailto:' . $usuario['correo']
+                            . '?subject=' . rawurlencode('ForestID — Activa tu cuenta')
+                            . '&body=' . rawurlencode(texto_activacion($usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion)),
+                    ],
+                ];
+                header('Location: ' . BASE_URL . 'admin/usuarios/resultado_activacion.php');
+                exit;
             }
         }
     } else {
@@ -213,9 +248,9 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                                 <input type="hidden" name="reenviar_activacion_id" value="<?= htmlspecialchars($u['id_usuario']) ?>">
                                                 <button type="submit"
-                                                    class="p-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 inline-flex"
-                                                    title="Reenviar enlace de activación">
-                                                    <i data-lucide="mail" class="w-4 h-4"></i>
+                                                    class="px-2 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 inline-flex items-center gap-1 text-[11px] font-semibold"
+                                                    title="Reenviar enlace de activación por correo y WhatsApp">
+                                                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Reenviar
                                                 </button>
                                             </form>
                                         <?php endif; ?>
