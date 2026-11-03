@@ -8,8 +8,15 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/auth_check.php';
 
-// Si ya está autenticado, redirigir a su dashboard correspondiente
+// Destino interno solicitado (ej. registrar un individuo desde una placa vacía).
+$destino_login = destino_redireccion_valido($_GET['redirect'] ?? $_POST['redirect'] ?? null);
+
+// Si ya está autenticado, continuar al destino solicitado o a su dashboard.
 if (esta_autenticado()) {
+    if ($destino_login !== null && (es_admin() || es_operario())) {
+        header('Location: ' . $destino_login);
+        exit;
+    }
     redirigir_segun_rol();
 }
 
@@ -87,6 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
                 set_flash('success', '¡Bienvenido(a), ' . $usuario['nombres'] . '!');
+                if ($destino_login !== null && (es_admin() || es_operario())) {
+                    header('Location: ' . $destino_login);
+                    exit;
+                }
                 redirigir_segun_rol();
             } else {
                 $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';
@@ -182,8 +193,18 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             <?php endif; ?>
 
+            <?php if ($destino_login !== null): ?>
+                <div class="border-l-4 p-4 rounded-xl flex items-center gap-3 text-sm bg-emerald-50 border-emerald-500 text-emerald-900">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+                    <span>Inicie sesión como operario de Emincut para registrar el individuo de la placa escaneada.</span>
+                </div>
+            <?php endif; ?>
+
             <form method="POST" action="login.php" class="space-y-5">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                <?php if ($destino_login !== null): ?>
+                    <input type="hidden" name="redirect" value="<?= htmlspecialchars((string) ($_GET['redirect'] ?? $_POST['redirect'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                <?php endif; ?>
 
                 <div>
                     <label for="correo" class="emi-label block mb-1.5">Correo Electrónico</label>

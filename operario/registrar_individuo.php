@@ -31,7 +31,7 @@ if ($codigo_placa_solicitado !== '') {
 
 $zonas = $pdo->query("SELECT id_zona, nombre_zona FROM `zonas` WHERE estado = 1 ORDER BY nombre_zona ASC")->fetchAll();
 
-$codigo_sugerido = generar_codigo_placa($pdo, 'EBG');
+$codigo_sugerido = generar_codigo_placa($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf         = $_POST['csrf_token'] ?? '';
@@ -61,9 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'La placa de activación no coincide. Vuelva a escanear el QR.';
     } elseif (empty($codigo_placa) || empty($id_zona) || empty($nombre_comun)) {
         $error = 'Todos los campos obligatorios (*) son requeridos.';
+    } elseif ($codigo_placa_fijado === null && !preg_match('/^[0-9]{1,12}$/', $codigo_placa)) {
+        $error = 'El código de placa debe ser una serie numérica (ej. 448), sin letras ni guiones.';
     } elseif (!zona_activa($pdo, (string)$id_zona)) {
         $error = 'La zona seleccionada no es válida o está inactiva.';
     } else {
+        // Serie numérica: normalizar a 3 dígitos como en la placa física (5 -> 005).
+        if (preg_match('/^[0-9]{1,12}$/', $codigo_placa)) {
+            $codigo_placa = formatear_codigo_placa((int) $codigo_placa);
+        }
+
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE codigo_placa = :cod");
         $chk->execute([':cod' => $codigo_placa]);
         if ((int)$chk->fetchColumn() > 0) {
@@ -87,9 +94,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Generar código QR SVG
                 $urlFicha = QRCodeGenerator::urlFicha($codigo_placa);
+                $ruta_qr_placa = 'assets/qr/qr_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $codigo_placa) . '.svg';
                 try {
-                    $qr_relativo = $codigo_placa_fijado !== null
-                        ? 'assets/qr/qr_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $codigo_placa) . '.svg'
+                    $qr_relativo = $codigo_placa_fijado !== null && is_file(ROOT_PATH . $ruta_qr_placa)
+                        ? $ruta_qr_placa
                         : QRCodeGenerator::guardarQR($codigo_placa, $urlFicha);
                 } catch (Throwable $e) {
                     error_log('[ForestID] Error generando QR en alta de campo: ' . $e->getMessage());
@@ -263,8 +271,8 @@ require_once __DIR__ . '/../includes/navbar.php';
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="codigo_placa" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa *</label>
-                        <input type="text" <?= $codigo_placa_fijado === null ? 'name="codigo_placa"' : '' ?> id="codigo_placa" required value="<?= htmlspecialchars($codigo_placa_fijado ?? $codigo_sugerido, ENT_QUOTES, 'UTF-8') ?>" <?= $codigo_placa_fijado !== null ? 'readonly' : '' ?> class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs font-bold uppercase focus:ring-2 focus:ring-emerald-600 outline-none">
+                        <label for="codigo_placa" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa (numérico) *</label>
+                        <input type="text" <?= $codigo_placa_fijado === null ? 'name="codigo_placa"' : '' ?> id="codigo_placa" required inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" value="<?= htmlspecialchars($codigo_placa_fijado ?? $codigo_sugerido, ENT_QUOTES, 'UTF-8') ?>" <?= $codigo_placa_fijado !== null ? 'readonly' : '' ?> class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-sm font-bold tracking-wider focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                     <div>
                         <label for="id_zona" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Zona Territorial *</label>

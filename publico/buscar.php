@@ -89,7 +89,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                         <i data-lucide="search" class="w-4 h-4"></i>
                     </div>
-                    <input type="text" id="q" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Guayacán, Ceiba, EBG-..."
+                    <input type="text" id="q" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Guayacán, Ceiba, 448..."
                            class="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
                 </div>
             </div>
