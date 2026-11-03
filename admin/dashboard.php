@@ -92,6 +92,9 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <a href="<?= BASE_URL ?>admin/individuos/crear.php" class="emi-btn emi-btn-verde text-xs py-2.5 px-4">
                     <span class="inline-flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4"></i> Nuevo Individuo</span>
                 </a>
+                <a href="<?= BASE_URL ?>admin/qr/masivo.php" class="emi-btn emi-btn-sol text-xs py-2.5 px-4">
+                    <span class="inline-flex items-center gap-2"><i data-lucide="tags" class="w-4 h-4"></i> Placas QR Vacías</span>
+                </a>
                 <a href="<?= BASE_URL ?>admin/qr/imprimir.php" class="emi-btn text-xs py-2.5 px-4 border" style="background:#fff; color:var(--emi-verde-oscuro); border-color:#CBD9B8">
                     <span class="inline-flex items-center gap-2"><i data-lucide="printer" class="w-4 h-4"></i> Imprimir Placas</span>
                 </a>
