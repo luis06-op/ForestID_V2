@@ -184,26 +184,110 @@ function generar_uuid(): string {
 }
 
 /**
- * Genera un código de placa único y legible (ej. EBG-PARQ-042)
+ * Formatea un número consecutivo como código visible de placa.
+ * Emincut usa series numéricas simples (ej. 001, 117, 448, 536).
  */
-function generar_codigo_placa(PDO $pdo, string $prefijo_zona = 'EBG'): string {
-    $prefijo = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', substr($prefijo_zona, 0, 4)));
-    if (empty($prefijo)) {
-        $prefijo = 'EBG';
+function formatear_codigo_placa(int $numero): string {
+    return str_pad((string) max(1, $numero), 3, '0', STR_PAD_LEFT);
+}
+
+/**
+ * Reserva los siguientes códigos numéricos libres para placas.
+ * La serie es única y compartida entre individuos registrados y placas vacías.
+ *
+ * @return string[] Códigos consecutivos disponibles (ej. ['005', '006']).
+ */
+function reservar_codigos_placa(PDO $pdo, int $cantidad = 1): array {
+    $cantidad = max(1, $cantidad);
+
+    $sqlMax = "
+        SELECT MAX(n) FROM (
+            SELECT CAST(codigo_placa AS UNSIGNED) AS n
+              FROM `individuos_forestales`
+             WHERE codigo_placa REGEXP '^[0-9]+$'
+            UNION ALL
+            SELECT CAST(codigo_placa AS UNSIGNED) AS n
+              FROM `placas_qr`
+             WHERE codigo_placa REGEXP '^[0-9]+$'
+        ) AS usados
+    ";
+    $ultimo = (int) $pdo->query($sqlMax)->fetchColumn();
+    $inicio = $ultimo + 1;
+
+    $stmt = $pdo->prepare("
+        SELECT codigo_placa FROM `individuos_forestales`
+         WHERE codigo_placa REGEXP '^[0-9]+$' AND CAST(codigo_placa AS UNSIGNED) >= :inicio_a
+        UNION
+        SELECT codigo_placa FROM `placas_qr`
+         WHERE codigo_placa REGEXP '^[0-9]+$' AND CAST(codigo_placa AS UNSIGNED) >= :inicio_b
+    ");
+    $stmt->execute([':inicio_a' => $inicio, ':inicio_b' => $inicio]);
+
+    $ocupados = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $codigo) {
+        $ocupados[(int) $codigo] = true;
     }
 
-    $intentos = 0;
-    do {
-        $numero = str_pad((string)random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-        $codigo = "{$prefijo}-{$numero}";
+    $codigos = [];
+    $numero = $inicio;
+    while (count($codigos) < $cantidad) {
+        if (!isset($ocupados[$numero])) {
+            $codigos[] = formatear_codigo_placa($numero);
+        }
+        $numero++;
+    }
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM `individuos_forestales` WHERE `codigo_placa` = :codigo");
-        $stmt->execute([':codigo' => $codigo]);
-        $existe = (int)$stmt->fetchColumn() > 0;
-        $intentos++;
-    } while ($existe && $intentos < 50);
+    return $codigos;
+}
 
-    return $codigo;
+/**
+ * Genera un código de placa único con la serie numérica de Emincut (ej. 448).
+ * El parámetro $prefijo_zona se conserva solo por compatibilidad con llamadas antiguas.
+ */
+function generar_codigo_placa(PDO $pdo, string $prefijo_zona = ''): string {
+    return reservar_codigos_placa($pdo, 1)[0];
+}
+
+/**
+ * Valida un destino de redirección interno y devuelve su URL absoluta.
+ * Evita open redirects: solo rutas de módulos conocidos de la aplicación.
+ */
+function destino_redireccion_valido($destino): ?string {
+    if (!is_string($destino)) {
+        return null;
+    }
+    $destino = trim($destino);
+    if ($destino === '' || strlen($destino) > 500) {
+        return null;
+    }
+    // Sin espacios ni caracteres de control.
+    if (preg_match('/[\x00-\x20\x7F]/', $destino)) {
+        return null;
+    }
+    // Sin esquemas (http:, https:, javascript:, data:...).
+    if (preg_match('#^[a-z][a-z0-9+.-]*:#i', $destino)) {
+        return null;
+    }
+    // Sin rutas protocol-relative ni barras invertidas.
+    if (strpos($destino, '//') === 0 || strpos($destino, '\\') !== false) {
+        return null;
+    }
+    if (strpos($destino, '..') !== false) {
+        return null;
+    }
+
+    // Si llega con la ruta base de la app, se recorta para normalizarla.
+    $ruta_base = rtrim((string) parse_url(BASE_URL, PHP_URL_PATH), '/');
+    if ($ruta_base !== '' && strpos($destino, $ruta_base) === 0) {
+        $destino = substr($destino, strlen($ruta_base));
+    }
+    $destino = ltrim($destino, '/');
+
+    if (!preg_match('#^(operario|admin|publico|auth)/[A-Za-z0-9._/?=&%+-]*$#', $destino)) {
+        return null;
+    }
+
+    return BASE_URL . $destino;
 }
 
 /**
