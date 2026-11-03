@@ -6,6 +6,11 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Forzar HTTPS en producción (compatible con proxies/LiteSpeed).
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Carpetas internas: no accesibles por HTTP (sí por include de PHP).
     RewriteRule ^(?:\.git|\.opencode|database|docs|includes|config|vendor|scripts)(?:/|$) - [R=404,L]
 

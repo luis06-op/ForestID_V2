@@ -27,7 +27,7 @@ define('DB_PASS', 'DB_PASS');          // contraseña del usuario MySQL
 // ---- Aplicación ----
 // URL canónica pública, con HTTPS y barra final. Se codifica en los códigos QR
 // y en los enlaces de correo, por lo que debe definirse ANTES de generar placas.
-define('APP_URL', 'APP_URL');          // p. ej. https://forestid.emincut.com/ (reemplace el placeholder)
+define('APP_URL', 'https://Forestid.cfmasoft.com/'); // URL canónica de producción (Forestid.cfmasoft.com)
 
 // Opcional: lista blanca adicional de hosts separados por coma (p. ej. IP del servidor).
 // define('FORESTID_HOSTS', '127.0.0.1');

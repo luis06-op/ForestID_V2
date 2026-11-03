@@ -1,16 +1,16 @@
 # ForestID — Despliegue previsto en Hostinger
 
-> **Estado:** acuerdo en curso con Emincut. Todavía **no** existe un entorno de producción.
+> **Estado:** despliegue objetivo para la feria FISAD en el dominio **Forestid.cfmasoft.com** (HTTPS). El entorno local XAMPP sigue siendo la referencia para desarrollo.
 
 ## Situación actual
 
-El paso a producción de ForestID está previsto en **Hostinger**, junto al sitio de Emincut y como subdominio del mismo. A la fecha de esta nota **solo se está llegando a un acuerdo con Emincut**: no hay dominio, plan de hosting, credenciales ni fecha confirmados, y **no hay un entorno de producción activo**.
+El despliegue de producción para la feria FISAD se realizará en el dominio **https://Forestid.cfmasoft.com/**. Las credenciales reales de BD/SMTP y el certificado SSL se configuran en el servidor (no se versionan). La referencia de desarrollo sigue siendo la instalación local XAMPP.
 
 Mientras el acuerdo no se cierre, la referencia válida sigue siendo la instalación local con XAMPP descrita en el [README principal](README.md).
 
 ## Pendiente de definir
 
-- Dominio o subdominio definitivo (se ha planteado `forestid.emincut.com`, sin confirmar).
+- Dominio definitivo: `https://Forestid.cfmasoft.com/` (configurar DNS A/CNAME hacia el hosting y emitir SSL).
 - Plan de Hostinger (compartido o VPS/Cloud) y ubicación del centro de datos.
 - Credenciales de la base de datos y del servidor SMTP.
 - Responsable de la migración y ventana de corte.
@@ -20,7 +20,7 @@ Mientras el acuerdo no se cierre, la referencia válida sigue siendo la instalac
 1. Crear el subdominio y emitir el certificado SSL.
 2. Crear una base de datos vacía e importar `database/forestsrd_db.sql`. El script empieza con `DROP TABLE`, pero incluye un **preflight** que **aborta el import si la base destino ya tiene tablas con datos** (error `45000`). Aun así, **nunca** ejecutarlo sobre datos existentes sin un respaldo verificado.
 3. Verificar la versión de MariaDB del plan (se espera **10.11/11.x**) y probar el import primero en un entorno de staging: el dump se ha probado en MariaDB 10.4 y el `DEFAULT (UUID())` debe validarse en la versión destino.
-4. Crear `config/config.local.php` desde la plantilla (sin valores reales): `cp config/config.local.example.php config/config.local.php` y definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` y `APP_URL=https://<dominio>/`. El archivo está ignorado por Git. (Existe también `config/config.local.ejemplo.php`; ambos son plantillas equivalentes.)
+4. Crear `config/config.local.php` desde la plantilla (sin valores reales): `cp config/config.local.example.php config/config.local.php` y definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` y `APP_URL=https://Forestid.cfmasoft.com/`. El archivo está ignorado por Git. (Existe también `config/config.local.ejemplo.php`; ambos son plantillas equivalentes.)
 5. Crear `config/mailer.php` desde la plantilla: `cp config/mailer.example.php config/mailer.php` con el SMTP de Hostinger (`smtp.hostinger.com`, puerto `465` con `ssl`). El archivo está ignorado por Git. (Existe también `config/mailer.ejemplo.php`.)
 6. Fijar la zona horaria `America/Bogota` (por ejemplo en `.user.ini`: `date.timezone=America/Bogota`) y revisar `upload_max_filesize`, `post_max_size` y `memory_limit`.
 7. Comprobar permisos de escritura en `assets/uploads/` y `assets/qr/`.
