@@ -76,7 +76,10 @@ define('TEAM_QA_SUPERVISOR', 'Valentina (Supervisor / Verificador de Calidad)');
 define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 // Cálculo dinámico de la URL base
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
+    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https'))
+    ? "https://" : "http://";
 $host_raw = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
 // M2: validar el host de la petición contra una lista blanca para evitar
@@ -122,6 +125,15 @@ $host_permitidos = array_map('strtolower', $host_permitidos);
 $host_sin_puerto = preg_replace('/:\d+$/', '', $host_raw);
 $host_valido = in_array(strtolower($host_raw), $host_permitidos, true)
     || in_array(strtolower($host_sin_puerto), $host_permitidos, true);
+
+// Si no hay APP_URL ni FORESTID_HOSTS configurados, se acepta el host de la
+// petición siempre que tenga forma de hostname válido (p. ej. el dominio de
+// producción). Así los enlaces no degradan a "localhost" cuando el archivo
+// config/config.local.php no se despliega (caso habitual en hosting).
+if (!$host_valido && $host_canonico === '' && $host_raw !== ''
+    && preg_match('/^[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?$/', $host_raw)) {
+    $host_valido = true;
+}
 
 if ($host_valido) {
     $host = $host_raw;
