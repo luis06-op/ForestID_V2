@@ -91,7 +91,7 @@ done
 
 # 5. Buscar secretos en el árbol de trabajo
 git grep -nE "SMTP_CONTRASENA|WHATSAPP_API_TOKEN|DB_PASS.*[^'']|Admin123\*" -- . \
-  ':!README.md' ':!docs/AUDITORIA.md' ':!config/mailer.ejemplo.php' || echo "Sin secretos en tracked files"
+  ':!docs/README.md' ':!docs/AUDITORIA.md' ':!config/mailer.ejemplo.php' || echo "Sin secretos en tracked files"
 
 # 6. Confirmar que los archivos locales están ignorados
 git check-ignore -v config/config.local.php config/mailer.php
@@ -475,7 +475,7 @@ find . -name '*.php' -not -path './vendor/*' -not -path './.opencode/*' -exec ph
 for f in assets/qr/*.svg; do magick -background white "$f" /tmp/qr.png; echo -n "$f -> "; zbarimg --quiet --raw /tmp/qr.png; done
 
 # Secretos en tracked files
-git grep -nE "Admin123\*|Operario123\*|Ciudadano123\*|SMTP_CONTRASENA|DB_PASS" -- . ':!README.md' ':!docs/*'
+git grep -nE "Admin123\*|Operario123\*|Ciudadano123\*|SMTP_CONTRASENA|DB_PASS" -- . ':!docs/README.md' ':!docs/*'
 
 # Estado del repo
 git status --short

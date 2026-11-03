@@ -82,7 +82,7 @@ Los datos de la empresa viven en `config/empresa.php` (`EMINCUT_NOMBRE`, `EMINCU
 - Refactor “solo Emincut” completado: tabla `instituciones` y columnas `id_institucion` eliminadas del esquema; módulo `admin/instituciones/` retirado; formularios, reportes, ficha pública y QR sin institución.
 - Migración para bases existentes: `database/migraciones/2026-10-23_solo_emincut.sql`.
 - El envío de credenciales por **correo** y **WhatsApp** requiere configurar un **SMTP real** y las credenciales de **WhatsApp Business Cloud API** (`WHATSAPP_API_TOKEN`, `WHATSAPP_API_PHONE_ID`); mientras tanto se ofrece enlace `wa.me` y `mailto:` de respaldo.
-- Quedan menciones históricas del equipo y del SENA como créditos en `README.md`, `docs/` y el footer. No afectan el alcance funcional exclusivo de Emincut.
+- Quedan menciones históricas del equipo y del SENA como créditos en `docs/README.md`, `docs/` y el footer. No afectan el alcance funcional exclusivo de Emincut.
 
 ## Cómo empezar
 
