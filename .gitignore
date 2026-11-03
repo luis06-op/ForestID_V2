@@ -15,3 +15,11 @@ Thumbs.db
 .vscode/
 .idea/
 .aider*
+
+# Archivos de agentes de IA (no necesarios en producción)
+.opencode/
+AGENTS.md
+CLAUDE.md
+AI.md
+*ai_skills*
+*.mcp*
