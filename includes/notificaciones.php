@@ -25,7 +25,7 @@ if (is_file(__DIR__ . '/../config/mailer.php')) {
 
 // Remitente institucional
 if (!defined('CORREO_REMITENTE')) {
-    define('CORREO_REMITENTE', 'no-reply@emincut.com');
+    define('CORREO_REMITENTE', 'no-reply@forestid.cfmasoft.com');
 }
 
 // API de WhatsApp Business (opcional — dejar vacío para enlace wa.me manual)
@@ -80,9 +80,10 @@ function cuerpo_html_activacion(string $nombres, string $apellidos, string $enla
  * @return array{ok: bool, detalle: string}
  */
 function enviar_correo_html(string $correo, string $nombre_destino, string $asunto, string $texto, string $html): array {
-    $remitente = (defined('SMTP_USUARIO') && SMTP_USUARIO !== '') ? SMTP_USUARIO : CORREO_REMITENTE;
+    // El remitente visible debe ser el de dominio (ForestID / dominio de producción),
+    // aunque SMTP_USUARIO sirva para autenticarse contra el servidor SMTP.
+    $remitente = (defined('CORREO_REMITENTE') && CORREO_REMITENTE !== '') ? CORREO_REMITENTE : 'no-reply@forestid.cfmasoft.com';
     $puede_smtp = defined('SMTP_HOST') && SMTP_HOST !== '' && defined('SMTP_USUARIO') && SMTP_USUARIO !== '';
-
     if ($puede_smtp) {
         try {
             // M8: PHPMailer se instala y versiona con Composer.

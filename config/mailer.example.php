@@ -19,6 +19,7 @@
  */
 
 // ---- Correo saliente (SMTP de Hostinger) ----
+define('CORREO_REMITENTE', 'no-reply@forestid.cfmasoft.com'); // remitente visible
 define('SMTP_HOST',       'smtp.hostinger.com'); // servidor SMTP de Hostinger
 define('SMTP_PORT',       465);                  // 465 = SSL
 define('SMTP_CIFRADO',    'ssl');                // 'ssl' (465) | 'tls' (587)

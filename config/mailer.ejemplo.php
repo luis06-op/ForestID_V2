@@ -31,10 +31,11 @@
  */
 
 // ---- Correo (SMTP) ----
-define('SMTP_HOST',        '');          // p. ej. smtp.gmail.com | vacío = mail() de respaldo
-define('SMTP_PORT',        587);
-define('SMTP_CIFRADO',     'tls');       // 'tls' (587) | 'ssl' (465) | '' (sin cifrado)
-define('SMTP_USUARIO',     '');          // cuenta completa remitente
+define('CORREO_REMITENTE', 'no-reply@forestid.cfmasoft.com'); // remitente visible
+define('SMTP_HOST',        'smtp.hostinger.com'); // hosting: smtp.hostinger.com (Hostinger)
+define('SMTP_PORT',        465);                  // 465 = SSL
+define('SMTP_CIFRADO',     'ssl');              // 'tls' (587) | 'ssl' (465) | '' (sin cifrado)
+define('SMTP_USUARIO',     '');          // cuenta completa remitente | vacío = mail() de respaldo
 define('SMTP_CONTRASENA',  '');          // contraseña o contraseña de aplicación
 
 // Si deja SMTP_USUARIO vacío, se usa CORREO_REMITENTE definido en notificaciones.php.
