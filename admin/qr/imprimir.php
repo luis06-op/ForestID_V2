@@ -133,7 +133,7 @@ $placas = $stmt->fetchAll();
                             
                             <!-- Código QR Vectorial Grande -->
                             <div class="w-32 h-32 p-1 bg-white border border-gray-300 rounded-xl shrink-0 flex items-center justify-center">
-                                <img src="<?= htmlspecialchars($qr_img) ?>" alt="QR <?= $p['codigo_placa'] ?>" class="w-full h-full object-contain">
+                                <img src="<?= htmlspecialchars($qr_img) ?>" alt="QR <?= htmlspecialchars($p['codigo_placa']) ?>" class="w-full h-full object-contain">
                             </div>
 
                             <!-- Información Botánica -->

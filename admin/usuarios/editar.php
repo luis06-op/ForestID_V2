@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Todos los campos obligatorios (*) deben ser completados.';
     } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         $error = 'El correo electrónico no tiene un formato válido.';
+    } elseif (!empty($password_nueva) && ($error_password = validar_password_fuerte($password_nueva)) !== null) {
+        $error = $error_password;
     } else {
         // Verificar correo único excluyendo al usuario actual
         $chk = $pdo->prepare("SELECT COUNT(*) FROM `usuarios` WHERE correo = :correo AND id_usuario != :id");
@@ -165,7 +167,8 @@ require_once __DIR__ . '/../../includes/navbar.php';
 
                 <div class="pt-4 border-t border-gray-100 space-y-1">
                     <label for="password_nueva" class="block text-xs font-semibold text-gray-700 uppercase">Cambiar Contraseña (Opcional)</label>
-                    <input type="password" name="password_nueva" id="password_nueva" minlength="6" placeholder="Dejar en blanco para mantener la contraseña actual" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                    <input type="password" name="password_nueva" id="password_nueva" minlength="10" placeholder="Dejar en blanco para mantener la contraseña actual" class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-600 outline-none">
+                    <p class="text-[11px] mt-1.5 text-gray-500">Mínimo 10 caracteres, con mayúscula, minúscula y número.</p>
                 </div>
 
                 <div class="pt-4 border-t border-gray-100 flex justify-end gap-2">

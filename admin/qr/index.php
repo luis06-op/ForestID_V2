@@ -13,10 +13,10 @@ requerir_rol(['AdminEmincut']);
 
 $pdo = getDBConnection();
 
-// Acción de regenerar QR individual
-if (isset($_GET['regenerar_id'])) {
-    $reg_id = $_GET['regenerar_id'];
-    $csrf = $_GET['csrf'] ?? '';
+// Acción de regenerar QR individual (A6: solo POST con CSRF)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['regenerar_id'])) {
+    $reg_id = $_POST['regenerar_id'];
+    $csrf = $_POST['csrf_token'] ?? '';
 
     if (validar_token_csrf($csrf)) {
         $stmt = $pdo->prepare("SELECT codigo_placa FROM `individuos_forestales` WHERE id_individuo = :id");
@@ -174,6 +174,28 @@ require_once __DIR__ . '/../../includes/navbar.php';
             </div>
         </div>
 
+        <?php $tab_qr = 'asignadas'; require __DIR__ . '/../../includes/qr_tabs.php'; ?>
+
+        <!-- Acceso directo a la generación de placas vacías -->
+        <div class="forest-card p-5 sm:p-6 border-l-4" style="border-left-color:var(--emi-amarillo)">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0" style="background:rgba(242,182,50,.18); color:#8A6D1B">
+                        <i data-lucide="tags" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-heading font-bold text-lg text-gray-900">Placas QR vacías</h2>
+                        <p class="text-xs text-gray-500 mt-1 max-w-2xl leading-relaxed">
+                            Genere un lote de placas sin individuo asignado, imprímalas y actívelas en campo: el operario escanea el QR, inicia sesión y registra el árbol desde su panel.
+                        </p>
+                    </div>
+                </div>
+                <a href="<?= BASE_URL ?>admin/qr/masivo.php" class="btn-forest-primary text-xs py-2.5 px-4 shrink-0">
+                    <i data-lucide="qr-code" class="w-4 h-4"></i> Generar placas vacías
+                </a>
+            </div>
+        </div>
+
         <!-- Resumen de estado -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="forest-card p-4">
@@ -277,9 +299,13 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                 <i data-lucide="printer" class="w-3 h-3"></i> Imprimir
                             </span>
                         <?php endif; ?>
-                        <a href="<?= BASE_URL ?>admin/qr/index.php?regenerar_id=<?= $arbol['id_individuo'] ?>&csrf=<?= $csrf_token ?>" class="p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
-                            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
-                        </a>
+                        <form method="POST" action="<?= BASE_URL ?>admin/qr/index.php" class="inline">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                            <input type="hidden" name="regenerar_id" value="<?= htmlspecialchars($arbol['id_individuo']) ?>">
+                            <button type="submit" class="p-1.5 bg-gray-100 hover:bg-emerald-100 text-gray-600 hover:text-emerald-800 rounded-lg text-[11px] font-medium flex items-center justify-center gap-1" title="Regenerar archivo QR">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Regenerar
+                            </button>
+                        </form>
                     </div>
 
                 </div>

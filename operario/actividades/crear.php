@@ -17,7 +17,8 @@ $individuos = $pdo->query("SELECT id_individuo, codigo_placa, nombre_comun FROM 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf     = $_POST['csrf_token'] ?? '';
     $id_individuo   = $_POST['id_individuo'] ?? '';
-    $tipo_actividad = $_POST['tipo_actividad'] ?? 'Poda';
+    // M3: el tipo de intervención también pertenece a un ENUM del esquema.
+    $tipo_actividad = normalizar_enum((string)($_POST['tipo_actividad'] ?? 'Poda'), TIPOS_ACTIVIDAD_VALIDOS, 'Otro');
     $descripcion    = sanear($_POST['descripcion'] ?? '');
 
     if (!validar_token_csrf($token_csrf)) {

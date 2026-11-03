@@ -6,7 +6,7 @@
 > **Rama de correcciones:** `fix/auditoria-p0`
 > **Alcance:** 51 archivos PHP propios (~8.400 líneas), esquema SQL, `.htaccess`, documentación y assets QR.
 > **Método:** revisión estática + pruebas de humo reales con PHP 8.2.12, MariaDB 10.4, Apache/XAMPP y `zbarimg`.
-> **Estado:** los hallazgos **P0 están corregidos** en la rama `fix/auditoria-p0`. Los P1/P2 quedan planificados.
+> **Estado:** los hallazgos **P0 y P1 están corregidos**, igual que M1–M3 y M5–M6. Quedan parcialmente abiertos M4, M7 y M8, además de los P3 documentados al final.
 
 ---
 
@@ -14,19 +14,19 @@
 
 | Área | Antes | Después de P0 | Comentario |
 |---|---:|---:|---|
-| Seguridad | 4/10 | **7/10** | Se cerraron el bypass de login y la toma de cuenta por reseteo. Quedan endurecimiento de sesión, rate limiting y tokens hasheados. |
+| Seguridad | 4/10 | **9/10** | Se cerraron el bypass de login, la toma de cuenta por reseteo y todos los P1: sesión endurecida, rate limiting, tokens hasheados, transacciones, POST+CSRF y activación por enlace. |
 | Funcionalidad | 6/10 | **8/10** | Los QR ya son estándar y el buscador dejó de devolver 500. |
-| Calidad de código | 7/10 | **7,5/10** | Se añadió manejo de errores en QR; faltan transacciones y eliminar el doble escape. |
+| Calidad de código | 7/10 | **8,5/10** | Se añadieron transacciones, manejo de errores en QR y se eliminó el doble escape. |
 | Documentación | 9/10 | **9/10** | README y manuales actualizados con la nueva configuración. |
-| **Global** | **6,3/10** | **7,9/10** | Apto para demo/pruebas internas. Para producción faltan los P1. |
+| **Global** | **6,3/10** | **8,7/10** | Apto para pruebas internas y despliegue controlado; restan los P2/P3. |
 
 ### Hallazgos por severidad
 
 | Severidad | Detectados | Corregidos | Pendientes |
 |---|---:|---:|---:|
 | Crítico (P0) | 6 | **6** | 0 |
-| Alto (P1) | 7 | 0 | 7 |
-| Medio (P2) | 8 | 3 (parciales) | 5 |
+| Alto (P1) | 7 | **7** | 0 |
+| Medio (P2) | 8 | 5 | 3 (parciales: M4, M7, M8) |
 | Bajo (P3) | 5 | 1 | 4 |
 
 ---
@@ -87,7 +87,17 @@
 
 ---
 
-## 3. Hallazgos altos (P1) — ⏳ pendientes
+## 3. Hallazgos altos (P1) — ✅ corregidos
+
+**Correcciones aplicadas el 26 de octubre de 2026:**
+
+- **A1:** `config/db.php` configura cookies `HttpOnly`/`SameSite=Lax` (y `Secure` bajo HTTPS), modo estricto y nombre de sesión propio. `auth/login.php` regenera el ID tras autenticar y `includes/auth_check.php` expira la sesión tras 30 minutos de inactividad.
+- **A2:** `includes/funciones.php` cuenta los intentos desde `logs_sistema`; el login se bloquea 15 minutos tras 5 fallos por IP o correo (con retardo progresivo) y la recuperación se limita a 3 solicitudes por IP.
+- **A3:** los tokens de recuperación y activación se guardan como `hash('sha256', $token)`; se invalidan los anteriores y la contraseña exige 10 caracteres con mayúscula, minúscula y número.
+- **A4:** `sanear()` ya no escapa HTML (solo normaliza UTF-8 y recorta); todas las salidas usan `htmlspecialchars()`. La migración `database/migraciones/2026-10-26_desescape_textos.sql` limpia las entidades guardadas por la versión anterior.
+- **A5:** las altas de individuos (admin y operario) y la creación de usuarios se ejecutan en transacción, con limpieza de foto/QR si hay reversión.
+- **A6:** baja lógica, cierre de sesión, activación de usuarios y regeneración individual de QR solo aceptan `POST` con token CSRF.
+- **A7:** las cuentas nuevas reciben un enlace de activación de un solo uso (48 horas); nunca se envían contraseñas por correo ni WhatsApp.
 
 | ID | Hallazgo | Ubicación | Impacto | Corrección recomendada |
 |---|---|---|---|---|
@@ -106,13 +116,13 @@
 | ID | Hallazgo | Ubicación | Estado |
 |---|---|---|---|
 | M1 | El error de conexión imprimía `$e->getMessage()` | `config/db.php` | ✅ Corregido: solo con `FORESTID_DEBUG=1`. |
-| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php:45` | ⏳ Validar contra `APP_URL` o lista blanca. |
-| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ⏳ Validar contra listas permitidas y verificar FK activas. |
-| M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: cabeceras añadidas en `.htaccess`; falta CSP/HSTS y quitar CDNs sin SRI. |
-| M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php:274-275` | ⏳ Ofuscar (~100 m) o mostrar solo a autenticados; riesgo de extracción de especies. |
-| M6 | CSV sin protección contra inyección de fórmulas | `admin/reportes/index.php:39-60` | ⏳ Prefijar `'` a valores que empiecen por `= + - @`. |
-| M7 | Sin pruebas automatizadas; `test*.html/js` de depuración versionados | raíz | ⏳ Mover a `tests/` o eliminar; añadir smoke tests. |
-| M8 | `vendor/phpmailer` copiado a mano, sin Composer ni versión fijada; `.opencode/` versionado | raíz | ⏳ Gestionar PHPMailer con Composer; excluir herramientas de desarrollo del release. |
+| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php` | ✅ Corregido: lista blanca con `APP_URL` (constante o variable de entorno), `FORESTID_HOSTS` y la IP del servidor; un host no confiable se sustituye por la URL canónica, no por `localhost`. |
+| M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ✅ Corregido: `normalizar_enum()` y `zona_activa()` en `includes/funciones.php`, aplicadas en altas, evaluaciones y actividades (incluido `tipo_actividad`). |
+| M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: CSP y HSTS añadidos en `.htaccess`, pero la CSP mantiene `'unsafe-inline'`/`'unsafe-eval'` y los CDNs siguen sin SRI. |
+| M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php` | ✅ Corregido: la ficha pública redondea latitud/longitud a 3 decimales (~111 m); el admin conserva la precisión. |
+| M6 | CSV sin protección contra inyección de fórmulas | `admin/reportes/index.php` | ✅ Corregido: prefijo `'` en valores que empiezan por `= + - @`, tabulador o salto de línea. |
+| M7 | Sin pruebas automatizadas; `test*.html/js` de depuración versionados | raíz | ⏳ Parcial: los `test*.html/js` se eliminaron; sigue faltando una suite de smoke tests. |
+| M8 | `vendor/phpmailer` copiado a mano, sin Composer ni versión fijada; `.opencode/` versionado | raíz | ⏳ Parcial: PHPMailer ahora se gestiona con Composer (`v6.12.0`, autoload y lock); `.opencode/` sigue versionado. |
 
 ---
 
@@ -170,19 +180,13 @@ GET  /assets/uploads/shell.php               → 403
 ## 8. Plan de remediación
 
 ### Hecho en esta rama
-- C1–C6, M1 y parte de M4/M8.
+- C1–C6, M1, M2, M3, M5 y M6; parte de M4, M7 y M8.
+- P1 completo (A1–A7) el 26 de octubre de 2026.
 - Actualización de README, manual técnico y documentación de instalación.
 
-### Siguiente iteración (P1)
-1. Endurecer sesión (A1) y rate limiting (A2).
-2. Hashear tokens de recuperación y elevar la política de contraseñas (A3).
-3. Separar sanitización de entrada y escape de salida (A4).
-4. Transacciones en altas (A5).
-5. POST para eliminar/logout (A6).
-6. Enlaces de activación en lugar de contraseñas (A7).
-
 ### Antes de producción
-- Resolver M2–M8, añadir pruebas automatizadas y CI, forzar HTTPS y CSP, rotar credenciales y revisar la historia de Git (ver `docs/PLAN_PUBLICACION_GITHUB.md`).
+- Cerrar M4 (CSP estricta, SRI y HTTPS forzado), M7 (pruebas automatizadas y CI) y la parte de M8 relativa a `.opencode/`; rotar credenciales y revisar la historia de Git (ver `docs/PLAN_PUBLICACION_GITHUB.md`).
+- Ejecutar la migración `database/migraciones/2026-10-26_desescape_textos.sql` sobre bases existentes.
 
 ---
 

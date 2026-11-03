@@ -8,13 +8,26 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/auth_check.php';
 
-// Si ya está autenticado, redirigir a su dashboard correspondiente
+// Destino interno solicitado (ej. registrar un individuo desde una placa vacía).
+$destino_login = destino_redireccion_valido($_GET['redirect'] ?? $_POST['redirect'] ?? null);
+
+// Si ya está autenticado, continuar al destino solicitado o a su dashboard.
 if (esta_autenticado()) {
+    if ($destino_login !== null && (es_admin() || es_operario())) {
+        header('Location: ' . $destino_login);
+        exit;
+    }
     redirigir_segun_rol();
 }
 
 $error_login = '';
 $correo_previo = '';
+
+// Aviso si se llegó aquí por expiración de la sesión.
+if (!empty($_SESSION['sesion_expirada'])) {
+    unset($_SESSION['sesion_expirada']);
+    $error_login = 'Su sesión expiró por inactividad. Vuelva a iniciar sesión.';
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token_csrf = $_POST['csrf_token'] ?? '';
@@ -28,48 +41,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_login = 'Por favor ingrese su correo electrónico y contraseña.';
     } else {
         $pdo = getDBConnection();
-        $stmt = $pdo->prepare("
-            SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol
-            FROM `usuarios` u
-            INNER JOIN `roles` r ON u.id_rol = r.id_rol
-            WHERE u.correo = :correo AND u.estado = 1
-            LIMIT 1
-        ");
-        $stmt->execute([':correo' => $correo]);
-        $usuario = $stmt->fetch();
 
-        // Validar contraseña exclusivamente contra el hash almacenado.
-        // No se permiten credenciales en texto plano ni rehasheos automáticos:
-        // los usuarios de prueba deben crearse con password_hash() real.
-        $password_valida = $usuario && password_verify($password, $usuario['password_hash']);
-
-        if ($usuario && $password_valida) {
-            // Iniciar sesión y guardar datos mínimos necesarios
-            $_SESSION['usuario'] = [
-                'id_usuario'         => $usuario['id_usuario'],
-                'nombres'            => $usuario['nombres'],
-                'apellidos'          => $usuario['apellidos'],
-                'correo'             => $usuario['correo'],
-                'id_rol'             => $usuario['id_rol'],
-                'nombre_rol'         => $usuario['nombre_rol']
-            ];
-
-            // Registrar acceso en BD y logs
-            $updAcceso = $pdo->prepare("UPDATE `usuarios` SET `ultimo_acceso` = NOW() WHERE `id_usuario` = :id");
-            $updAcceso->execute([':id' => $usuario['id_usuario']]);
-
-            registrar_log($pdo, $usuario['id_usuario'], 'INICIO_SESION', 'AUTENTICACION', [
-                'rol'    => $usuario['nombre_rol'],
-                'correo' => $usuario['correo']
-            ]);
-
-            set_flash('success', '¡Bienvenido(a), ' . htmlspecialchars($usuario['nombres']) . '!');
-            redirigir_segun_rol();
-        } else {
-            $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';
-            registrar_log($pdo, null, 'INTENTO_FALLIDO_LOGIN', 'AUTENTICACION', [
+        // A2: bloqueo temporal tras varios fallos por IP o por correo.
+        if (login_bloqueado($pdo, $correo)) {
+            $error_login = 'Demasiados intentos fallidos. Espere ' . LOGIN_VENTANA_MIN . ' minutos e intente nuevamente.';
+            registrar_log($pdo, null, 'LOGIN_BLOQUEADO', 'AUTENTICACION', [
                 'correo_intentado' => $correo
             ]);
+        } else {
+            $fallos_previos = intentos_login_fallidos($pdo, $correo);
+            retardo_progresivo($fallos_previos);
+
+            $stmt = $pdo->prepare("
+                SELECT u.*, r.nombre_rol, r.descripcion AS descripcion_rol
+                FROM `usuarios` u
+                INNER JOIN `roles` r ON u.id_rol = r.id_rol
+                WHERE u.correo = :correo AND u.estado = 1
+                LIMIT 1
+            ");
+            $stmt->execute([':correo' => $correo]);
+            $usuario = $stmt->fetch();
+
+            // Validar contraseña exclusivamente contra el hash almacenado.
+            // No se permiten credenciales en texto plano ni rehasheos automáticos:
+            // los usuarios de prueba deben crearse con password_hash() real.
+            $password_valida = $usuario && password_verify($password, $usuario['password_hash']);
+
+            if ($usuario && $password_valida) {
+                // A1: nuevo ID de sesión tras autenticar (evita fijación de sesión).
+                session_regenerate_id(true);
+                $_SESSION['ultima_actividad'] = time();
+                $_SESSION['iniciada_en']      = time();
+                unset($_SESSION['sesion_expirada']);
+
+                // Iniciar sesión y guardar datos mínimos necesarios
+                $_SESSION['usuario'] = [
+                    'id_usuario'         => $usuario['id_usuario'],
+                    'nombres'            => $usuario['nombres'],
+                    'apellidos'          => $usuario['apellidos'],
+                    'correo'             => $usuario['correo'],
+                    'id_rol'             => $usuario['id_rol'],
+                    'nombre_rol'         => $usuario['nombre_rol']
+                ];
+
+                // Registrar acceso en BD y logs
+                $updAcceso = $pdo->prepare("UPDATE `usuarios` SET `ultimo_acceso` = NOW() WHERE `id_usuario` = :id");
+                $updAcceso->execute([':id' => $usuario['id_usuario']]);
+
+                registrar_log($pdo, $usuario['id_usuario'], 'INICIO_SESION', 'AUTENTICACION', [
+                    'rol'    => $usuario['nombre_rol'],
+                    'correo' => $usuario['correo']
+                ]);
+
+                set_flash('success', '¡Bienvenido(a), ' . $usuario['nombres'] . '!');
+                if ($destino_login !== null && (es_admin() || es_operario())) {
+                    header('Location: ' . $destino_login);
+                    exit;
+                }
+                redirigir_segun_rol();
+            } else {
+                $error_login = 'Credenciales incorrectas o cuenta de usuario inactiva.';
+                registrar_log($pdo, null, 'INTENTO_FALLIDO_LOGIN', 'AUTENTICACION', [
+                    'correo_intentado' => $correo
+                ]);
+            }
         }
     }
 }
@@ -158,8 +193,18 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
             <?php endif; ?>
 
+            <?php if ($destino_login !== null): ?>
+                <div class="border-l-4 p-4 rounded-xl flex items-center gap-3 text-sm bg-emerald-50 border-emerald-500 text-emerald-900">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+                    <span>Inicie sesión como operario de Emincut para registrar el individuo de la placa escaneada.</span>
+                </div>
+            <?php endif; ?>
+
             <form method="POST" action="login.php" class="space-y-5">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                <?php if ($destino_login !== null): ?>
+                    <input type="hidden" name="redirect" value="<?= htmlspecialchars((string) ($_GET['redirect'] ?? $_POST['redirect'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                <?php endif; ?>
 
                 <div>
                     <label for="correo" class="emi-label block mb-1.5">Correo Electrónico</label>

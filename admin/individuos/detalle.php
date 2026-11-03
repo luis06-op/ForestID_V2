@@ -38,7 +38,8 @@ if (!$arbol) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_evaluacion'])) {
     $csrf = $_POST['csrf_token'] ?? '';
     if (validar_token_csrf($csrf)) {
-        $nuevo_estado = $_POST['estado_nuevo'] ?? 'Sano';
+        // M3: el estado debe pertenecer al ENUM del esquema.
+        $nuevo_estado = normalizar_enum((string)($_POST['estado_nuevo'] ?? 'Sano'), ESTADOS_FITOSANITARIOS_VALIDOS, 'Sano');
         $diag = sanear($_POST['diagnostico_nuevo'] ?? '');
         $recom = sanear($_POST['recomendacion_nueva'] ?? '');
         $id_nuevo_estado = generar_uuid();
@@ -79,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_evaluacion']))
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_mantenimiento'])) {
     $csrf = $_POST['csrf_token'] ?? '';
     if (validar_token_csrf($csrf)) {
-        $tipo_act = $_POST['tipo_actividad'] ?? 'Poda';
+        // M3: el tipo de intervención también pertenece a un ENUM del esquema.
+        $tipo_act = normalizar_enum((string)($_POST['tipo_actividad'] ?? 'Poda'), TIPOS_ACTIVIDAD_VALIDOS, 'Otro');
         $desc = sanear($_POST['descripcion_actividad'] ?? '');
         $id_usuario = $_SESSION['usuario']['id_usuario'];
 

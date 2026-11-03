@@ -41,21 +41,30 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         'Diámetro Copa (m)', 'Fecha Siembra', 'Estado Fitosanitario', 'Fecha Registro'
     ]);
 
+    // M6: protección contra inyección de fórmulas en CSV
+    $sanear_csv = static function ($v) {
+        if (is_string($v) && $v !== '' && in_array($v[0], ['=', '+', '-', '@', "\t", "
+"], true)) {
+            return "'" . $v;
+        }
+        return $v;
+    };
+
     foreach ($filas as $f) {
         fputcsv($salida, [
-            $f['codigo_placa'],
-            $f['nombre_comun'],
-            $f['nombre_cientifico'],
-            $f['familia_botanica'],
-            $f['tipo_individuo'],
-            $f['nombre_zona'],
+            $sanear_csv($f['codigo_placa']),
+            $sanear_csv($f['nombre_comun']),
+            $sanear_csv($f['nombre_cientifico']),
+            $sanear_csv($f['familia_botanica']),
+            $sanear_csv($f['tipo_individuo']),
+            $sanear_csv($f['nombre_zona']),
             $f['latitud'],
             $f['longitud'],
             $f['dap_cm'],
             $f['altura_total_m'],
             $f['diametro_copa_m'],
             $f['fecha_siembra'],
-            $f['estado_salud'] ?? 'Sano',
+            $sanear_csv($f['estado_salud'] ?? 'Sano'),
             $f['fecha_registro']
         ]);
     }
