@@ -95,7 +95,7 @@ Destinado a la gerencia técnica y directiva de Emincut.
 
 ### 3.5 Gestión de Zonas y Usuarios
 - Alta y edición de sectores y zonas internas de Emincut en El Bagre.
-- Control de usuarios: creación de cuentas, asignación de roles (`AdminEmincut`, `OperarioEmincut`, `UsuarioPublico`), reseteo de contraseñas y activación/desactivación.
+- Control de usuarios: creación de cuentas, asignación de roles (`AdminEmincut`, `OperarioEmincut`, `UsuarioPublico`), reseteo de contraseñas, activación/desactivación y reenvío del enlace de activación (correo/WhatsApp).
 
 ### 3.6 Auditoría y Bitácora de Logs (`admin/logs/`)
 - Registro inmutable de cada acción sensible realizada en el sistema (inicios de sesión, altas, ediciones, bajas lógicas, evaluaciones y reportes) con fecha, hora, usuario e IP de origen.

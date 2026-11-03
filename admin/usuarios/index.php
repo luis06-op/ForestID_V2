@@ -34,6 +34,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_id'])) {
     exit;
 }
 
+// Acción de reenviar enlace de activación de usuario inactivo (AdminEmincut)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_id'])) {
+    $reenviar_id = $_POST['reenviar_activacion_id'];
+    $csrf = $_POST['csrf_token'] ?? '';
+    $horas_activacion = max(1, (int)round(TOKEN_VIGENCIA_ACTIVACION / 3600));
+
+    if (validar_token_csrf($csrf)) {
+        if ($reenviar_id === $_SESSION['usuario']['id_usuario']) {
+            set_flash('error', 'No se puede reenviar la activación de su propia cuenta.');
+        } else {
+            $stmtU = $pdo->prepare("SELECT id_usuario, nombres, apellidos, correo, telefono, estado FROM `usuarios` WHERE `id_usuario` = :id");
+            $stmtU->execute([':id' => $reenviar_id]);
+            $usuario = $stmtU->fetch(PDO::FETCH_ASSOC);
+            if (!$usuario) {
+                set_flash('error', 'El usuario indicado no existe.');
+            } elseif ((int)$usuario['estado'] !== 0) {
+                set_flash('success', 'El usuario ya se encuentra activo; no hay nada que reenviar.');
+            } else {
+                $updTokens = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_usuario` = :id AND `usado` = 0");
+                $updTokens->execute([':id' => $usuario['id_usuario']]);
+                $token_activacion = bin2hex(random_bytes(32));
+                $expira_activacion = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_ACTIVACION);
+                $enlace_activacion = APP_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
+                $insToken = $pdo->prepare("INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`) VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())");
+                $insToken->execute([':id_usuario' => $usuario['id_usuario'], ':token' => hash_token($token_activacion), ':expiracion' => $expira_activacion]);
+                $res_correo = enviar_correo_activacion($usuario['correo'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
+                $res_wa = enviar_whatsapp_activacion($usuario['telefono'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
+                $enlace_wa = enlace_whatsapp_activacion($usuario['telefono'], $usuario['nombres'], $usuario['apellidos'], $enlace_activacion, $horas_activacion);
+                registrar_log($pdo, $_SESSION['usuario']['id_usuario'], 'REENVIAR_ACTIVACION', 'USUARIOS', ['id_usuario_afectado' => $usuario['id_usuario'], 'correo_ok' => $res_correo['ok'], 'whatsapp_ok' => $res_wa['ok']]);
+                set_flash('success', 'Enlace de activación reenviado correctamente. Verifique correo y WhatsApp.');
+            }
+        }
+    } else {
+        set_flash('error', 'Token de seguridad inválido.');
+    }
+    header('Location: ' . BASE_URL . 'admin/usuarios/index.php');
+    exit;
+}
+
 $q = sanear($_GET['q'] ?? '');
 $params = [];
 $where = "1=1";
@@ -167,6 +206,17 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                                    class="p-1.5 rounded-lg <?= ($u['estado'] == 1) ? 'bg-rose-50 text-rose-600 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' ?> inline-flex" 
                                                    title="<?= ($u['estado'] == 1) ? 'Desactivar' : 'Activar' ?>">
                                                     <i data-lucide="<?= ($u['estado'] == 1) ? 'user-x' : 'user-check' ?>" class="w-4 h-4"></i>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                        <?php if ((int)$u['estado'] === 0 && (string)$u['id_usuario'] !== (string)$_SESSION['usuario']['id_usuario']): ?>
+                                            <form method="POST" action="<?= BASE_URL ?>admin/usuarios/index.php" class="inline">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                                                <input type="hidden" name="reenviar_activacion_id" value="<?= htmlspecialchars($u['id_usuario']) ?>">
+                                                <button type="submit"
+                                                    class="p-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 inline-flex"
+                                                    title="Reenviar enlace de activación">
+                                                    <i data-lucide="mail" class="w-4 h-4"></i>
                                                 </button>
                                             </form>
                                         <?php endif; ?>
