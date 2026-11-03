@@ -7,8 +7,12 @@ Options -Indexes
     RewriteEngine On
 
     # Forzar HTTPS en producción (compatible con proxies/LiteSpeed).
+    # No se fuerza en entornos locales (localhost / 127.0.0.1) para evitar que
+    # el navegador muestre "Conexión no privada" por el certificado autofirmado.
     RewriteCond %{HTTPS} off
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Carpetas internas: no accesibles por HTTP (sí por include de PHP).
