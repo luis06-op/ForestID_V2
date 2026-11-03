@@ -14,12 +14,6 @@
 -- el DEFAULT (UUID()) y las columnas JSON deben parsear en el motor destino.
 -- =============================================================================
 
-CREATE DATABASE IF NOT EXISTS `forestsrd_db` 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_spanish_ci;
-
-USE `forestsrd_db`;
-
 -- =============================================================================
 -- PROTECCIÓN DE IMPORTACIÓN (preflight) - NO ELIMINAR
 -- El script borra y recrea las tablas. Este bloque ABORTA el import si la base
@@ -549,3 +543,25 @@ INSERT INTO `logs_sistema` (
 -- =============================================================================
 -- FIN DEL SCRIPT DE BASE DE DATOS
 -- =============================================================================
+
+-- =============================================================================
+-- TABLA placas_qr (placas QR vacías) — incluida para que el dump sea completo.
+-- =============================================================================
+DROP TABLE IF EXISTS `placas_qr`;
+CREATE TABLE `placas_qr` (
+    `id_placa` CHAR(36) NOT NULL DEFAULT (UUID()),
+    `id_lote` CHAR(36) NOT NULL,
+    `codigo_placa` VARCHAR(30) NOT NULL,
+    `estado` ENUM('pendiente', 'asignada') NOT NULL DEFAULT 'pendiente',
+    `generado_por` INT NULL,
+    `fecha_generacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `asignado_a` CHAR(36) NULL,
+    `fecha_asignacion` DATETIME NULL,
+    `tamano` ENUM('pequena', 'mediana', 'grande') NOT NULL DEFAULT 'mediana',
+    PRIMARY KEY (`id_placa`),
+    UNIQUE KEY `uq_placas_qr_codigo` (`codigo_placa`),
+    KEY `idx_placas_qr_lote` (`id_lote`),
+    KEY `idx_placas_qr_estado` (`estado`),
+    CONSTRAINT `fk_placas_qr_individuo` FOREIGN KEY (`asignado_a`)
+        REFERENCES `individuos_forestales` (`id_individuo`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
