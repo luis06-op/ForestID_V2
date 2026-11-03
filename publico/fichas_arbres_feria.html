@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForestID | Fichas de Árbol – Feria FISAD</title>
+    <meta name="description" content="Fichas públicas de árbol con código QR para la Feria de Investigación, Indagación y Desarrollo (FISAD).">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: { dark: '#1B5E20', DEFAULT: '#2E7D32', DEFAULT2: '#43A047' },
+                        earth: { 900: '#3E2723' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --emi-amarillo: #E9A22E;
+            --emi-ambar: #F2B632;
+            --emi-verde: #2E7D32;
+            --forest-dark: #1B5E20;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #052E16; }
+        .f-poppins { font-family: 'Poppins', sans-serif; }
+
+        /* ================= ANIMACIÓN DE ÁRBOLES (SVG animado, sin imágenes) ================= */
+        .arbol-scene {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 200px;
+        }
+        .arbol {
+            transform-origin: 50% 100%;
+            animation: sway 6s ease-in-out infinite;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2.2deg); }
+            50%      { transform: rotate(2.2deg); }
+        }
+        .arbol-svg { display: block; height: 180px; width: auto; }
+        .follaje {
+            transform-box: fill-box;
+            transform-origin: 50% 75%;
+            animation: flutear 4.5s ease-in-out infinite;
+        }
+        @keyframes flutear {
+            0%, 100% { transform: rotate(-2.5deg); }
+            50%      { transform: rotate(2.5deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .arbol, .follaje { animation: none; }
+        }
+
+        /* ================= ESTADOS DE LA TARJETA ================= */
+        .fade-in { animation: fadeIn 1s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= QR PLACA ================= */
+        .qr-placa { background: #ffffff; border-radius: 12px; padding: 6px; display: block; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+    </style>
+</head>
+<body class="min-h-screen text-white antialiased" style="background: radial-gradient(1200px 620px at 50% -10%, #14532D 0%, #052E16 55%); background-attachment: fixed;">
+
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto px-6 pt-14 pb-10 text-center fade-in">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-[#E9A22E]/15 border border-[#E9A22E]/40 text-[#F2B632] text-[11px] font-bold uppercase tracking-[0.25em]">
+            Ferias de Investigación, Indagación y Desarrollo
+        </span>
+        <h1 class="f-poppins text-4xl sm:text-5xl font-extrabold mt-5 text-white">ForestID</h1>
+        <p class="mt-4 text-white/70 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+            Cada árbol con identidad digital. En esta feria presentamos el aplicativo que, mediante el escaneo
+            de una placa QR, permite consultar al instante la ficha técnica pública de cada individuo forestal.
+        </p>
+        <p class="mt-2 text-[#F2B632] text-xs font-semibold uppercase tracking-[0.2em]">Escanea el QR de cada árbol</p>
+    </header>
+
+    <!-- Fichas de árbol -->
+    <main class="max-w-6xl mx-auto px-6 pb-16">
+        <div class="grid gap-6 md:grid-cols-3">
+
+            <!-- Ficha pública del árbol #1 -->
+            <article class="group rounded-3xl bg-white/[0.04] border border-white/10 p-6 text-center backdrop-blur-sm shadow-2xl fade-in">
+                <div class="h-60 rounded-2xl bg-gradient-to-b from-[#14532D] via-[#0B3D20] to-[#052E16] border border-white/10 overflow-hidden flex items-end justify-center">
+                    <div class="arbol-scene">
+                        <div class="arbol">
+                            <svg class="arbol-svg" viewBox="0 0 120 150" role="img" aria-label="Árbol EBG-NECH-003">
+                                <g class="follaje">
+                                    <polygon points="60,16 26,60 94,60" fill="#2E7D32"/>
+                                    <polygon points="60,40 28,80 92,80" fill="#1B5E20"/>
+                                    <polygon points="60,64 36,104 84,104" fill="#43A047"/>
+                                </g>
+                                <g class="tronco">
+                                    <rect x="52" y="96" width="16" height="46" rx="8" fill="#6D4C41"/>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <img src="https://fisadelbagre.com/assets/qr/qr_EBG-NECH-003.svg" alt="Código QR ficha pública del árbol EBG-NECH-003" class="qr-placa h-28 w-28 mx-auto">
+                </div>
+                <p class="mt-3 font-mono text-[#F2B632] text-sm font-bold tracking-wider">EBG-NECH-003</p>
+                <a href="https://fisadelbagre.com/publico/ficha.php?codigo=EBG-NECH-003" target="_blank" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#E9A22E] hover:bg-[#F2B632] text-[#052E16] font-bold text-sm px-5 py-2.5 transition">Ver ficha pública</a>
+            </article>
+
+            <!-- Ficha pública del árbol #2 -->
+            <article class="group rounded-3xl bg-white/[0.04] border border-white/10 p-6 text-center backdrop-blur-sm shadow-2xl fade-in" style="animation-delay: .15s;">
+                <div class="h-60 rounded-2xl bg-gradient-to-b from-[#14532D] via-[#0B3D20] to-[#052E16] border border-white/10 overflow-hidden flex items-end justify-center">
+                    <div class="arbol-scene">
+                        <div class="arbol">
+                            <svg class="arbol-svg" viewBox="0 0 120 150" role="img" aria-label="Árbol EBG-PARQ-001">
+                                <g class="follaje">
+                                    <circle cx="60" cy="60" r="32" fill="#2E7D32"/>
+                                    <circle cx="32" cy="76" r="20" fill="#1B5E20"/>
+                                    <circle cx="88" cy="76" r="20" fill="#1B5E20"/>
+                                    <circle cx="60" cy="40" r="22" fill="#43A047"/>
+                                </g>
+                                <g class="tronco">
+                                    <path d="M54 116 C52 138 58 148 60 150 L60 116 Z" fill="#6D4C41"/>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <img src="https://fisadelbagre.com/assets/qr/qr_EBG-PARQ-001.svg" alt="Código QR ficha pública del árbol EBG-PARQ-001" class="qr-placa h-28 w-28 mx-auto">
+                </div>
+                <p class="mt-3 font-mono text-[#F2B632] text-sm font-bold tracking-wider">EBG-PARQ-001</p>
+                <a href="https://fisadelbagre.com/publico/ficha.php?codigo=EBG-PARQ-001" target="_blank" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#E9A22E] hover:bg-[#F2B632] text-[#052E16] font-bold text-sm px-5 py-2.5 transition">Ver ficha pública</a>
+            </article>
+
+            <!-- Ficha pública del árbol #3 -->
+            <article class="group rounded-3xl bg-white/[0.04] border border-white/10 p-6 text-center backdrop-blur-sm shadow-2xl fade-in" style="animation-delay: .3s;">
+                <div class="h-60 rounded-2xl bg-gradient-to-b from-[#14532D] via-[#0B3D20] to-[#052E16] border border-white/10 overflow-hidden flex items-end justify-center">
+                    <div class="arbol-scene">
+                        <div class="arbol">
+                            <svg class="arbol-svg" viewBox="0 0 120 150" role="img" aria-label="Árbol EBG-PARQ-004">
+                                <g class="follaje">
+                                    <circle cx="60" cy="56" r="34" fill="#1B5E20"/>
+                                    <circle cx="26" cy="68" r="19" fill="#2E7D32"/>
+                                    <circle cx="94" cy="68" r="19" fill="#2E7D32"/>
+                                    <circle cx="60" cy="26" r="17" fill="#43A047"/>
+                                </g>
+                                <g class="tronco">
+                                    <path d="M55 114 C52 136 58 148 60 150 L60 114 Z" fill="#5D4037"/>
+                                    <path d="M55 106 C42 92 36 72 36 50" stroke="#5D4037" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <img src="https://fisadelbagre.com/assets/qr/qr_EBG-PARQ-004.svg" alt="Código QR ficha pública del árbol EBG-PARQ-004" class="qr-placa h-28 w-28 mx-auto">
+                </div>
+                <p class="mt-3 font-mono text-[#F2B632] text-sm font-bold tracking-wider">EBG-PARQ-004</p>
+                <a href="https://fisadelbagre.com/publico/ficha.php?codigo=EBG-PARQ-004" target="_blank" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#E9A22E] hover:bg-[#F2B632] text-[#052E16] font-bold text-sm px-5 py-2.5 transition">Ver ficha pública</a>
+            </article>
+
+        </div>
+    </main>
+
+    <footer class="pb-10 text-center text-white/40 text-xs px-6">
+        <p class="font-semibold text-white/70">Emincut S.A.S. – El Bagre, Antioquia</p>
+        <p class="mt-1">ForestID / ForestSRD – Escaneo, trazabilidad y salud del arbolado</p>
+    </footer>
+</body>
+</html>
