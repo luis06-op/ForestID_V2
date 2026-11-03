@@ -9,6 +9,9 @@
 --   In memoriam: Michael Rodríguez Londoño (Desarrollador UI / QA)
 -- Base de Datos: MySQL 8.0 / MariaDB 10.3+ (Soporte UUID() por defecto)
 -- Collation: utf8mb4_spanish_ci | Motor: InnoDB
+-- Compatibilidad: probado en MariaDB 10.4 (XAMPP). Antes de importar en
+-- MariaDB 10.11/11.x (p. ej. Hostinger), valide el import en staging:
+-- el DEFAULT (UUID()) y las columnas JSON deben parsear en el motor destino.
 -- =============================================================================
 
 CREATE DATABASE IF NOT EXISTS `forestsrd_db` 
