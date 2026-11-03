@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/funciones.php';
 require_once __DIR__ . '/qrcode_helper.php';
 
 class PlacasHelper
@@ -18,27 +19,8 @@ class PlacasHelper
             throw new InvalidArgumentException('La cantidad debe estar entre 1 y 500.');
         }
 
-        $stmt = $pdo->prepare(
-            "SELECT EXISTS(SELECT 1 FROM placas_qr WHERE codigo_placa = :codigo_qr)
-              OR EXISTS(SELECT 1 FROM individuos_forestales WHERE codigo_placa = :codigo_individuo)"
-        );
-        $codigos = [];
-        $intentos = 0;
-        while (count($codigos) < $n && $intentos < $n * 100) {
-            $intentos++;
-            $codigo = 'EBG-' . str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            if (isset($codigos[$codigo])) {
-                continue;
-            }
-            $stmt->execute([':codigo_qr' => $codigo, ':codigo_individuo' => $codigo]);
-            if (!(bool) $stmt->fetchColumn()) {
-                $codigos[$codigo] = true;
-            }
-        }
-        if (count($codigos) !== $n) {
-            throw new RuntimeException('No fue posible reservar códigos únicos suficientes.');
-        }
-        return array_keys($codigos);
+        // Serie numérica consecutiva compartida con los individuos registrados.
+        return reservar_codigos_placa($pdo, $n);
     }
 
     /** Inserta un lote completo y guarda sus SVG dentro de la transacción. */
@@ -83,6 +65,69 @@ class PlacasHelper
             }
             throw $e;
         }
+    }
+
+    /**
+     * Elimina un lote completo de placas vacías y sus archivos SVG.
+     * Por seguridad no permite borrar lotes con placas ya asignadas a individuos.
+     *
+     * @return int Cantidad de placas eliminadas.
+     */
+    public static function eliminarLote(PDO $pdo, string $idLote): int
+    {
+        $idLote = trim($idLote);
+        if ($idLote === '') {
+            throw new RuntimeException('El lote indicado no es válido.');
+        }
+
+        $stmt = $pdo->prepare("SELECT codigo_placa, estado FROM `placas_qr` WHERE id_lote = :lote");
+        $stmt->execute([':lote' => $idLote]);
+        $placas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$placas) {
+            throw new RuntimeException('El lote no existe o ya fue eliminado.');
+        }
+
+        $asignadas = 0;
+        foreach ($placas as $placa) {
+            if (($placa['estado'] ?? '') === 'asignada') {
+                $asignadas++;
+            }
+        }
+        if ($asignadas > 0) {
+            throw new RuntimeException(
+                'Este lote tiene ' . $asignadas . ' placa(s) asignada(s) a individuos y no se puede eliminar. '
+                . 'Solo se pueden borrar lotes con placas pendientes.'
+            );
+        }
+
+        $iniciadaAqui = !$pdo->inTransaction();
+        if ($iniciadaAqui) {
+            $pdo->beginTransaction();
+        }
+        try {
+            $del = $pdo->prepare("DELETE FROM `placas_qr` WHERE id_lote = :lote");
+            $del->execute([':lote' => $idLote]);
+            if ($iniciadaAqui) {
+                $pdo->commit();
+            }
+        } catch (Throwable $e) {
+            if ($iniciadaAqui && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            throw $e;
+        }
+
+        // Los archivos se borran después de confirmar la transacción.
+        foreach ($placas as $placa) {
+            $archivo = ROOT_PATH . 'assets/qr/qr_'
+                . preg_replace('/[^A-Za-z0-9_-]/', '_', (string) $placa['codigo_placa']) . '.svg';
+            if (is_file($archivo)) {
+                @unlink($archivo);
+            }
+        }
+
+        return count($placas);
     }
 
     public static function marcarAsignada(PDO $pdo, string $codigo, string $idIndividuo): bool
