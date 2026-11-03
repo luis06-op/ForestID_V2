@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../includes/funciones.php';
 require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../includes/notificaciones.php';
 
 requerir_rol(['AdminEmincut']);
 
