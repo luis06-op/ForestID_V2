@@ -18,7 +18,9 @@ Mientras el acuerdo no se cierre, la referencia válida sigue siendo la instalac
 ## Pasos previstos cuando se cierre el acuerdo
 
 1. Crear el subdominio y emitir el certificado SSL.
-2. Crear una base de datos vacía e importar `database/forestsrd_db.sql`. El script empieza con `DROP TABLE`, pero incluye un **preflight** que **aborta el import si la base destino ya tiene tablas con datos** (error `45000`). Aun así, **nunca** ejecutarlo sobre datos existentes sin un respaldo verificado.
+2. Crear una base de datos vacía e importar el dump:
+   - `database/forestsrd_db.sql` (recomendado): incluye un **preflight** que aborta el import si la base destino ya tiene tablas con datos (error `45000`). Requiere permisos para `CREATE PROCEDURE` (normal en Hostinger).
+   - `database/forestsrd_db_hostinger.sql` (alternativa): sin preflight ni procedimientos almacenados, para hosts compartidos que restrinjan `CREATE PROCEDURE`. Usar **solo en una base vacía** (hace `DROP TABLE`).
 3. Verificar la versión de MariaDB del plan (se espera **10.11/11.x**) y probar el import primero en un entorno de staging: el dump se ha probado en MariaDB 10.4 y el `DEFAULT (UUID())` debe validarse en la versión destino.
 4. Crear `config/config.local.php` desde la plantilla (sin valores reales): `cp config/config.local.example.php config/config.local.php` y definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` y `APP_URL=https://Forestid.cfmasoft.com/`. El archivo está ignorado por Git. (Existe también `config/config.local.ejemplo.php`; ambos son plantillas equivalentes.)
 5. Crear `config/mailer.php` desde la plantilla: `cp config/mailer.example.php config/mailer.php` con el SMTP de Hostinger (`smtp.hostinger.com`, puerto `465` con `ssl`). El archivo está ignorado por Git. (Existe también `config/mailer.ejemplo.php`.)
