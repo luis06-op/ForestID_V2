@@ -112,6 +112,20 @@ if (is_string($host_app) && $host_app !== '') {
 if (!empty($_SERVER['SERVER_ADDR'])) {
     $host_permitidos[] = (string)$_SERVER['SERVER_ADDR'];
 }
+
+// Si APP_URL apunta a un host local (config de desarrollo copiada a
+// producción), se ignora como canónico cuando la petición trae un dominio
+// real. Evita que los enlaces queden en https://localhost/.
+$hosts_locales = ['localhost', '127.0.0.1', '::1', '[::1]'];
+$host_peticion_plano = strtolower((string)preg_replace('/:\d+$/', '', $host_raw));
+$canonico_plano = strtolower((string)preg_replace('/:\d+$/', '', $host_canonico));
+if ($host_canonico !== ''
+    && in_array($canonico_plano, $hosts_locales, true)
+    && $host_peticion_plano !== ''
+    && !in_array($host_peticion_plano, $hosts_locales, true)
+    && preg_match('/^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/', $host_peticion_plano)) {
+    $host_canonico = '';
+}
 $env_hosts = getenv('FORESTID_HOSTS');
 if ($env_hosts !== false && $env_hosts !== '') {
     foreach (explode(',', $env_hosts) as $h) {
