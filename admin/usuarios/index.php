@@ -49,8 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_i
             $usuario = $stmtU->fetch(PDO::FETCH_ASSOC);
             if (!$usuario) {
                 set_flash('error', 'El usuario indicado no existe.');
-            } elseif ((int)$usuario['estado'] !== 0) {
-                set_flash('success', 'El usuario ya se encuentra activo; no hay nada que reenviar.');
             } else {
                 $updTokens = $pdo->prepare("UPDATE `tokens_recuperacion` SET `usado` = 1 WHERE `id_usuario` = :id AND `usado` = 0");
                 $updTokens->execute([':id' => $usuario['id_usuario']]);
@@ -209,7 +207,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
                                                 </button>
                                             </form>
                                         <?php endif; ?>
-                                        <?php if ((int)$u['estado'] === 0 && (string)$u['id_usuario'] !== (string)$_SESSION['usuario']['id_usuario']): ?>
+                                        <?php if ((string)$u['id_usuario'] !== (string)$_SESSION['usuario']['id_usuario']): ?>
                                             <form method="POST" action="<?= BASE_URL ?>admin/usuarios/index.php" class="inline">
                                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                                 <input type="hidden" name="reenviar_activacion_id" value="<?= htmlspecialchars($u['id_usuario']) ?>">
