@@ -20,6 +20,58 @@ COLLATE utf8mb4_spanish_ci;
 
 USE `forestsrd_db`;
 
+-- =============================================================================
+-- PROTECCIÓN DE IMPORTACIÓN (preflight) - NO ELIMINAR
+-- El script borra y recrea las tablas. Este bloque ABORTA el import si la base
+-- destino ya contiene ALGUNA tabla de la aplicación con AL MENOS UNA fila,
+-- para no destruir datos existentes. En una base vacía o recién creada el
+-- preflight no encuentra filas y el import continúa con normalidad.
+-- Si realmente desea recrear TODO desde cero, vacíe la base manualmente
+-- después de verificar y de hacer un respaldo (NUNCA en producción con datos).
+-- Compatible con phpMyAdmin y con los clientes mysql/mariadb (DELIMITER).
+-- =============================================================================
+DROP PROCEDURE IF EXISTS `forestid_preflight_guard`;
+DELIMITER $$
+CREATE PROCEDURE `forestid_preflight_guard`()
+BEGIN
+    DECLARE v_tabla VARCHAR(64);
+    DECLARE v_filas BIGINT DEFAULT 0;
+    DECLARE v_total BIGINT DEFAULT 0;
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE cur CURSOR FOR
+        SELECT `TABLE_NAME`
+          FROM information_schema.TABLES
+         WHERE `TABLE_SCHEMA` = DATABASE()
+           AND `TABLE_NAME` IN (
+               'roles', 'usuarios', 'tokens_recuperacion', 'zonas',
+               'individuos_forestales', 'estados_fitosanitarios',
+               'actividades_mantenimiento', 'logs_sistema'
+           );
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur;
+    read_loop: LOOP
+        FETCH cur INTO v_tabla;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        SET @forestid_sql := CONCAT('SELECT COUNT(*) INTO @forestid_n FROM `', v_tabla, '`');
+        PREPARE forestid_stmt FROM @forestid_sql;
+        EXECUTE forestid_stmt;
+        DEALLOCATE PREPARE forestid_stmt;
+        SET v_total := v_total + COALESCE(@forestid_n, 0);
+    END LOOP;
+    CLOSE cur;
+
+    IF v_total > 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'FORESTID: la base destino ya contiene datos. Importacion ABORTADA para no destruir informacion (el script empieza con DROP TABLE). Haga un respaldo y vacie la base manualmente si realmente quiere recrearla.';
+    END IF;
+END$$
+DELIMITER ;
+CALL `forestid_preflight_guard`();
+DROP PROCEDURE IF EXISTS `forestid_preflight_guard`;
+
 -- Desactivar temporalmente revisión de llaves foráneas para recreación limpia
 SET FOREIGN_KEY_CHECKS = 0;
 
