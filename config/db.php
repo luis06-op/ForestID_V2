@@ -209,10 +209,30 @@ define('BASE_URL', $protocol . $host . $base_path . '/');
 // En producción defina APP_URL en config/config.local.php, por ejemplo:
 //   define('APP_URL', 'https://forestid.emincut.com/');
 // Si no se define, se usa la URL detectada automáticamente (útil en local).
-if (!defined('APP_URL')) {
-    $app_url = getenv('APP_URL');
-    define('APP_URL', ($app_url !== false && $app_url !== '') ? rtrim($app_url, '/') . '/' : BASE_URL);
+//
+// APP_URL_EFECTIVA es la que debe usarse en QR, correos y enlaces: si se copió
+// a producción un config.local.php de desarrollo con APP_URL=localhost, se
+// descarta y se usa el dominio real de la petición.
+$app_url_configurada = defined('APP_URL')
+    ? (string) APP_URL
+    : (string) (getenv('APP_URL') ?: '');
+
+$app_url_efectiva = BASE_URL;
+if ($app_url_configurada !== '') {
+    $partes_efectiva = parse_url($app_url_configurada);
+    $host_efectivo   = strtolower((string) ($partes_efectiva['host'] ?? ''));
+    $es_local_efectivo = in_array($host_efectivo, $hosts_locales, true);
+    $peticion_es_local = in_array($host_peticion_plano, $hosts_locales, true);
+
+    if (!($es_local_efectivo && !$peticion_es_local)) {
+        $app_url_efectiva = rtrim($app_url_configurada, '/') . '/';
+    }
 }
+
+if (!defined('APP_URL')) {
+    define('APP_URL', $app_url_efectiva);
+}
+define('APP_URL_EFECTIVA', $app_url_efectiva);
 
 // Función Singleton para obtener conexión PDO
 function getDBConnection(): PDO {

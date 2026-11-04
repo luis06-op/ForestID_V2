@@ -20,10 +20,10 @@ class QRCodeGenerator {
 
     /**
      * URL pública canónica de la ficha de un individuo.
-     * Se usa APP_URL para que los QR apunten al dominio real en producción.
+     * Se usa APP_URL_EFECTIVA para que los QR apunten al dominio real en producción.
      */
     public static function urlFicha(string $codigoPlaca): string {
-        return rtrim(APP_URL, '/') . '/publico/ficha.php?codigo=' . rawurlencode($codigoPlaca);
+        return rtrim(APP_URL_EFECTIVA, '/') . '/publico/ficha.php?codigo=' . rawurlencode($codigoPlaca);
     }
 
     /**

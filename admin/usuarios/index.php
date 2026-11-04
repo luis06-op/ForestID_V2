@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reenviar_activacion_i
                 $updTokens->execute([':id' => $usuario['id_usuario']]);
                 $token_activacion = bin2hex(random_bytes(32));
                 $expira_activacion = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_ACTIVACION);
-                $enlace_activacion = APP_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
+                $enlace_activacion = APP_URL_EFECTIVA . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
                 $insToken = $pdo->prepare("INSERT INTO `tokens_recuperacion` (`id_token`, `id_usuario`, `token`, `fecha_expiracion`, `usado`, `fecha_creacion`) VALUES (UUID(), :id_usuario, :token, :expiracion, 0, NOW())");
                 $insToken->execute([':id_usuario' => $usuario['id_usuario'], ':token' => hash_token($token_activacion), ':expiracion' => $expira_activacion]);
 

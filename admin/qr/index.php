@@ -217,7 +217,7 @@ require_once __DIR__ . '/../../includes/navbar.php';
             <i data-lucide="link" class="w-4 h-4 mt-0.5 shrink-0"></i>
             <div>
                 <span class="font-bold block">Dominio canónico de los QR</span>
-                <code class="break-all"><?= htmlspecialchars(APP_URL) ?>publico/ficha.php?codigo=...</code>
+                <code class="break-all"><?= htmlspecialchars(APP_URL_EFECTIVA) ?>publico/ficha.php?codigo=...</code>
             </div>
         </div>
 

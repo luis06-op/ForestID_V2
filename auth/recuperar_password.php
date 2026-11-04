@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':expiracion' => $expira
                 ]);
 
-                $enlace = APP_URL . "auth/restablecer_password.php?token=" . urlencode($token);
+                $enlace = APP_URL_EFECTIVA . "auth/restablecer_password.php?token=" . urlencode($token);
                 $envio  = enviar_correo_recuperacion($usuario['correo'], $usuario['nombres'], $enlace);
                 if (!$envio['ok']) {
                     error_log('[ForestID] No se pudo enviar el enlace de recuperación: ' . $envio['detalle']);

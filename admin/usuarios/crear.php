@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id_nuevo = generar_uuid();
             $token_activacion = bin2hex(random_bytes(32));
             $expira_activacion = date('Y-m-d H:i:s', time() + TOKEN_VIGENCIA_ACTIVACION);
-            $enlace_activacion = APP_URL . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
+            $enlace_activacion = APP_URL_EFECTIVA . 'auth/restablecer_password.php?token=' . urlencode($token_activacion) . '&nuevo=1';
 
             try {
                 $pdo->beginTransaction();
