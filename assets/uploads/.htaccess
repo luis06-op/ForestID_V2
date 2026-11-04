@@ -1,6 +1,21 @@
-# Impide la ejecución de scripts dentro de las imágenes subidas.
-<FilesMatch "\.(?:php|phtml|phar|php[0-9]?|cgi|pl|py|sh)$">
+# ForestID — Protección de imágenes subidas
+# Ningún archivo de esta carpeta debe ejecutarse como script.
+
+Options -Indexes -ExecCGI
+
+# Bloquea scripts con cualquier extensión ejecutable habitual.
+<FilesMatch "\.(?:php|phtml|phar|php[0-9]?|cgi|pl|py|rb|sh|bash|asp|aspx|jsp|htm|html|svg)$">
     Require all denied
 </FilesMatch>
 
-Options -ExecCGI
+<IfModule mod_mime.c>
+    # Quita manejadores que pudieran ejecutar PHP aunque se suba un archivo así.
+    RemoveHandler .php .phtml .phar .php3 .php4 .php5 .php7 .php8
+    RemoveType .php .phtml .phar
+</IfModule>
+
+# Solo se sirven como imágenes; nunca como HTML.
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Content-Disposition "inline"
+</IfModule>

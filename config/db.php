@@ -4,6 +4,11 @@
  * Empresa: Emincut S.A.S. | El Bagre, Antioquia
  */
 
+// Zona horaria institucional: no depende del php.ini del hosting.
+if (function_exists('date_default_timezone_set')) {
+    date_default_timezone_set('America/Bogota');
+}
+
 // Endurecimiento de la sesión (A1): cookies HttpOnly + SameSite, modo estricto
 // y nombre propio de sesión. Debe ejecutarse siempre antes de session_start().
 if (session_status() === PHP_SESSION_NONE) {
@@ -36,6 +41,14 @@ if (session_status() === PHP_SESSION_NONE) {
 $config_local = __DIR__ . '/config.local.php';
 if (is_file($config_local)) {
     require_once $config_local;
+}
+
+// Errores: nunca en pantalla, siempre al log del servidor (defensa en
+// profundidad además de .user.ini). Para depurar en local: FORESTID_DEBUG=1.
+if (getenv('FORESTID_DEBUG') !== '1') {
+    @ini_set('display_errors', '0');
+    @ini_set('display_startup_errors', '0');
+    @ini_set('log_errors', '1');
 }
 
 // Datos corporativos de Emincut (nombre, NIT, contacto, logo).

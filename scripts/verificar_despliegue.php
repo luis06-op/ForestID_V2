@@ -29,7 +29,7 @@ const VERIFY_MIN_PHP           = '8.1.0';
 const VERIFY_MIN_UPLOAD_BYTES  = 2097152;   // 2 MB
 const VERIFY_MIN_MEMORY_BYTES  = 134217728; // 128 MB (-1 = sin límite, se acepta)
 const VERIFY_APP_TIMEZONE      = 'America/Bogota';
-const VERIFY_REQUIRED_EXT      = ['pdo_mysql', 'mbstring', 'fileinfo', 'curl', 'openssl', 'json', 'session'];
+const VERIFY_REQUIRED_EXT      = ['pdo_mysql', 'mbstring', 'fileinfo', 'curl', 'openssl', 'json', 'session', 'gd'];
 
 $root = dirname(__DIR__);
 $filas = [];
@@ -67,8 +67,22 @@ $tz = ini_get('date.timezone');
 if ($tz === false || $tz === '') {
     $tz = date_default_timezone_get();
 }
-check('Zona horaria America/Bogota', $tz === VERIFY_APP_TIMEZONE,
-    "date.timezone = '{$tz}'" . ($tz === VERIFY_APP_TIMEZONE ? '' : ' - fíjela en .user.ini o php.ini: date.timezone=America/Bogota'));
+$tzOk = ($tz === VERIFY_APP_TIMEZONE);
+$tzDetalle = "date.timezone = '{$tz}'";
+if (!$tzOk) {
+    // En CLI el php.ini puede diferir del usado por el servidor web: si
+    // .user.ini fija la zona, el despliegue web es correcto.
+    $userIni = $root . DIRECTORY_SEPARATOR . '.user.ini';
+    if (is_file($userIni)) {
+        $contenidoIni = (string) file_get_contents($userIni);
+        if (preg_match('/^\s*date\.timezone\s*=\s*' . preg_quote(VERIFY_APP_TIMEZONE, '/') . '\s*$/mi', $contenidoIni) === 1) {
+            $tzOk = true;
+            $tzDetalle .= ' — .user.ini fija ' . VERIFY_APP_TIMEZONE . ' para el servidor web';
+        }
+    }
+}
+check('Zona horaria America/Bogota', $tzOk,
+    $tzDetalle . ($tzOk ? '' : ' - fíjela en .user.ini o php.ini: date.timezone=America/Bogota'));
 
 // ---------------- 3. Límites de subida y memoria ----------------
 $uploadRaw = (string) ini_get('upload_max_filesize');
@@ -81,6 +95,23 @@ $memory    = ini_size_to_bytes($memRaw);
 check('upload_max_filesize (>= 2M)', $upload === -1 || $upload >= VERIFY_MIN_UPLOAD_BYTES, "upload_max_filesize = {$uploadRaw}");
 check('post_max_size (>= upload_max_filesize)', $post === -1 || $post >= $upload, "post_max_size = {$postRaw}" . (($post !== -1 && $upload !== -1 && $post < $upload) ? ' - es MENOR que upload_max_filesize' : ''));
 check('memory_limit (>= 128M o -1)', $memory === -1 || $memory >= VERIFY_MIN_MEMORY_BYTES, "memory_limit = {$memRaw}");
+
+// ---------------- 3.b Errores fuera de pantalla ----------------
+$displayErrors = strtolower((string) ini_get('display_errors'));
+$logErrors     = strtolower((string) ini_get('log_errors'));
+check('display_errors desactivado', in_array($displayErrors, ['0', 'off', ''], true),
+    "display_errors = '{$displayErrors}'" . (in_array($displayErrors, ['0', 'off', ''], true) ? '' : ' - debe ser Off'));
+check('log_errors activado', in_array($logErrors, ['1', 'on'], true),
+    "log_errors = '{$logErrors}'");
+
+// ---------------- 3.c Protección de carpetas sensibles ----------------
+foreach (['config', 'includes', 'vendor', 'database'] as $dirSensible) {
+    $rutaDir = $root . DIRECTORY_SEPARATOR . $dirSensible;
+    if (is_dir($rutaDir)) {
+        $ht = is_file($rutaDir . DIRECTORY_SEPARATOR . '.htaccess');
+        check(".htaccess en {$dirSensible}/", $ht, $ht ? 'presente' : 'FALTA - cree el .htaccess de bloqueo');
+    }
+}
 
 // ---------------- 4. Permisos de escritura ----------------
 foreach (['assets/uploads', 'assets/qr'] as $rutaRelativa) {
@@ -122,10 +153,10 @@ try {
     check('Conexión a BD', false, 'FALLA - no se pudo conectar (fuente: ' . $fuenteDb . '). Detalle en el log del servidor; no se muestran credenciales.');
 }
 
-// ---------------- 6. APP_URL con HTTPS ----------------
+// ---------------- 6. APP_URL (opcional: si falta se detecta del dominio) ----------------
 $appUrl = defined('APP_URL') ? (string) APP_URL : (string) (getenv('APP_URL') ?: '');
 if ($appUrl === '') {
-    check('APP_URL con HTTPS', false, 'FALLA - APP_URL no definida (config/config.local.php o variable de entorno). Los QR y enlaces de correo la necesitan.');
+    check('APP_URL', true, 'no definida - se detecta automáticamente del dominio de la petición');
 } else {
     $scheme = strtolower((string) (parse_url($appUrl, PHP_URL_SCHEME) ?: ''));
     $host   = (string) (parse_url($appUrl, PHP_URL_HOST) ?: '');

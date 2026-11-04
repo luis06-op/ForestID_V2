@@ -141,7 +141,7 @@ $stmtActs = $pdo->prepare("
 $stmtActs->execute([':id' => $id]);
 $actividades = $stmtActs->fetchAll();
 
-$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/img/guayacan_rosado.svg';
 $qr_img = !empty($arbol['qr_url']) ? BASE_URL . $arbol['qr_url'] : BASE_URL . 'assets/qr/qr_' . $arbol['codigo_placa'] . '.svg';
 
 $csrf_token = crear_token_csrf();

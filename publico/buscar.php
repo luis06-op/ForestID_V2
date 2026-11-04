@@ -176,7 +176,7 @@ require_once __DIR__ . '/../includes/navbar.php';
     <?php else: ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($individuos as $arbol): 
-                $foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+                $foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/img/guayacan_rosado.svg';
             ?>
                 <div class="forest-card overflow-hidden flex flex-col group">
                     <div class="h-44 overflow-hidden relative bg-gray-100">

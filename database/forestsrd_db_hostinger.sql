@@ -213,14 +213,12 @@ INSERT INTO `roles` (`id_rol`, `nombre_rol`, `descripcion`, `fecha_creacion`) VA
 ('11111111-1111-1111-1111-111111111103', 'UsuarioPublico', 'Ciudadano o visitante con acceso a consulta pública y reporte de novedades', NOW());
 
 -- 5.2 Usuarios Iniciales
--- NOTA DE SEGURIDAD PARA ENTORNO LOCAL / PRUEBAS:
--- Contraseñas en texto plano para los 3 roles de prueba:
--- 1. Administrador (admin@emincut.com): Admin123*
--- 2. Operario (operario@emincut.com): Operario123*
--- 3. Ciudadano (ciudadano@emincut.com): Ciudadano123*
--- Los hashes a continuación son Bcrypt reales (cost 12), generados con
--- password_hash() y verificados con password_verify(). CÁMBIELOS antes de
--- cualquier despliegue real: estas contraseñas son públicas (están en el README).
+-- NOTA DE SEGURIDAD:
+-- No se documentan contraseñas en este archivo. Las claves de las cuentas
+-- administrativas se entregan por un canal privado y deben cambiarse desde
+-- el panel tras el primer acceso.
+-- Todos los hashes son Bcrypt reales (cost 12) generados con password_hash()
+-- y verificados con password_verify().
 INSERT INTO `usuarios` (
     `id_usuario`, `id_rol`, `nombres`, `apellidos`, 
     `correo`, `password_hash`, `telefono`, `estado`, `ultimo_acceso`, `fecha_creacion`
@@ -231,7 +229,7 @@ INSERT INTO `usuarios` (
     'Luis Angel',
     'Muñoz Márquez',
     'admin@emincut.com',
-    '$2y$12$H.2pA5GAoGuzgWCjCWRSUuvzg4wg7pN55cKZdzcqpIgrcfgR0KBX.',
+    '$2y$12$Qe1jqhi4tI0kqqpr20lCPeIEpa0x92.5ZigLcCfH8LQ2i1T9C626K',
     '+57 310 445 8899',
     1,
     NOW(),
@@ -243,7 +241,7 @@ INSERT INTO `usuarios` (
     'Gabriel Jaime',
     'Correa Correa',
     'operario@emincut.com',
-    '$2y$12$iYjdqdr/GyjgXVqfMGAGR.BK0S7RbLiINfuFfLRegehlFoA.GYsYK',
+    '$2y$12$2IgBpUZ4J3FtObeVy.CTRuJp0aOcZcXJ/VA1xhWBRIp9pC.E/FWu.',
     '+57 311 556 7788',
     1,
     NOW(),

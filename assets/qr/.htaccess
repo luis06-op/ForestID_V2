@@ -1,0 +1,21 @@
+# ForestID — Carpeta de códigos QR generados (solo lectura pública de SVG)
+# No se permite ejecutar scripts ni listar el directorio.
+
+Options -Indexes -ExecCGI
+
+<FilesMatch "\.(?:php|phtml|phar|php[0-9]?|cgi|pl|py|rb|sh|bash|asp|aspx|jsp|htm|html)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_mime.c>
+    AddType image/svg+xml .svg
+    RemoveHandler .php .phtml .phar .php3 .php4 .php5 .php7 .php8
+    RemoveType .php .phtml .phar
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    # Los SVG son imágenes pasivas: evita que el navegador ejecute scripts
+    # incrustados si un archivo fuera manipulado.
+    Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src data:"
+</IfModule>

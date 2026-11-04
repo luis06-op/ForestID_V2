@@ -130,7 +130,7 @@ $stmtActs = $pdo->prepare("
 $stmtActs->execute([':id' => $id]);
 $actividades = $stmtActs->fetchAll();
 
-$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/uploads/individuos/guayacan_rosado.svg';
+$foto = !empty($arbol['foto_principal_url']) ? BASE_URL . $arbol['foto_principal_url'] : BASE_URL . 'assets/img/guayacan_rosado.svg';
 $csrf_token = crear_token_csrf();
 $titulo_pagina = "Gestión: {$arbol['codigo_placa']} — " . APP_NAME;
 require_once __DIR__ . '/../../includes/header.php';

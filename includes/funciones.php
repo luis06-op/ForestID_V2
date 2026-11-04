@@ -416,7 +416,17 @@ function formatear_numero($numero, int $decimales = 2, string $sufijo = ''): str
 }
 
 /**
- * Manejo seguro de subida de imágenes con validación de tipo MIME real y tamaño
+ * Manejo seguro de subida de imágenes.
+ *
+ * Defensas aplicadas:
+ *  - Solo POST auténtico (is_uploaded_file).
+ *  - Tamaño máximo configurable.
+ *  - Tipo MIME real con finfo + verificación con getimagesize().
+ *  - Nombre generado (UUID) y extensión derivada del tipo real, nunca del
+ *    nombre enviado por el cliente.
+ *  - Recodificación con GD para eliminar metadatos y cargas poliglotas
+ *    (un archivo válido como imagen y como script a la vez).
+ *  - Guardado en assets/uploads/<subdirectorio>/ con permisos 0644.
  */
 function subir_imagen_segura(array $archivo, string $subdirectorio = 'individuos', int $max_mb = 5): array {
     if (!isset($archivo['error']) || is_array($archivo['error'])) {
@@ -431,35 +441,79 @@ function subir_imagen_segura(array $archivo, string $subdirectorio = 'individuos
         return ['ok' => false, 'error' => 'Error al subir el archivo (Código: ' . $archivo['error'] . ').'];
     }
 
-    if ($archivo['size'] > $max_mb * 1024 * 1024) {
+    if (!is_uploaded_file($archivo['tmp_name'] ?? '')) {
+        return ['ok' => false, 'error' => 'El archivo no proviene de una subida HTTP válida.'];
+    }
+
+    if (($archivo['size'] ?? 0) > $max_mb * 1024 * 1024) {
         return ['ok' => false, 'error' => "El tamaño de la imagen supera el límite permitido de {$max_mb} MB."];
     }
 
-    // Validar tipo MIME real
+    // Tipo MIME real (magic bytes), no la extensión ni el Content-Type del cliente.
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime = $finfo->file($archivo['tmp_name']);
     $mimes_permitidos = [
-        'image/jpeg' => 'jpg',
-        'image/png'  => 'png',
-        'image/webp' => 'webp'
+        'image/jpeg' => ['ext' => 'jpg',  'tipo' => IMAGETYPE_JPEG],
+        'image/png'  => ['ext' => 'png',  'tipo' => IMAGETYPE_PNG],
+        'image/webp' => ['ext' => 'webp', 'tipo' => IMAGETYPE_WEBP],
     ];
 
-    if (!array_key_exists($mime, $mimes_permitidos)) {
+    if (!is_string($mime) || !array_key_exists($mime, $mimes_permitidos)) {
         return ['ok' => false, 'error' => 'Formato no permitido. Solo se aceptan imágenes JPG, PNG o WEBP.'];
     }
 
-    $extension = $mimes_permitidos[$mime];
+    // Verificación estructural de la imagen y límite de dimensiones
+    // (protege contra bombas de descompresión).
+    $info = @getimagesize($archivo['tmp_name']);
+    if ($info === false || ($info[2] ?? null) !== $mimes_permitidos[$mime]['tipo']) {
+        return ['ok' => false, 'error' => 'El archivo no es una imagen válida.'];
+    }
+    $ancho  = (int)($info[0] ?? 0);
+    $alto   = (int)($info[1] ?? 0);
+    if ($ancho < 1 || $alto < 1 || $ancho > 8000 || $alto > 8000 || ($ancho * $alto) > 40000000) {
+        return ['ok' => false, 'error' => 'Las dimensiones de la imagen no son válidas (máximo 8000×8000 px).'];
+    }
+
+    // Recodificar con GD: descarta EXIF y cualquier contenido incrustado.
+    $contenido = @file_get_contents($archivo['tmp_name']);
+    $imagen = $contenido !== false ? @imagecreatefromstring($contenido) : false;
+    if ($imagen === false) {
+        return ['ok' => false, 'error' => 'No se pudo procesar la imagen. Intente con otro archivo.'];
+    }
+
+    $extension   = $mimes_permitidos[$mime]['ext'];
     $nombre_unico = generar_uuid() . '.' . $extension;
 
     $directorio_destino = ROOT_PATH . 'assets' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . $subdirectorio;
-    if (!is_dir($directorio_destino)) {
-        mkdir($directorio_destino, 0755, true);
+    if (!is_dir($directorio_destino) && !mkdir($directorio_destino, 0755, true) && !is_dir($directorio_destino)) {
+        imagedestroy($imagen);
+        return ['ok' => false, 'error' => 'No se pudo preparar el directorio de destino.'];
     }
 
     $ruta_absoluta = $directorio_destino . DIRECTORY_SEPARATOR . $nombre_unico;
-    if (!move_uploaded_file($archivo['tmp_name'], $ruta_absoluta)) {
+    $guardada = false;
+
+    switch ($extension) {
+        case 'jpg':
+            $guardada = @imagejpeg($imagen, $ruta_absoluta, 90);
+            break;
+        case 'png':
+            imagealphablending($imagen, false);
+            imagesavealpha($imagen, true);
+            $guardada = @imagepng($imagen, $ruta_absoluta, 6);
+            break;
+        case 'webp':
+            $guardada = @imagewebp($imagen, $ruta_absoluta, 90);
+            break;
+    }
+    imagedestroy($imagen);
+
+    if (!$guardada || !is_file($ruta_absoluta)) {
+        @unlink($ruta_absoluta);
         return ['ok' => false, 'error' => 'No se pudo guardar la imagen en el servidor.'];
     }
+
+    @chmod($ruta_absoluta, 0644);
 
     $ruta_relativa = "assets/uploads/{$subdirectorio}/{$nombre_unico}";
     return ['ok' => true, 'ruta' => $ruta_relativa];

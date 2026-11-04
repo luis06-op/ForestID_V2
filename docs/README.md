@@ -84,11 +84,11 @@ Corre en **XAMPP** (desarrollo) o en **LAMP / LEMP** (producción), sin Node y s
 
 | Rol | Correo | Contraseña | Alcance |
 | :-- | :-- | :-- | :-- |
-| **AdminEmincut** | `admin@emincut.com` | `Admin123*` | Control total: usuarios, zonas, QR masivo, reportes y logs. |
-| **OperarioEmincut** | `operario@emincut.com` | `Operario123*` | Escaneo QR con cámara, alta rápida con GPS y mantenimientos. |
-| **UsuarioPublico** | `ciudadano@emincut.com` | `Ciudadano123*` | Portal ciudadano: ficha pública y reporte de novedades. |
+| **AdminEmincut** | `admin@emincut.com` | *entregada por canal privado* | Control total: usuarios, zonas, QR masivo, reportes y logs. |
+| **OperarioEmincut** | `operario@emincut.com` | *entregada por canal privado* | Escaneo QR con cámara, alta rápida con GPS y mantenimientos. |
+| **UsuarioPublico** | `ciudadano@emincut.com` | *entregada por canal privado* | Portal ciudadano: ficha pública y reporte de novedades. |
 
-> ⚠️ **Solo para entorno local.** Estas cuentas vienen del script SQL con hashes Bcrypt reales, pero sus contraseñas son públicas (están en este README). **Cámbielas o elimínelas antes de publicar el sistema en Internet.** El login ya **no** acepta credenciales en texto plano ni las autocompleta.
+> ⚠️ **Las contraseñas no se documentan en el repositorio.** Se entregan por un canal privado y deben cambiarse tras el primer acceso. Todos los hashes son Bcrypt reales (coste 12) generados con `password_hash()`. El login ya **no** acepta credenciales en texto plano ni las autocompleta.
 >
 > 💡 Al crear un usuario nuevo desde el panel, el sistema **envía un enlace de activación de un solo uso** por correo (PHPMailer/SMTP) y ofrece el envío por **WhatsApp**. El administrador nunca define ni ve la contraseña.
 
