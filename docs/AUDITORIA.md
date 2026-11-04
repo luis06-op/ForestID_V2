@@ -116,7 +116,7 @@
 | ID | Hallazgo | Ubicación | Estado |
 |---|---|---|---|
 | M1 | El error de conexión imprimía `$e->getMessage()` | `config/db.php` | ✅ Corregido: solo con `FORESTID_DEBUG=1`. |
-| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php` | ✅ Corregido: lista blanca con `APP_URL` (constante o variable de entorno), `FORESTID_HOSTS` y la IP del servidor; un host no confiable se sustituye por la URL canónica, no por `localhost`. |
+| M2 | `BASE_URL` se construye con `HTTP_HOST` sin validar | `config/db.php` | ✅ Corregido: lista blanca estricta (`forestid.cfmasoft.com`, `www.forestid.cfmasoft.com`, locales, host de `APP_URL` y `FORESTID_HOSTS`). Un host no confiable se sustituye por `APP_URL`; si tampoco existe, la petición se rechaza con **400**. El `.htaccess` solo redirige a HTTPS para el dominio propio, sin reflejar un `Host` ajeno. |
 | M3 | Enums y FK sin validar en servidor (`estado_salud`, `tipo_individuo`, `id_zona`) | `crear.php`, `operario/registrar_individuo.php`, `detalle.php` | ✅ Corregido: `normalizar_enum()` y `zona_activa()` en `includes/funciones.php`, aplicadas en altas, evaluaciones y actividades (incluido `tipo_actividad`). |
 | M4 | Sin CSP ni HTTPS forzado | global | ⏳ Parcial: CSP y HSTS añadidos en `.htaccess`, pero la CSP mantiene `'unsafe-inline'`/`'unsafe-eval'` y los CDNs siguen sin SRI. |
 | M5 | Coordenadas GPS exactas públicas en la ficha | `publico/ficha.php` | ✅ Corregido: la ficha pública redondea latitud/longitud a 3 decimales (~111 m); el admin conserva la precisión. |

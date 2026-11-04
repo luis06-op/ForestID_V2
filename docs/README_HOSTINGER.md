@@ -47,6 +47,22 @@ find . \( -name '*.sql' -o -name 'renumerar_codigos.php' -o -name 'database' \) 
 grep -n "X-Forwarded-Proto" config/db.php   # confirma que está el db.php nuevo
 ```
 
+## Verificación de integridad del paquete
+
+El ZIP se entrega con un SHA-256 conocido. Compruébelo **en el servidor** después de subirlo, antes de extraer, para descartar una subida corrupta o truncada:
+
+```bash
+# En su equipo, junto al ZIP descargado:
+sha256sum ForestID_Feria_Forestid.cfmasoft.zip
+
+# En el servidor, sobre el archivo subido:
+sha256sum ~/ForestID_Feria_Forestid.cfmasoft.zip
+```
+
+Los dos valores deben coincidir exactamente. El hash de esta entrega está en el informe `AUDITORIA_FORESTID_2026-11-04.md`. Si no coincide, **no extraiga**: vuelva a subir el ZIP.
+
+El dump SQL también tiene su propio SHA-256 en el informe.
+
 ## Pasos previstos cuando se cierre el acuerdo
 
 1. Crear el subdominio y emitir el certificado SSL.
@@ -54,7 +70,7 @@ grep -n "X-Forwarded-Proto" config/db.php   # confirma que está el db.php nuevo
    - `database/forestsrd_db_hostinger.sql` (recomendado para Hostinger): sin preflight ni procedimientos almacenados; compatible con hosting compartido. Usar **solo en una base vacía** (hace `DROP TABLE`).
    - `database/forestsrd_db.sql` (alternativa): incluye un **preflight** que aborta el import si la base destino ya tiene tablas con datos (error `45000`). Requiere permisos para `CREATE PROCEDURE`.
 3. Verificar la versión de MariaDB del plan (se espera **10.11/11.x**) y probar el import primero en un entorno de staging: el dump se ha probado en MariaDB 10.4 y el `DEFAULT (UUID())` debe validarse en la versión destino.
-4. Crear `config/config.local.php` desde la plantilla (sin valores reales): `cp config/config.local.example.php config/config.local.php` y definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` y, recomendable, `APP_URL=https://Forestid.cfmasoft.com/` (si se omite, la aplicación detecta el dominio de la petición). El archivo está ignorado por Git. (Existe también `config/config.local.ejemplo.php`; ambos son plantillas equivalentes.)
+4. Crear `config/config.local.php` desde la plantilla (sin valores reales): `cp config/config.local.example.php config/config.local.php` y definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` y **siempre** `APP_URL='https://forestid.cfmasoft.com/'`. `APP_URL` es la fuente de verdad de los enlaces, QR y correos; si se omite, la aplicación usa como red de seguridad el dominio de la petición, pero solo si está en la lista blanca (`forestid.cfmasoft.com` y `www.forestid.cfmasoft.com`). Para otro dominio legítimo (staging), añada `FORESTID_HOSTS`. El archivo está ignorado por Git. (Existe también `config/config.local.ejemplo.php`; ambos son plantillas equivalentes.)
 5. Crear `config/mailer.php` desde la plantilla: `cp config/mailer.example.php config/mailer.php` con el SMTP de Hostinger (`smtp.hostinger.com`, puerto `465` con `ssl`), remitente visible `no-reply@forestid.cfmasoft.com` y los datos reales del buzón. El archivo está ignorado por Git. (Existe también `config/mailer.ejemplo.php`.)
 6. Fijar la zona horaria `America/Bogota` (por ejemplo en `.user.ini`: `date.timezone=America/Bogota`) y revisar `upload_max_filesize`, `post_max_size` y `memory_limit`.
 7. Comprobar permisos: directorios `755` y archivos `644`; si el servidor necesita escritura por grupo, `775` con `setgid` (`2775`). **Nunca `777`.** Deben ser escribibles solo `assets/uploads/` y `assets/qr/`.
@@ -82,7 +98,7 @@ Qué comprueba:
 - `.htaccess` presente en `config/`, `includes/`, `vendor/` y `database/`.
 - Directorios `assets/uploads/` y `assets/qr/` existentes y con permiso de escritura.
 - Conexión real a la base de datos (prioridad `config/config.local.php` > variables de entorno > defaults de XAMPP) e imprime la versión del servidor.
-- `APP_URL` con `https` si está definida; si falta, se informa que se detecta del dominio.
+- `APP_URL` con `https` si está definida; si falta, se informa que se detecta del dominio. La comprobación adicional `APP_URL no apunta a localhost` **falla** si quedó un valor de desarrollo.
 
 Salida: tabla `PRUEBA | RESULTADO | DETALLE` con `OK`/`FALLA`, resumen final y **código de salida 0 si todo pasa, 1 si hay alguna FALLA**, por lo que sirve en despliegues automatizados. No imprime contraseñas ni datos sensibles.
 
@@ -91,7 +107,9 @@ Si una prueba sale `FALLA`, corrija el entorno y vuelva a ejecutar hasta que el 
 ## Checklist final (antes de abrir a público)
 
 - [ ] Subdominio creado con SSL activo; HTTP redirige a HTTPS y el candado es válido **antes** de confiar en HSTS.
+- [ ] `sha256sum` del ZIP en el servidor coincide con el del informe **antes** de extraer.
 - [ ] `public_html` vaciado antes de extraer el ZIP; sin `database/`, `.sql` ni `renumerar_codigos.php` residuales.
+- [ ] `APP_URL` real definido en `config/config.local.php` (no `localhost`).
 - [ ] MariaDB del plan confirmada (10.11/11.x) e **import de `database/forestsrd_db_hostinger.sql` probado en staging** (o de `forestsrd_db.sql`, que incluye preflight; nunca sobre datos sin respaldo).
 - [ ] `config/config.local.php` y `config/mailer.php` creados desde las plantillas `.example.php` con los valores reales; ausentes del índice de Git (`git status --ignored`).
 - [ ] `php scripts/verificar_despliegue.php` termina en `0 FALLA(s)` (incluye `America/Bogota` y BD conectada; si `APP_URL` está definida, debe ser HTTPS).
@@ -114,7 +132,8 @@ Si una prueba sale `FALLA`, corrija el entorno y vuelva a ejecutar hasta que el 
 - El dump `database/forestsrd_db.sql` incluye un **preflight con `SIGNAL SQLSTATE '45000'`**: si alguna de las 9 tablas de la aplicación existe y tiene filas, el import se aborta antes de los `DROP TABLE`. En una base vacía el preflight pasa y el import continúa. El dump `forestsrd_db_hostinger.sql` omite el preflight (no requiere `CREATE PROCEDURE`) y debe importarse **solo en una base vacía**.
 - `vendor/` está versionado en el repositorio: **no se necesita Composer en el servidor**.
 - Hostinger usa **LiteSpeed**. El HSTS del `.htaccess` ya no usa la expresión `<If "%{HTTPS} == 'on'">`: ahora se emite con `Header ... env=HTTPS_ON` a partir de `SetEnvIf HTTPS "on"` (además de `X-Forwarded-Proto=https` para proxies), lo que es portable entre Apache y LiteSpeed.
-- **HSTS en el primer despliegue:** se entrega con `max-age=86400` (1 día), sin `includeSubDomains` y **sin `preload`**. Primero confirme el candado y el certificado en el navegador; después puede subir el valor a `31536000` (1 año). Si el certificado falla, el bloqueo máximo será de un día.
+- **HSTS en el primer despliegue:** se entrega con `max-age=86400` (1 día), sin `includeSubDomains` y **sin `preload`**. Primero confirme el candado y el certificado en el navegador. **No suba el valor el mismo día**: espere varios días de uso estable con HTTPS validado en escritorio y móvil; solo entonces cambie a `31536000` (1 año). Si el certificado falla con HSTS activo, el navegador no permite continuar; con un día, el bloqueo es acotado.
+- **Lista blanca de Host:** `config/db.php` solo acepta `forestid.cfmasoft.com`, `www.forestid.cfmasoft.com`, hosts locales, el host de `APP_URL` y los de `FORESTID_HOSTS`. Cualquier otro `Host` se sustituye por `APP_URL` o se rechaza con **400**. El `.htaccess` tampoco refleja un `Host` ajeno en la redirección a HTTPS. Esto protege los enlaces de recuperación y activación, que se envían por correo.
 - **CSP:** probada en navegador real (Chromium) sobre la landing, la ficha pública, el dashboard, reportes, alta de individuo y escáner. Tailwind, Leaflet (teselas OpenStreetMap), Chart.js, Lucide y las fuentes Poppins/Inter cargan sin errores `Refused to load`. La CSP incluye `media-src 'self' blob:` y `worker-src 'self' blob:` para la cámara del escáner. Si en el futuro se añade otro CDN, hay que declararlo en `script-src`, `style-src` o `img-src`.
 - **Cámara:** `Permissions-Policy` se envía con `camera=(self)` (no `camera=()`), por lo que `operario/escanear.php` puede usar `getUserMedia`. El escáner solo funciona en **HTTPS** o en `localhost`; en producción use el celular con el dominio real y acepte el permiso de cámara.
 - **Códigos EBG y serie numérica:** los individuos semilla usan códigos heredados `EBG-PARQ-001`, etc., mientras que las placas nuevas se reservan con serie numérica pura (`001`, `002`, …). `reservar_codigos_placa()` filtra con `REGEXP '^[0-9]+$'`, así que **ignora los EBG y no colisiona** con ellos; la ficha pública y el buscador resuelven ambos formatos por coincidencia exacta o `LIKE`. El alta manual de un individuo nuevo sigue exigiendo serie numérica (es la placa física nueva); para buscar o escanear un EBG no hay restricción numérica.

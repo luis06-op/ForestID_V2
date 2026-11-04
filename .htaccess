@@ -9,10 +9,12 @@ Options -Indexes
     # Forzar HTTPS en producción (compatible con proxies/LiteSpeed).
     # No se fuerza en entornos locales (localhost / 127.0.0.1) para evitar que
     # el navegador muestre "Conexión no privada" por el certificado autofirmado.
+    # Solo se redirige para el dominio de producción: así un Host ajeno no se
+    # refleja en la cabecera Location (Host Header Injection). Para otro
+    # dominio legítimo (staging), añada aquí su patrón.
     RewriteCond %{HTTPS} off
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
-    RewriteCond %{HTTP_HOST} !^localhost(:[0-9]+)?$ [NC]
-    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1(:[0-9]+)?$ [NC]
+    RewriteCond %{HTTP_HOST} ^(?:www\.)?forestid\.cfmasoft\.com(?::[0-9]+)?$ [NC]
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Carpetas internas: no accesibles por HTTP (sí por include de PHP).

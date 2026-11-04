@@ -167,6 +167,19 @@ if ($appUrl === '') {
         $esLocal ? "FALLA - '{$appUrl}' dejaría los QR y enlaces en localhost" : $appUrl . ' - OK');
 }
 
+// ---------------- 6.b Lista blanca de Host (anti Host Injection) ----------------
+$dbPhp = $root . '/config/db.php';
+$codigoDb = is_readable($dbPhp) ? (string) file_get_contents($dbPhp) : '';
+$whitelistOk = $codigoDb !== ''
+    && strpos($codigoDb, 'forestid.cfmasoft.com') !== false
+    && strpos($codigoDb, 'dominios_produccion') !== false
+    && strpos($codigoDb, 'HTTP_HOST') !== false
+    && strpos($codigoDb, 'http_response_code(400)') !== false;
+check('Lista blanca de Host', $whitelistOk,
+    $whitelistOk
+        ? 'solo dominios conocidos; Host ajeno => APP_URL o 400'
+        : 'FALLA - config/db.php no contiene la validación de Host esperada');
+
 // ---------------- Salida: tabla ----------------
 $anchoPrueba = 44;
 $anchoEstado = 8;

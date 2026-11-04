@@ -95,11 +95,23 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
     ? "https://" : "http://";
 $host_raw = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-// M2: validar el host de la petición contra una lista blanca para evitar
-// Host Header Injection. La URL canónica puede venir de APP_URL (constante en
-// config/config.local.php o variable de entorno) o de FORESTID_HOSTS (hosts
-// separados por coma). Si el host recibido no es de confianza se usa el
-// canónico (nunca se refleja en los enlaces) y, en su defecto, localhost.
+// M2: lista blanca de Host para evitar Host Header Injection.
+//
+// Se aceptan únicamente:
+//   1. Los dominios de producción de ForestID (con y sin «www.»).
+//   2. Hosts locales, para desarrollo y para el propio servidor.
+//   3. El host de APP_URL, que es configuración del servidor, no del cliente.
+//   4. Los hosts declarados en FORESTID_HOSTS (separados por coma), para
+//      staging u otros dominios legítimos.
+//
+// Un Host que no esté en la lista NUNCA se refleja en enlaces, QR o correos:
+// se sustituye por el APP_URL canónico y, si tampoco existe, se rechaza la
+// petición con 400 (salvo en CLI). La IP del cliente no forma parte de la
+// lista; solo la IP propia del servidor (SERVER_ADDR), que no controla el
+// cliente.
+$dominios_produccion = ['forestid.cfmasoft.com', 'www.forestid.cfmasoft.com'];
+$hosts_locales = ['localhost', '127.0.0.1', '::1', '[::1]'];
+
 $app_url_canonica = defined('APP_URL')
     ? (string)APP_URL
     : (string)(getenv('APP_URL') ?: '');
@@ -108,37 +120,38 @@ if (!is_array($partes_app)) {
     $partes_app = [];
 }
 
-$host_permitidos = ['localhost', '127.0.0.1', '::1', '[::1]'];
+// Normaliza un host: minúsculas, sin espacios, sin puerto y sin punto final.
+// Respeta las direcciones IPv6 (p. ej. «::1» o «[::1]:8080»).
+$normalizar_host = static function (string $valor): string {
+    $valor = strtolower(trim($valor));
+    if (preg_match('/^\[([0-9a-f:.]+)\](?::\d{1,5})?$/', $valor, $m)) {
+        return $m[1];
+    }
+    if (substr_count($valor, ':') === 1) {
+        $valor = preg_replace('/:\d{1,5}$/', '', $valor) ?? $valor;
+    }
+    return rtrim($valor, '.');
+};
+
+$host_permitidos = array_merge($hosts_locales, $dominios_produccion);
 $host_canonico = '';
 $host_app = $partes_app['host'] ?? '';
 if (is_string($host_app) && $host_app !== '') {
     $host_canonico = $host_app;
     $host_permitidos[] = $host_app;
     if (!empty($partes_app['port'])) {
-        // Se admite tanto "host" como "host:puerto" en la lista blanca.
+        // Se conserva el puerto solo para construir BASE_URL; la lista blanca
+        // compara sin puerto.
         $host_canonico .= ':' . $partes_app['port'];
-        $host_permitidos[] = $host_canonico;
     }
 }
-// Permite probar desde la LAN usando la IP del propio servidor (no es
-// manipulable por el cliente, a diferencia de HTTP_HOST).
+
+// La IP del propio servidor no la controla el cliente: permite health checks
+// y acceso directo sin abrir la lista a cualquier IP.
 if (!empty($_SERVER['SERVER_ADDR'])) {
     $host_permitidos[] = (string)$_SERVER['SERVER_ADDR'];
 }
 
-// Si APP_URL apunta a un host local (config de desarrollo copiada a
-// producción), se ignora como canónico cuando la petición trae un dominio
-// real. Evita que los enlaces queden en https://localhost/.
-$hosts_locales = ['localhost', '127.0.0.1', '::1', '[::1]'];
-$host_peticion_plano = strtolower((string)preg_replace('/:\d+$/', '', $host_raw));
-$canonico_plano = strtolower((string)preg_replace('/:\d+$/', '', $host_canonico));
-if ($host_canonico !== ''
-    && in_array($canonico_plano, $hosts_locales, true)
-    && $host_peticion_plano !== ''
-    && !in_array($host_peticion_plano, $hosts_locales, true)
-    && preg_match('/^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/', $host_peticion_plano)) {
-    $host_canonico = '';
-}
 $env_hosts = getenv('FORESTID_HOSTS');
 if ($env_hosts !== false && $env_hosts !== '') {
     foreach (explode(',', $env_hosts) as $h) {
@@ -148,18 +161,24 @@ if ($env_hosts !== false && $env_hosts !== '') {
         }
     }
 }
-$host_permitidos = array_map('strtolower', $host_permitidos);
-$host_sin_puerto = preg_replace('/:\d+$/', '', $host_raw);
-$host_valido = in_array(strtolower($host_raw), $host_permitidos, true)
-    || in_array(strtolower($host_sin_puerto), $host_permitidos, true);
 
-// Si no hay APP_URL ni FORESTID_HOSTS configurados, se acepta el host de la
-// petición siempre que tenga forma de hostname válido (p. ej. el dominio de
-// producción). Así los enlaces no degradan a "localhost" cuando el archivo
-// config/config.local.php no se despliega (caso habitual en hosting).
-if (!$host_valido && $host_canonico === '' && $host_raw !== ''
-    && preg_match('/^[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?$/', $host_raw)) {
-    $host_valido = true;
+$host_permitidos = array_values(array_unique(array_filter(
+    array_map($normalizar_host, $host_permitidos),
+    static fn(string $h): bool => $h !== ''
+)));
+
+$host_peticion_plano = $normalizar_host((string)$host_raw);
+$host_valido = in_array($host_peticion_plano, $host_permitidos, true);
+
+// Si APP_URL apunta a un host local (config de desarrollo copiada a
+// producción), se ignora como canónico cuando la petición trae un dominio
+// real. Evita que los enlaces queden en https://localhost/.
+$canonico_plano = $normalizar_host($host_canonico);
+if ($host_canonico !== ''
+    && in_array($canonico_plano, $hosts_locales, true)
+    && !in_array($host_peticion_plano, $hosts_locales, true)) {
+    $host_canonico = '';
+    $canonico_plano = '';
 }
 
 if ($host_valido) {
@@ -170,6 +189,14 @@ if ($host_valido) {
         $protocol = $partes_app['scheme'] . '://';
     }
 } else {
+    // Ni Host de confianza ni APP_URL: no se puede construir una URL segura.
+    if (PHP_SAPI !== 'cli') {
+        http_response_code(400);
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Connection: close');
+        echo "Solicitud rechazada: dominio no autorizado.\n";
+        exit;
+    }
     $host = 'localhost';
 }
 $script_name = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
@@ -210,9 +237,10 @@ define('BASE_URL', $protocol . $host . $base_path . '/');
 //   define('APP_URL', 'https://forestid.emincut.com/');
 // Si no se define, se usa la URL detectada automáticamente (útil en local).
 //
-// APP_URL_EFECTIVA es la que debe usarse en QR, correos y enlaces: si se copió
-// a producción un config.local.php de desarrollo con APP_URL=localhost, se
-// descarta y se usa el dominio real de la petición.
+// APP_URL_EFECTIVA es solo una red de seguridad: la fuente de verdad es
+// APP_URL en config/config.local.php. Si no está definida (o apunta a
+// localhost en producción), se usa BASE_URL, que ya se construyó con un host
+// de la lista blanca. Nunca se toma un Host no validado.
 $app_url_configurada = defined('APP_URL')
     ? (string) APP_URL
     : (string) (getenv('APP_URL') ?: '');

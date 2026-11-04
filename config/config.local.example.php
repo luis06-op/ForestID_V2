@@ -25,9 +25,13 @@ define('DB_USER', 'DB_USER');          // usuario MySQL con permisos mínimos
 define('DB_PASS', 'DB_PASS');          // contraseña del usuario MySQL
 
 // ---- Aplicación ----
-// URL canónica pública, con HTTPS y barra final. Se codifica en los códigos QR
-// y en los enlaces de correo, por lo que debe definirse ANTES de generar placas.
-define('APP_URL', 'https://Forestid.cfmasoft.com/'); // URL canónica de producción (Forestid.cfmasoft.com)
+// URL canónica pública, con HTTPS y barra final. Es la fuente de verdad de los
+// QR y de los enlaces de correo: defínala siempre en producción.
+define('APP_URL', 'https://forestid.cfmasoft.com/');
 
-// Opcional: lista blanca adicional de hosts separados por coma (p. ej. IP del servidor).
-// define('FORESTID_HOSTS', '127.0.0.1');
+// Lista blanca de Host: la aplicación acepta únicamente
+// forestid.cfmasoft.com, www.forestid.cfmasoft.com, hosts locales, el host de
+// APP_URL y los declarados aquí. Cualquier otro Host se sustituye por APP_URL
+// o se rechaza con 400. Use FORESTID_HOSTS solo para staging u otro dominio
+// legítimo, separado por comas:
+// define('FORESTID_HOSTS', 'staging.cfmasoft.com,192.168.1.50');
