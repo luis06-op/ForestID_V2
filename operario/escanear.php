@@ -83,7 +83,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                 <form action="<?= BASE_URL ?>operario/individuos/detalle.php" method="GET" class="space-y-3">
                     <div>
                         <label for="codigo" class="block text-xs font-semibold text-gray-700 uppercase mb-1">Código de Placa</label>
-                        <input type="text" id="codigo" name="codigo" required inputmode="numeric" placeholder="ej. 448"
+                        <input type="text" id="codigo" name="codigo" required inputmode="text" placeholder="ej. 448 o EBG-PARQ-001"
                                class="w-full py-2.5 px-3 border border-gray-300 rounded-xl text-sm font-mono font-bold tracking-wider focus:ring-2 focus:ring-emerald-600 outline-none">
                     </div>
                     <button type="submit" class="w-full btn-forest-primary text-xs py-2.5 justify-center shadow-sm">

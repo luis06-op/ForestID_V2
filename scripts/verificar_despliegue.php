@@ -159,9 +159,12 @@ if ($appUrl === '') {
     check('APP_URL', true, 'no definida - se detecta automáticamente del dominio de la petición');
 } else {
     $scheme = strtolower((string) (parse_url($appUrl, PHP_URL_SCHEME) ?: ''));
-    $host   = (string) (parse_url($appUrl, PHP_URL_HOST) ?: '');
+    $host   = strtolower((string) (parse_url($appUrl, PHP_URL_HOST) ?: ''));
     $ok     = $scheme === 'https' && $host !== '';
     check('APP_URL con HTTPS', $ok, $appUrl . ($ok ? ' - OK' : ' - debe ser https://'));
+    $esLocal = in_array($host, ['localhost', '127.0.0.1', '::1', '[::1]'], true);
+    check('APP_URL no apunta a localhost', !$esLocal,
+        $esLocal ? "FALLA - '{$appUrl}' dejaría los QR y enlaces en localhost" : $appUrl . ' - OK');
 }
 
 // ---------------- Salida: tabla ----------------

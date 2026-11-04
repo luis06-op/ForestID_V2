@@ -42,8 +42,13 @@ Options -Indexes
     Header always set Permissions-Policy "geolocation=(self), camera=(self), microphone=()"
     Header always set X-Permitted-Cross-Domain-Policies "none"
     # M4: CSP (permite CDNs usados por el proyecto) + HSTS bajo HTTPS.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'self'"
+    # media-src/worker-src cubren la cámara (MediaStream) y el escáner QR sin
+    # abrir la política al resto de orígenes.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' https:; frame-ancestors 'self'"
     # HSTS solo bajo HTTPS (LiteSpeed/Apache): SetEnvIf arriba marca HTTPS_ON.
     # No se usa <If> porque LiteSpeed no garantiza soportarlo.
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS_ON
+    # Rollout conservador: 1 día. Tras confirmar el candado y el certificado,
+    # suba a max-age=31536000. Sin includeSubDomains ni preload para no
+    # bloquear subdominios ni dejar el dominio "sellado" si algo falla.
+    Header always set Strict-Transport-Security "max-age=86400" env=HTTPS_ON
 </IfModule>
