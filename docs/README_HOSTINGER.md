@@ -6,7 +6,7 @@
 
 El despliegue de producción para la feria FISAD se realizará en el dominio **https://Forestid.cfmasoft.com/**. Las credenciales reales de BD/SMTP y el certificado SSL se configuran en el servidor (no se versionan). La referencia de desarrollo sigue siendo la instalación local XAMPP.
 
-Mientras el acuerdo no se cierre, la referencia válida sigue siendo la instalación local con XAMPP descrita en el [README principal](README.md).
+La aplicación ya está preparada para el despliegue. Lo que falta se ejecuta en el servidor: crear las credenciales locales (`config/config.local.php` y `config/mailer.php`), importar la base, subir el paquete y ejecutar el verificador. La referencia de desarrollo sigue siendo la instalación local con XAMPP descrita en el [README principal](README.md).
 
 ## Pendiente de definir
 
@@ -59,9 +59,9 @@ Si una prueba sale `FALLA`, corrija el entorno y vuelva a ejecutar hasta que el 
 ## Checklist final (antes de abrir a público)
 
 - [ ] Subdominio creado con SSL activo; HTTP redirige a HTTPS.
-- [ ] MariaDB del plan confirmada (10.11/11.x) e **import de `database/forestsrd_db.sql` probado en staging** (preflight incluido; nunca sobre datos sin respaldo).
+- [ ] MariaDB del plan confirmada (10.11/11.x) e **import de `database/forestsrd_db_hostinger.sql` probado en staging** (o de `forestsrd_db.sql`, que incluye preflight; nunca sobre datos sin respaldo).
 - [ ] `config/config.local.php` y `config/mailer.php` creados desde las plantillas `.example.php` con los valores reales; ausentes del índice de Git (`git status --ignored`).
-- [ ] `php scripts/verificar_despliegue.php` termina en `0 FALLA(s)` (incluye `America/Bogota`, HTTPS en `APP_URL` y BD conectada).
+- [ ] `php scripts/verificar_despliegue.php` termina en `0 FALLA(s)` (incluye `America/Bogota` y BD conectada; si `APP_URL` está definida, debe ser HTTPS).
 - [ ] `.htaccess` raíz activo y respetado por LiteSpeed: `database/`, `docs/`, `config/`, `vendor/`, `includes/`, `scripts/`, `.git`, `.opencode` → 404; `*.md`, `*.sql`, `*.env`, `.zip`, `.bak` → 403/404; HSTS presente solo bajo HTTPS (cabecera `Strict-Transport-Security`).
 - [ ] Sin `.sql` ni `database/renumerar_codigos.php` en el servidor tras importar la base.
 - [ ] `assets/uploads/.htaccess` y `assets/qr/.htaccess` activos: ningún `.php` se ejecuta dentro de esas carpetas.
@@ -75,7 +75,7 @@ Si una prueba sale `FALLA`, corrija el entorno y vuelva a ejecutar hasta que el 
 ## Notas técnicas
 
 - El esquema se ha probado en **MariaDB 10.4**. Hostinger suele ofrecer MariaDB 10.11/11.x; valide antes de migrar: `DEFAULT (UUID())` (8 defaults `CHAR(36)`), columnas `JSON` (alias de `LONGTEXT` con `CHECK (JSON_VALID(...))` en MariaDB) y los `ENUM`. La collation `utf8mb4_spanish_ci` existe en MariaDB 10.11/11.x.
-- El dump `database/forestsrd_db.sql` incluye un **preflight con `SIGNAL SQLSTATE '45000'`**: si alguna de las 8 tablas de la aplicación existe y tiene filas, el import se aborta antes de los `DROP TABLE`. En una base vacía el preflight pasa y el import continúa.
+- El dump `database/forestsrd_db.sql` incluye un **preflight con `SIGNAL SQLSTATE '45000'`**: si alguna de las 9 tablas de la aplicación existe y tiene filas, el import se aborta antes de los `DROP TABLE`. En una base vacía el preflight pasa y el import continúa. El dump `forestsrd_db_hostinger.sql` omite el preflight (no requiere `CREATE PROCEDURE`) y debe importarse **solo en una base vacía**.
 - `vendor/` está versionado en el repositorio: **no se necesita Composer en el servidor**.
 - Hostinger usa **LiteSpeed**. El HSTS del `.htaccess` ya no usa la expresión `<If "%{HTTPS} == 'on'">`: ahora se emite con `Header ... env=HTTPS_ON` a partir de `SetEnvIf HTTPS "on"` (además de `X-Forwarded-Proto=https` para proxies), lo que es portable entre Apache y LiteSpeed.
 - `.htaccess` bloquea `config/`, `vendor/`, `database/`, `docs/`, `includes/`, `scripts/`, `.git`, `.opencode` y los archivos `.md`; hay que verificar que LiteSpeed respete esas reglas en el subdominio.
