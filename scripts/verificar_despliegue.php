@@ -135,22 +135,51 @@ if (is_file($configLocal)) {
     }
 }
 if (!defined('DB_HOST'))    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: 'forestsrd_db');
-if (!defined('DB_USER'))    define('DB_USER', getenv('DB_USER') ?: 'root');
+if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: '');
+if (!defined('DB_USER'))    define('DB_USER', getenv('DB_USER') ?: '');
 if (!defined('DB_PASS'))    define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 
-try {
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4;connect_timeout=5';
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
-    ]);
-    $version = (string) $pdo->query('SELECT VERSION()')->fetchColumn();
-    check('Conexión a BD', true, 'OK - ' . $version . ' (fuente: ' . $fuenteDb . ')');
-    $pdo = null;
-} catch (PDOException $e) {
-    check('Conexión a BD', false, 'FALLA - no se pudo conectar (fuente: ' . $fuenteDb . '). Detalle en el log del servidor; no se muestran credenciales.');
+// Mismo criterio que config/db.php: combinación principal y, si existe,
+// la variante declarada en DB_NAME_ALT/DB_USER_ALT (diferencias de
+// mayúsculas en el nombre de la base o del usuario de MySQL).
+$combinaciones = [[DB_NAME, DB_USER]];
+$nombreAlt  = defined('DB_NAME_ALT') ? (string) DB_NAME_ALT : '';
+$usuarioAlt = defined('DB_USER_ALT') ? (string) DB_USER_ALT : '';
+if ($nombreAlt !== '' || $usuarioAlt !== '') {
+    $combinaciones[] = [
+        $nombreAlt  !== '' ? $nombreAlt  : DB_NAME,
+        $usuarioAlt !== '' ? $usuarioAlt : DB_USER,
+    ];
+}
+
+$version = null;
+if (DB_NAME === '' || DB_USER === '') {
+    check('Conexión a BD', false,
+        'FALLA - faltan DB_NAME/DB_USER en config/config.local.php o en variables de entorno (no se muestran credenciales).');
+} else {
+    foreach ($combinaciones as [$nombreIntento, $usuarioIntento]) {
+        try {
+            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . $nombreIntento . ';charset=utf8mb4;connect_timeout=5';
+            $pdo = new PDO($dsn, $usuarioIntento, DB_PASS, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+            ]);
+            $version = (string) $pdo->query('SELECT VERSION()')->fetchColumn();
+            if ($nombreIntento !== DB_NAME || $usuarioIntento !== DB_USER) {
+                $fuenteDb .= ' (variante DB_NAME_ALT/DB_USER_ALT)';
+            }
+            $pdo = null;
+            break;
+        } catch (PDOException $e) {
+            $pdo = null;
+        }
+    }
+    if ($version !== null) {
+        check('Conexión a BD', true, 'OK - ' . $version . ' (fuente: ' . $fuenteDb . ')');
+    } else {
+        check('Conexión a BD', false, 'FALLA - no se pudo conectar (fuente: ' . $fuenteDb . '). Detalle en el log del servidor; no se muestran credenciales.');
+    }
 }
 
 // ---------------- 6. APP_URL (opcional: si falta se detecta del dominio) ----------------

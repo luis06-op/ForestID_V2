@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placa QR disponible — ForestID</title>
+    <meta name="description" content="Esta placa QR aún no tiene un árbol asignado. Si eres parte de Emincut S.A.S., inicia sesión para registrarlo.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/feria.css">
+</head>
+<body>
+
+<div class="vacio">
+    <div class="vacio__caja">
+
+        <div class="vacio__cabecera">
+            <div class="vacio__icono" aria-hidden="true">🌱</div>
+            <span class="vacio__etiqueta">Placa disponible</span>
+            <h1 class="vacio__titulo">Este QR está vacío</h1>
+            <p style="margin:0;color:rgba(255,255,255,.72);font-size:.92rem;">
+                Todavía no está vinculado a ningún individuo forestal.
+            </p>
+        </div>
+
+        <div class="vacio__cuerpo">
+            <p>
+                Esta placa física ya está lista para colocarse, pero aún no se ha registrado el
+                árbol que la llevará. Cuando se asigne, este mismo código mostrará su ficha
+                pública: especie, ubicación y estado fitosanitario.
+            </p>
+
+            <div class="aviso">
+                <strong>¿Eres parte de Emincut S.A.S.?</strong><br>
+                Si eres operario de campo o administrador del sistema, inicia sesión con tu cuenta
+                institucional y registra el individuo desde el panel. La placa quedará marcada
+                como asignada al guardar el registro.
+            </div>
+
+            <ol class="pasos">
+                <li>Identifica el árbol y verifica que no tenga ya una placa asignada.</li>
+                <li>Ingresa al sistema con tu cuenta de Emincut.</li>
+                <li>Registra el individuo y asocia este código de placa.</li>
+            </ol>
+
+            <a class="boton" style="width:100%;" href="https://forestid.cfmasoft.com/auth/login.php" rel="noopener">
+                Iniciar sesión como funcionario de Emincut
+            </a>
+
+            <p style="font-size:.78rem;color:rgba(255,255,255,.5);">
+                ¿Solo quieres consultar el inventario?
+                <a href="https://forestid.cfmasoft.com/publico/index.php" rel="noopener" style="color:var(--emi-ambar);font-weight:600;">Explorar las fichas públicas →</a>
+            </p>
+
+            <div style="padding-top:1rem;border-top:1px solid var(--linea);display:flex;align-items:center;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                <div class="qr-caja" data-qr="qr-vacio.html" aria-label="Código QR de esta página"></div>
+                <p style="font-size:.7rem;color:rgba(255,255,255,.45);margin:0;text-align:left;line-height:1.5;">
+                    Este es el destino actual de la placa.<br>
+                    <span data-qr-url="qr-vacio.html" style="word-break:break-all;"></span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="contenedor pie">
+    <p><strong>Emincut S.A.S.</strong> — El Bagre, Antioquia, Colombia</p>
+    <p>ForestID · Feria FISAD 2026</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="assets/qr.js"></script>
+</body>
+</html>

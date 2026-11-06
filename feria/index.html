@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForestID — Fichas de la Feria FISAD</title>
+    <meta name="description" content="Fichas públicas del inventario forestal de Emincut S.A.S. para la feria FISAD: mango, guayacán y placa QR disponible.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/feria.css">
+</head>
+<body>
+
+<header class="contenedor cabecera">
+    <div class="marca">
+        <span class="punto">F</span>
+        Emincut · El Bagre, Antioquia
+    </div>
+    <h1 class="titulo">Forest<span class="amarillo">ID</span> en la feria</h1>
+    <p class="subtitulo">
+        Cada árbol de Emincut lleva una placa física con un código QR. Escanéala para ver su
+        ficha pública: especie, ubicación y estado fitosanitario. Sin registro y sin contraseña.
+    </p>
+</header>
+
+<main class="contenedor">
+    <section class="rejilla" aria-label="Fichas disponibles en la feria">
+
+        <!-- Mango -->
+        <article class="tarjeta">
+            <div class="tarjeta__arte" aria-hidden="true">
+                <svg viewBox="0 0 120 150" width="150" height="188" role="img" aria-label="Ilustración de un árbol de mango">
+                    <g fill="#2E7D32">
+                        <circle cx="60" cy="58" r="36"/>
+                        <circle cx="24" cy="72" r="20"/>
+                        <circle cx="96" cy="72" r="20"/>
+                    </g>
+                    <g fill="#43A047">
+                        <circle cx="60" cy="28" r="18"/>
+                        <circle cx="38" cy="48" r="16"/>
+                        <circle cx="84" cy="50" r="15"/>
+                    </g>
+                    <g fill="#F2B632">
+                        <ellipse cx="46" cy="62" rx="6" ry="8"/>
+                        <ellipse cx="70" cy="52" rx="6" ry="8"/>
+                        <ellipse cx="78" cy="74" rx="5" ry="7"/>
+                    </g>
+                    <rect x="54" y="92" width="12" height="46" rx="4" fill="#6D4C41"/>
+                    <path d="M60 118 L44 100" stroke="#6D4C41" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M60 110 L76 96" stroke="#6D4C41" stroke-width="6" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="tarjeta__cuerpo">
+                <span class="tarjeta__codigo">FISAD-MANGO-001</span>
+                <h2 class="tarjeta__nombre">Mango</h2>
+                <p class="tarjeta__cient">Mangifera indica L.</p>
+                <p class="qr-nota">Polideportivo de El Bagre · Zona verde</p>
+                <div class="tarjeta__qr">
+                    <div class="qr-caja" data-qr="ficha-mango.html" aria-label="Código QR de la ficha del mango"></div>
+                    <div>
+                        <p class="qr-nota">Escanea para abrir la ficha completa del árbol.</p>
+                        <p class="qr-nota" style="margin-top:.35rem;"><a href="ficha-mango.html" style="color:var(--emi-ambar);font-weight:600;">Ver ficha →</a></p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Guayacán -->
+        <article class="tarjeta">
+            <div class="tarjeta__arte" aria-hidden="true">
+                <svg viewBox="0 0 120 150" width="150" height="188" role="img" aria-label="Ilustración de un guayacán rosado">
+                    <g fill="#1B5E20">
+                        <circle cx="60" cy="56" r="34"/>
+                        <circle cx="26" cy="68" r="19"/>
+                        <circle cx="94" cy="68" r="19"/>
+                    </g>
+                    <g fill="#2E7D32">
+                        <circle cx="60" cy="26" r="17"/>
+                        <circle cx="40" cy="46" r="15"/>
+                        <circle cx="82" cy="46" r="15"/>
+                    </g>
+                    <g fill="#F2B632">
+                        <circle cx="44" cy="40" r="4"/><circle cx="62" cy="34" r="4"/>
+                        <circle cx="78" cy="46" r="4"/><circle cx="54" cy="56" r="4"/>
+                        <circle cx="70" cy="60" r="4"/>
+                    </g>
+                    <rect x="54" y="88" width="12" height="50" rx="4" fill="#6D4C41"/>
+                </svg>
+            </div>
+            <div class="tarjeta__cuerpo">
+                <span class="tarjeta__codigo">EBG-PARQ-001</span>
+                <h2 class="tarjeta__nombre">Guayacán Rosado</h2>
+                <p class="tarjeta__cient">Handroanthus chrysanthus</p>
+                <p class="qr-nota">Parque principal · Árbol registrado</p>
+                <div class="tarjeta__qr">
+                    <div class="qr-caja" data-qr="ficha-guayacan.html" aria-label="Código QR de la ficha del guayacán"></div>
+                    <div>
+                        <p class="qr-nota">Ficha de un individuo ya registrado en el sistema.</p>
+                        <p class="qr-nota" style="margin-top:.35rem;"><a href="ficha-guayacan.html" style="color:var(--emi-ambar);font-weight:600;">Ver ficha →</a></p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Placa vacía -->
+        <article class="tarjeta">
+            <div class="tarjeta__arte" aria-hidden="true">
+                <svg viewBox="0 0 120 150" width="120" height="150" role="img" aria-label="Ilustración de una placa QR sin asignar">
+                    <rect x="18" y="30" width="84" height="84" rx="14" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-dasharray="8 7"/>
+                    <g fill="rgba(255,255,255,.55)">
+                        <rect x="40" y="52" width="12" height="12" rx="2"/>
+                        <rect x="68" y="52" width="12" height="12" rx="2"/>
+                        <rect x="40" y="80" width="12" height="12" rx="2"/>
+                    </g>
+                    <text x="60" y="140" text-anchor="middle" font-family="Poppins, sans-serif" font-size="13" font-weight="700" fill="#F2B632">SIN ASIGNAR</text>
+                </svg>
+            </div>
+            <div class="tarjeta__cuerpo">
+                <span class="tarjeta__codigo">PLACA DISPONIBLE</span>
+                <h2 class="tarjeta__nombre">QR vacío</h2>
+                <p class="tarjeta__cient">Todavía sin individuo asociado</p>
+                <p class="qr-nota">Si eres parte de Emincut, puedes registrar el árbol desde el sistema.</p>
+                <div class="tarjeta__qr">
+                    <div class="qr-caja" data-qr="qr-vacio.html" aria-label="Código QR de placa vacía"></div>
+                    <div>
+                        <p class="qr-nota">Escanea para ver las instrucciones de registro.</p>
+                        <p class="qr-nota" style="margin-top:.35rem;"><a href="qr-vacio.html" style="color:var(--emi-ambar);font-weight:600;">Ver ficha →</a></p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+    </section>
+</main>
+
+<footer class="contenedor pie">
+    <p><strong>Emincut S.A.S.</strong> — El Bagre, Antioquia, Colombia</p>
+    <p>ForestID · Gestión del inventario forestal · Feria FISAD 2026</p>
+    <p class="no-imprimir" style="margin-top:.6rem;">
+        ¿Necesitas el sistema completo? <a href="https://forestid.cfmasoft.com/publico/index.php" style="color:var(--emi-ambar);">Portal público</a>
+        · <a href="https://forestid.cfmasoft.com/auth/login.php" style="color:var(--emi-ambar);">Acceso funcionarios</a>
+    </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="assets/qr.js"></script>
+</body>
+</html>

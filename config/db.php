@@ -54,12 +54,29 @@ if (getenv('FORESTID_DEBUG') !== '1') {
 // Datos corporativos de Emincut (nombre, NIT, contacto, logo).
 require_once __DIR__ . '/empresa.php';
 
-// Prioridad: config.local.php > variables de entorno > valores por defecto de XAMPP.
+// Prioridad: config.local.php > variables de entorno > valores por defecto.
+//
+// Los valores por defecto NO llevan credenciales: DB_NAME, DB_USER y DB_PASS
+// deben venir de config/config.local.php (archivo protegido, no versionado)
+// o de variables de entorno del servidor. Así ninguna contraseña queda
+// incrustada en el código ni en el repositorio.
 if (!defined('DB_HOST'))    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: 'forestsrd_db');
-if (!defined('DB_USER'))    define('DB_USER', getenv('DB_USER') ?: 'root');
+if (!defined('DB_NAME'))    define('DB_NAME', getenv('DB_NAME') ?: '');
+if (!defined('DB_USER'))    define('DB_USER', getenv('DB_USER') ?: '');
 if (!defined('DB_PASS'))    define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 if (!defined('DB_CHARSET')) define('DB_CHARSET', 'utf8mb4');
+
+// Credenciales ausentes: error controlado, sin exponer secretos ni trazas.
+if (DB_NAME === '' || DB_USER === '') {
+    error_log('ForestID: faltan credenciales de base de datos (DB_NAME/DB_USER). '
+        . 'Defínalas en config/config.local.php o en variables de entorno.');
+    if (PHP_SAPI !== 'cli') {
+        http_response_code(500);
+    }
+    die('Error de configuración: faltan las credenciales de la base de datos. '
+        . 'Defina DB_NAME y DB_USER en config/config.local.php (protegido) o en las '
+        . 'variables de entorno del servidor.');
+}
 
 // Constantes de la Aplicación
 define('APP_NAME', 'ForestID');
@@ -266,27 +283,60 @@ define('APP_URL_EFECTIVA', $app_url_efectiva);
 function getDBConnection(): PDO {
     static $pdo = null;
     if ($pdo === null) {
-        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . DB_CHARSET . " COLLATE utf8mb4_spanish_ci"
         ];
-        try {
-            $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-        } catch (PDOException $e) {
-            // Manejo de error limpio sin revelar credenciales ni detalles internos.
-            error_log("Error de conexión a la Base de Datos: " . $e->getMessage());
-            $detalle = (getenv('FORESTID_DEBUG') === '1')
-                ? "<p><small style='color:#7F1D1D;'>Detalle técnico: " . htmlspecialchars($e->getMessage()) . "</small></p>"
-                : "";
-            die("<div style='font-family: sans-serif; padding: 2rem; max-width: 600px; margin: 3rem auto; background: #FEF2F2; border: 1px solid #F87171; border-radius: 8px; color: #991B1B;'>
-                    <h2 style='margin-top:0;'>Error de Conexión a la Base de Datos</h2>
-                    <p>No se pudo establecer conexión con MySQL. Verifique que el servicio esté activo en XAMPP y que la base de datos <strong>" . htmlspecialchars(DB_NAME) . "</strong> haya sido importada.</p>
-                    {$detalle}
-                 </div>");
+
+        // Combinaciones a intentar: la principal y, solo si está declarada, una
+        // alternativa por diferencias de mayúsculas/minúsculas en el nombre de
+        // la base o del usuario (MySQL distingue mayúsculas). Solo se cambia el
+        // nombre: la contraseña es siempre la misma configurada.
+        $combinaciones = [[DB_NAME, DB_USER]];
+        $nombre_alt   = defined('DB_NAME_ALT') ? (string) DB_NAME_ALT : '';
+        $usuario_alt  = defined('DB_USER_ALT') ? (string) DB_USER_ALT : '';
+        if ($nombre_alt !== '' || $usuario_alt !== '') {
+            $combinaciones[] = [
+                $nombre_alt  !== '' ? $nombre_alt  : DB_NAME,
+                $usuario_alt !== '' ? $usuario_alt : DB_USER,
+            ];
         }
+
+        $ultimo_error = null;
+        foreach ($combinaciones as [$nombre_bd, $usuario_bd]) {
+            try {
+                $dsn = "mysql:host=" . DB_HOST . ";dbname=" . $nombre_bd . ";charset=" . DB_CHARSET;
+                $pdo = new PDO($dsn, $usuario_bd, DB_PASS, $options);
+                if ($nombre_bd !== DB_NAME || $usuario_bd !== DB_USER) {
+                    error_log('ForestID: conexión establecida con la variante declarada en '
+                        . 'DB_NAME_ALT/DB_USER_ALT (diferencia de mayúsculas).');
+                }
+                return $pdo;
+            } catch (PDOException $e) {
+                $ultimo_error = $e;
+                $codigo = is_array($e->errorInfo) ? (int) ($e->errorInfo[1] ?? 0) : 0;
+                // 1045 = acceso denegado | 1049 = base desconocida.
+                // Solo en esos dos casos merece la pena probar la variante.
+                if (!in_array($codigo, [1045, 1049], true)) {
+                    break;
+                }
+            }
+        }
+
+        // Ninguna combinación conectó: error controlado, sin credenciales,
+        // trazas SQL ni información sensible para el usuario.
+        error_log("Error de conexión a la Base de Datos: "
+            . ($ultimo_error instanceof PDOException ? $ultimo_error->getMessage() : 'sin detalle'));
+        $detalle = (getenv('FORESTID_DEBUG') === '1' && $ultimo_error instanceof PDOException)
+            ? "<p><small style='color:#7F1D1D;'>Detalle técnico: " . htmlspecialchars($ultimo_error->getMessage()) . "</small></p>"
+            : "";
+        die("<div style='font-family: sans-serif; padding: 2rem; max-width: 600px; margin: 3rem auto; background: #FEF2F2; border: 1px solid #F87171; border-radius: 8px; color: #991B1B;'>
+                <h2 style='margin-top:0;'>Error de Conexión a la Base de Datos</h2>
+                <p>No se pudo establecer conexión con MySQL. Verifique que las credenciales de <strong>" . htmlspecialchars(DB_NAME) . "</strong> sean las correctas y que el usuario tenga permisos sobre esa base.</p>
+                {$detalle}
+             </div>");
     }
     return $pdo;
 }

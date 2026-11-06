@@ -1,0 +1,280 @@
+/* ==========================================================================
+   ForestID — Modo Feria FISAD (sitio estático, sin PHP ni base de datos)
+   Reutiliza los tokens visuales de assets/css/emincut.css
+   ========================================================================== */
+
+:root {
+    --emi-amarillo: #E9A22E;
+    --emi-ambar:    #F2B632;
+    --emi-verde:    #2E7D32;
+    --emi-verde-claro: #43A047;
+    --forest-dark:  #1B5E20;
+    --forest-deep:  #052E16;
+    --tinta:        #0F172A;
+    --gris:         #6B7280;
+    --linea:        rgba(255, 255, 255, .12);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: #F8FAFC;
+    background:
+        radial-gradient(1200px 620px at 50% -10%, #14532D 0%, #052E16 55%),
+        #052E16;
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.contenedor { width: min(1120px, 92vw); margin-inline: auto; }
+
+/* ---------------------------------------------------------------- cabecera */
+.cabecera { padding: 3.25rem 0 1.5rem; text-align: center; }
+
+.marca {
+    display: inline-flex; align-items: center; gap: .75rem;
+    padding: .4rem .9rem .4rem .4rem;
+    border: 1px solid var(--linea); border-radius: 999px;
+    background: rgba(255, 255, 255, .04);
+    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(255, 255, 255, .72);
+}
+
+.marca .punto {
+    width: 30px; height: 30px; border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, var(--emi-ambar), var(--emi-amarillo));
+    display: grid; place-items: center; color: #052E16; font-weight: 800;
+    font-family: 'Poppins', sans-serif; font-size: .8rem;
+}
+
+h1.titulo {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; line-height: 1.1;
+    margin: 1.1rem 0 .5rem; letter-spacing: -.02em;
+}
+
+.titulo .amarillo { color: var(--emi-ambar); }
+
+.subtitulo {
+    max-width: 46rem; margin: 0 auto;
+    color: rgba(255, 255, 255, .68);
+    font-size: .98rem; line-height: 1.65;
+}
+
+/* ------------------------------------------------------------------ rejilla */
+.rejilla {
+    display: grid; gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    padding: 2.25rem 0 1rem;
+}
+
+.tarjeta {
+    position: relative;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--linea); border-radius: 1.6rem;
+    background: rgba(255, 255, 255, .04);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+    backdrop-filter: blur(6px);
+    overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease;
+}
+
+.tarjeta:hover { transform: translateY(-4px); border-color: rgba(242, 182, 50, .45); }
+
+.tarjeta__arte {
+    height: 210px;
+    display: flex; align-items: flex-end; justify-content: center;
+    background: linear-gradient(180deg, #14532D 0%, #0B3D20 55%, #052E16 100%);
+    border-bottom: 1px solid var(--linea);
+    overflow: hidden;
+}
+
+.tarjeta__cuerpo { padding: 1.25rem 1.35rem 1.5rem; display: flex; flex-direction: column; gap: .85rem; flex: 1; }
+
+.tarjeta__codigo {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .75rem; font-weight: 700; letter-spacing: .14em;
+    color: var(--emi-ambar); text-transform: uppercase;
+}
+
+.tarjeta__nombre {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem; font-weight: 700; margin: 0;
+}
+
+.tarjeta__cient {
+    font-style: italic; color: rgba(255, 255, 255, .6); font-size: .86rem; margin: 0;
+}
+
+.tarjeta__qr {
+    margin-top: auto; display: flex; align-items: center; gap: .9rem;
+    padding-top: .5rem;
+}
+
+.qr-caja {
+    background: #fff; border-radius: 14px; padding: 7px;
+    width: 104px; height: 104px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .35);
+}
+
+.qr-caja canvas, .qr-caja img, .qr-caja svg { width: 90px !important; height: 90px !important; display: block; }
+
+.qr-nota { font-size: .72rem; color: rgba(255, 255, 255, .55); line-height: 1.45; margin: 0; }
+
+.boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    padding: .72rem 1.1rem; border-radius: .9rem;
+    background: linear-gradient(180deg, var(--emi-ambar), var(--emi-amarillo));
+    color: #052E16; font-weight: 700; font-size: .86rem;
+    border: 0; cursor: pointer;
+    transition: filter .2s ease, transform .2s ease;
+}
+
+.boton:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+.boton--fantasma {
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid var(--linea);
+    color: #F8FAFC;
+}
+
+.boton--fantasma:hover { background: rgba(255, 255, 255, .12); }
+
+/* -------------------------------------------------------------------- ficha */
+.miga { padding: 1.5rem 0 0; font-size: .8rem; color: rgba(255, 255, 255, .55); }
+.miga a:hover { color: var(--emi-ambar); }
+
+.ficha {
+    margin: 1.25rem 0 3rem;
+    border: 1px solid var(--linea); border-radius: 1.75rem;
+    background: rgba(255, 255, 255, .045);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, .4);
+    overflow: hidden;
+}
+
+.ficha__cabecera {
+    padding: 2.25rem 2rem;
+    background: linear-gradient(120deg, #0B3D20 0%, #14532D 55%, #1B5E20 100%);
+    border-bottom: 1px solid var(--linea);
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;
+}
+
+.ficha__codigo {
+    display: inline-block; padding: .35rem .75rem; border-radius: 999px;
+    background: rgba(242, 182, 50, .14); border: 1px solid rgba(242, 182, 50, .35);
+    color: var(--emi-ambar); font-size: .72rem; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+}
+
+.ficha__titulo { font-family: 'Poppins', sans-serif; font-size: clamp(1.6rem, 3.6vw, 2.3rem); margin: .7rem 0 .2rem; }
+.ficha__cientifico { font-style: italic; color: rgba(255, 255, 255, .7); margin: 0; }
+
+.ficha__qr { text-align: center; }
+.ficha__qr .qr-caja { width: 132px; height: 132px; }
+.ficha__qr .qr-caja canvas, .ficha__qr .qr-caja img, .ficha__qr .qr-caja svg { width: 116px !important; height: 116px !important; }
+.ficha__qr small { display: block; margin-top: .45rem; color: rgba(255, 255, 255, .55); font-size: .68rem; letter-spacing: .12em; }
+
+.ficha__cuerpo { padding: 2rem; display: grid; gap: 2rem; grid-template-columns: 1.15fr .85fr; }
+
+@media (max-width: 820px) { .ficha__cuerpo { grid-template-columns: 1fr; } }
+
+.datos { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin: 0; }
+.datos div { background: rgba(255, 255, 255, .04); border: 1px solid var(--linea); border-radius: .9rem; padding: .85rem .95rem; }
+.datos dt { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .5); margin-bottom: .3rem; }
+.datos dd { margin: 0; font-weight: 600; font-size: .92rem; }
+
+.seccion-titulo { font-family: 'Poppins', sans-serif; font-size: 1.02rem; margin: 1.9rem 0 .6rem; color: var(--emi-ambar); }
+.ficha p.texto { color: rgba(255, 255, 255, .78); line-height: 1.75; font-size: .94rem; margin: 0; }
+
+.mapa {
+    position: relative; border-radius: 1.1rem; overflow: hidden;
+    border: 1px solid var(--linea); background: #0B3D20; min-height: 300px;
+}
+
+/* Respaldo si el mapa no carga (feria sin buena conexión): coordenadas visibles. */
+.mapa__respaldo {
+    position: absolute; inset: 0; z-index: 0;
+    display: grid; place-content: center; gap: .35rem; text-align: center;
+    padding: 1rem; color: rgba(255, 255, 255, .6); font-size: .8rem;
+    background:
+        linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px) 0 0 / 32px 32px,
+        #0B3D20;
+}
+
+.mapa__respaldo strong { color: var(--emi-ambar); font-size: .95rem; letter-spacing: .06em; }
+
+.mapa iframe { position: relative; z-index: 1; display: block; width: 100%; height: 300px; border: 0; }
+
+.pendiente {
+    display: inline-block; padding: .2rem .55rem; border-radius: .5rem;
+    background: rgba(242, 182, 50, .14); border: 1px dashed rgba(242, 182, 50, .45);
+    color: var(--emi-ambar); font-size: .72rem; font-weight: 600;
+}
+
+/* ------------------------------------------------------------- QR vacío */
+.vacio { min-height: 100vh; display: grid; place-items: center; padding: 2rem 0; }
+
+.vacio__caja {
+    width: min(720px, 94vw); margin: 0 auto;
+    border: 1px solid var(--linea); border-radius: 1.9rem;
+    background: rgba(255, 255, 255, .045);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+    overflow: hidden; text-align: center;
+}
+
+.vacio__cabecera {
+    padding: 2.4rem 2rem;
+    background: linear-gradient(120deg, #0B3D20, #14532D 60%, #1B5E20);
+    border-bottom: 1px solid var(--linea);
+}
+
+.vacio__icono {
+    width: 74px; height: 74px; margin: 0 auto 1rem;
+    border-radius: 1.2rem; display: grid; place-items: center;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .18);
+    font-size: 2rem;
+}
+
+.vacio__etiqueta { font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: #A7F3D0; font-weight: 700; }
+.vacio__titulo { font-family: 'Poppins', sans-serif; font-size: clamp(1.6rem, 4vw, 2.2rem); margin: .7rem 0 .3rem; }
+.vacio__cuerpo { padding: 2rem; display: grid; gap: 1.15rem; }
+.vacio__cuerpo p { color: rgba(255, 255, 255, .74); line-height: 1.7; margin: 0; font-size: .94rem; }
+
+.aviso {
+    border-left: 4px solid var(--emi-amarillo);
+    background: rgba(242, 182, 50, .08);
+    border-radius: .8rem; padding: .95rem 1.1rem;
+    text-align: left; font-size: .84rem; color: rgba(255, 255, 255, .8);
+}
+
+.pasos { counter-reset: paso; display: grid; gap: .75rem; text-align: left; margin: .25rem 0 0; padding: 0; list-style: none; }
+.pasos li { counter-increment: paso; display: grid; grid-template-columns: 30px 1fr; gap: .7rem; align-items: start; font-size: .86rem; color: rgba(255, 255, 255, .75); }
+.pasos li::before {
+    content: counter(paso);
+    width: 26px; height: 26px; border-radius: 999px;
+    display: grid; place-items: center;
+    background: rgba(242, 182, 50, .16); border: 1px solid rgba(242, 182, 50, .4);
+    color: var(--emi-ambar); font-weight: 700; font-size: .75rem;
+}
+
+/* ----------------------------------------------------------------- pie */
+.pie { padding: 2.5rem 0 3rem; text-align: center; color: rgba(255, 255, 255, .45); font-size: .76rem; line-height: 1.7; }
+.pie strong { color: rgba(255, 255, 255, .7); }
+
+/* --------------------------------------------------------------- impresión */
+@media print {
+    body { background: #fff !important; color: #000 !important; }
+    .cabecera, .pie, .boton, .no-imprimir { display: none !important; }
+    .tarjeta, .ficha, .vacio__caja { background: #fff !important; border-color: #ddd !important; box-shadow: none !important; color: #000 !important; }
+}
