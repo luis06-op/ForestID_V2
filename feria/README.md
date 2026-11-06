@@ -13,7 +13,16 @@ Contiene tres fichas accesibles por QR:
 | `ficha-guayacan.html` | `…/ficha-guayacan.html` | Guayacán Rosado `EBG-PARQ-001` (datos reales del volcado oficial) |
 | `qr-vacio.html` | `…/qr-vacio.html` | Placa sin asignar + acceso al login para operarios de Emincut |
 
-La portada (`index.html`) muestra las tres con su QR.
+La portada (`index.html`) muestra las tres con su QR. Y
+`placas.html` es la **hoja de impresión de placas**: una tarjeta por QR
+con su ficha. En el navegador pulsa **Imprimir** y el `@page` de A4 deja
+una placa por hoja.
+
+## Imprimir las placas
+
+En cada ficha hay un botón **Imprimir ficha**; en la portada / hoja de
+placas el CSS de impresión genera el layout de A4. Para la feria física:
+escanea los QR impresos y que abran las fichas.
 
 ## Diseño fiel al aplicativo
 

@@ -53,3 +53,7 @@
         content: none !important;
     }
 }
+
+/* Impresión de la hoja de placas: una placa por pagina A4. */
+@page { size: A4; margin: 14mm; }
+.placa { break-inside: avoid; page-break-inside: avoid; }
