@@ -1,77 +1,254 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-[#FAFAF7]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placa QR disponible — ForestID</title>
     <meta name="description" content="Esta placa QR aún no tiene un árbol asignado. Si eres parte de Emincut S.A.S., inicia sesión para registrarlo.">
+    <meta name="author" content="Emincut S.A.S.">
+    <title>Placa QR disponible — ForestID</title>
+
+    <!-- Google Fonts: Poppins (Títulos) & Inter (Lectura) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/img/logo_emincut_oficial.svg" type="image/svg+xml">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            50: '#F0FDF4', 100: '#DCFCE7', 200: '#BBF7D0', 300: '#86EFAC',
+                            400: '#4ADE80', 500: '#22C55E', 600: '#16A34A', 700: '#15803D',
+                            800: '#166534', 900: '#14532D', 950: '#052E16',
+                            dark: '#1B5E20', primary: '#2E7D32', light: '#E8F5E9'
+                        },
+                        earth: { 500: '#6D4C41', 700: '#4E342E', 900: '#3E2723' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Leaflet CSS & JS (Mapas OpenStreetMap sin costos) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Identidad visual Emincut (misma que el aplicativo) -->
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/emincut.css">
     <link rel="stylesheet" href="assets/feria.css">
 </head>
-<body>
+<body class="min-h-full flex flex-col antialiased text-gray-800 bg-[#FAFAF7]">
+<header class="emi-navbar sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
 
-<div class="vacio">
-    <div class="vacio__caja">
+            <!-- Marca y Logo -->
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="flex items-center gap-2.5 group">
+                    <span class="bg-white rounded-xl p-1.5 shadow-md shadow-black/20 group-hover:scale-105 transition-transform block w-[54px] h-[40px] flex items-center justify-center">
+                        <img src="assets/img/logo_emincut_oficial.svg" alt="Emincut" class="w-full h-full object-contain">
+                    </span>
+                    <div class="flex flex-col">
+                        <span class="emi-display font-bold text-xl tracking-wide text-white leading-tight">
+                            Forest<span style="color:var(--emi-amarillo)">ID</span>
+                        </span>
+                        <span class="text-[10px] font-semibold uppercase tracking-widest -mt-0.5" style="color:rgba(255,255,255,.55)">
+                            Emincut • El Bagre
+                        </span>
+                    </div>
+                </a>
 
-        <div class="vacio__cabecera">
-            <div class="vacio__icono" aria-hidden="true">🌱</div>
-            <span class="vacio__etiqueta">Placa disponible</span>
-            <h1 class="vacio__titulo">Este QR está vacío</h1>
-            <p style="margin:0;color:rgba(255,255,255,.72);font-size:.92rem;">
-                Todavía no está vinculado a ningún individuo forestal.
-            </p>
-        </div>
-
-        <div class="vacio__cuerpo">
-            <p>
-                Esta placa física ya está lista para colocarse, pero aún no se ha registrado el
-                árbol que la llevará. Cuando se asigne, este mismo código mostrará su ficha
-                pública: especie, ubicación y estado fitosanitario.
-            </p>
-
-            <div class="aviso">
-                <strong>¿Eres parte de Emincut S.A.S.?</strong><br>
-                Si eres operario de campo o administrador del sistema, inicia sesión con tu cuenta
-                institucional y registra el individuo desde el panel. La placa quedará marcada
-                como asignada al guardar el registro.
+                <!-- Navegación en Desktop -->
+                <nav class="hidden md:flex items-center gap-1 pl-4 border-l" style="border-color:rgba(255,255,255,.15)">
+                    <a href="index.html" class="px-3 py-1.5 text-sm font-medium rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                        Inicio
+                    </a>
+                    <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="px-3 py-1.5 text-sm font-medium rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                        Inventario Forestal
+                    </a>
+                </nav>
             </div>
 
-            <ol class="pasos">
-                <li>Identifica el árbol y verifica que no tenga ya una placa asignada.</li>
-                <li>Ingresa al sistema con tu cuenta de Emincut.</li>
-                <li>Registra el individuo y asocia este código de placa.</li>
-            </ol>
+            <!-- Zona de Usuario / Accesos -->
+            <div class="flex items-center gap-3">
+                <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-xl transition-all text-white/85 hover:bg-white/10 border" style="border-color:rgba(255,255,255,.2)">
+                    <i data-lucide="search" class="w-4 h-4" style="color:var(--emi-amarillo)"></i> Buscar Árbol
+                </a>
+                <a href="https://forestid.cfmasoft.com/auth/login.php" class="emi-btn emi-btn-sol text-xs sm:text-sm py-2 px-4">
+                    <span class="inline-flex items-center gap-1.5"><i data-lucide="lock" class="w-4 h-4"></i> Iniciar Sesión</span>
+                </a>
 
-            <a class="boton" style="width:100%;" href="https://forestid.cfmasoft.com/auth/login.php" rel="noopener">
-                Iniciar sesión como funcionario de Emincut
-            </a>
+                <!-- Toggle Móvil -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-white hover:bg-white/10" aria-label="Abrir menú">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-            <p style="font-size:.78rem;color:rgba(255,255,255,.5);">
-                ¿Solo quieres consultar el inventario?
-                <a href="https://forestid.cfmasoft.com/publico/index.php" rel="noopener" style="color:var(--emi-ambar);font-weight:600;">Explorar las fichas públicas →</a>
-            </p>
+    <!-- Menú Móvil Desplegable -->
+    <div id="mobile-menu" class="hidden md:hidden border-t px-4 pt-3 pb-4 space-y-2" style="border-color:rgba(255,255,255,.1); background:var(--emi-verde-noche)">
+        <a href="index.html" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Inicio
+        </a>
+        <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Inventario Forestal
+        </a>
+        <a href="https://forestid.cfmasoft.com/auth/login.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Iniciar Sesión
+        </a>
+    </div>
+</header>
 
-            <div style="padding-top:1rem;border-top:1px solid var(--linea);display:flex;align-items:center;gap:1rem;justify-content:center;flex-wrap:wrap;">
-                <div class="qr-caja" data-qr="qr-vacio.html" aria-label="Código QR de esta página"></div>
-                <p style="font-size:.7rem;color:rgba(255,255,255,.45);margin:0;text-align:left;line-height:1.5;">
-                    Este es el destino actual de la placa.<br>
-                    <span data-qr-url="qr-vacio.html" style="word-break:break-all;"></span>
+<script>
+(function () {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+        btn.addEventListener('click', function () { menu.classList.toggle('hidden'); });
+    }
+})();
+</script>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <div class="forest-card overflow-hidden max-w-xl mx-auto">
+
+        <!-- Cabecera de la placa física -->
+        <div class="bg-gradient-to-r from-emerald-950 via-forest-dark to-emerald-900 text-white p-8 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="qr-code" class="w-8 h-8" style="color:var(--emi-amarillo)"></i>
+            </div>
+            <span class="text-[11px] font-bold uppercase tracking-[.2em] text-emerald-200">Placa disponible</span>
+            <p class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-[.12em]">SIN ASIGNAR</p>
+            <p class="mt-2 text-xs text-emerald-200/80">Todavía no está vinculada a un individuo forestal</p>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-6 text-center">
+            <div class="space-y-2">
+                <h1 class="font-heading font-bold text-xl text-gray-900">¿Eres parte de Emincut? Registra este árbol</h1>
+                <p class="text-sm text-gray-500 leading-relaxed">
+                    Esta placa está lista para asignarse. Si eres operario de campo o administrador, inicia sesión y completa el alta del individuo desde el panel.
                 </p>
             </div>
-        </div>
 
+            <div class="space-y-3">
+                <a href="https://forestid.cfmasoft.com/auth/login.php" class="btn-forest-primary w-full inline-flex items-center justify-center gap-2 py-3 text-sm">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Iniciar sesión como funcionario de Emincut
+                </a>
+                <p class="text-[11px] text-gray-400">La placa quedará marcada como asignada al guardar el registro.</p>
+            </div>
+
+            <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900 text-left space-y-1">
+                <p><strong>Esta es una placa de demostración de la feria.</strong></p>
+                <p>El código no existe todavía en la base de datos del sistema; al registrarlo desde el panel quedará activo y este mismo QR mostrará la ficha del árbol.</p>
+            </div>
+
+            <div class="text-left">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Cómo asignarla</h2>
+                <ol class="text-xs text-gray-600 space-y-2">
+                    <li class="flex gap-2"><span class="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold grid place-items-center">1</span> Identifica el árbol y verifica que no tenga ya una placa asignada.</li>
+                    <li class="flex gap-2"><span class="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold grid place-items-center">2</span> Ingresa al sistema con tu cuenta de Emincut.</li>
+                    <li class="flex gap-2"><span class="shrink-0 w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold grid place-items-center">3</span> Registra el individuo y asocia este código de placa.</li>
+                </ol>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 text-[11px] text-gray-400">
+                ¿Solo quieres consultar? <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="font-semibold text-emerald-700 hover:underline">Explorar el inventario forestal</a>
+            </div>
+        </div>
     </div>
+
+    <!-- QR de esta misma placa (para reimprimirla) -->
+    <div class="max-w-xl mx-auto mt-5 forest-card p-4 flex items-center gap-4 no-imprimir">
+        <div class="qr-caja w-20 h-20 p-1.5 rounded-xl border border-gray-200 shrink-0" data-qr="qr-vacio.html" aria-label="Código QR de esta placa"></div>
+        <div class="text-xs text-gray-500 min-w-0">
+            <span class="block text-xs font-bold text-gray-800 mb-1">Código de esta placa</span>
+            <span class="block break-all" data-qr-url="qr-vacio.html"></span>
+            <a href="#" data-qr-descarga="qr-vacio.html" class="inline-flex items-center gap-1 mt-2 text-emerald-700 font-semibold hover:underline">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Descargar PNG
+            </a>
+        </div>
+    </div>
+
 </div>
 
-<footer class="contenedor pie">
-    <p><strong>Emincut S.A.S.</strong> — El Bagre, Antioquia, Colombia</p>
-    <p>ForestID · Feria FISAD 2026</p>
-</footer>
+    <!-- Pie de página Institucional — fondo sólido, paleta Emincut -->
+    <footer class="mt-auto border-t-4" style="background-color:#22371C; border-color:#E9A22E; color:#FFFFFF">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="bg-white rounded-2xl p-2.5 shadow-lg shadow-black/20 w-[150px] h-[74px] flex items-center justify-center">
+                        <img src="assets/img/logo_emincut_oficial.svg" alt="Emincut" class="w-full h-full object-contain">
+                    </div>
+                    <p class="text-sm leading-relaxed text-white/75 max-w-md">
+                        <strong style="color:#F2B632">ForestID</strong> es la aplicación web de <strong class="text-white">Emincut S.A.S.</strong> para gestionar el inventario forestal de la empresa —árboles y plantas ornamentales— en <strong class="text-white">Antioquia, Colombia</strong>.
+                    </p>
+                    <p class="text-sm leading-relaxed text-white/75 max-w-md">
+                        Cada árbol cuenta con una placa física con <strong style="color:#F2B632">código QR</strong> que cualquier persona puede escanear para consultar su ficha, <span class="text-white/90">sin necesidad de iniciar sesión</span>.
+                    </p>
+                    <div class="flex items-center gap-2 text-xs text-white/60 font-medium">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5" style="color:#F2B632"></i>
+                        <span>El Bagre, Antioquia, Colombia — Sede Principal Emincut</span>
+                    </div>
+                </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="assets/qr.js"></script>
+                <div class="space-y-3">
+                    <h4 class="font-heading font-semibold text-sm uppercase tracking-wider" style="color:#F2B632">Equipo de Proyecto</h4>
+                    <ul class="text-xs text-white/75 space-y-1">
+                        <li>• <strong class="text-white">Luis Angel Muñoz M.</strong> (Arquitectura)</li>
+                        <li>• <strong class="text-white">Gabriel Jaime Correa C.</strong> (Backend)</li>
+                        <li>• <strong class="text-white">Valentina Hernández Zapata</strong> (Verificación Calidad)</li>
+                    </ul>
+                    <p class="text-[11px] text-white/45 leading-relaxed">
+                        Desarrollado por aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, en etapa productiva con Emincut.
+                    </p>
+
+                    <div class="mt-3 pt-3 border-t space-y-1.5" style="border-color:rgba(255,255,255,.15)">
+                        <div class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style="color:#F2B632">
+                            <i data-lucide="star" class="w-3 h-3"></i> In memoriam
+                        </div>
+                        <p class="text-xs leading-relaxed text-white/85">
+                            <strong class="text-white">Michael Rodríguez L.</strong> (UI / QA)<br>
+                            <span style="color:#E9A22E">2008 &ndash; 2026</span>
+                        </p>
+                        <p class="text-[11px] italic text-white/50">
+                            Parte de este equipo para siempre. En agradecido recuerdo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-3" style="border-color:rgba(255,255,255,.15)">
+                <div>
+                    &copy; 2026 <strong class="text-white">Emincut S.A.S.</strong> — Todos los derechos reservados.
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Inicio Público</a>
+                    <span class="text-white/30">•</span>
+                    <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Buscador QR</a>
+                    <span class="text-white/30">•</span>
+                    <a href="https://forestid.cfmasoft.com/auth/login.php" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Acceso Restringido</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="assets/qr.js"></script>
+    <script>
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+    </script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="fondo" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="100%" stop-color="#F0FDF4" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#fondo)"/>
+  <!-- Suelo -->
+  <path d="M0 320 Q 150 300, 300 320 T 600 320 L 600 400 L 0 400 Z" fill="#4ADE80" opacity="0.8"/>
+  <path d="M0 340 Q 200 320, 400 345 T 600 330 L 600 400 L 0 400 Z" fill="#16A34A"/>
+  <!-- Placa QR sin asignar -->
+  <rect x="210" y="90" width="180" height="180" rx="22" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3" stroke-dasharray="12 9"/>
+  <g fill="#CBD5E1">
+    <rect x="245" y="130" width="34" height="34" rx="5"/>
+    <rect x="321" y="130" width="34" height="34" rx="5"/>
+    <rect x="245" y="206" width="34" height="34" rx="5"/>
+    <rect x="300" y="190" width="14" height="14" rx="3"/>
+    <rect x="322" y="212" width="14" height="14" rx="3"/>
+    <rect x="300" y="236" width="14" height="14" rx="3"/>
+    <rect x="336" y="236" width="14" height="14" rx="3"/>
+  </g>
+  <circle cx="300" cy="300" r="14" fill="#F2B632" opacity="0.35"/>
+  <!-- Etiqueta -->
+  <rect x="20" y="20" width="166" height="38" rx="8" fill="#FFFFFF" fill-opacity="0.9" stroke="#64748B" stroke-width="1.5"/>
+  <text x="35" y="44" font-family="'Poppins', sans-serif" font-weight="700" font-size="14" fill="#334155">Placa sin asignar</text>
+</svg>

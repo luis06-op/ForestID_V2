@@ -27,7 +27,7 @@
         if (!contenedor) { return texto; }
 
         if (typeof window.QRCode !== 'function') {
-            contenedor.innerHTML = '<span style="font-size:10px;color:#0F172A;word-break:break-all;padding:4px;display:block;text-align:center;">' +
+            contenedor.innerHTML = '<span class="qr-respaldo">' +
                 texto.replace(/[<>&]/g, '') + '</span>';
             return texto;
         }
@@ -35,13 +35,25 @@
         contenedor.innerHTML = '';
         new window.QRCode(contenedor, {
             text: texto,
-            width: 180,
-            height: 180,
+            width: 240,
+            height: 240,
             colorDark: '#1B5E20',
             colorLight: '#FFFFFF',
             correctLevel: window.QRCode.CorrectLevel.M
         });
         return texto;
+    }
+
+    /** Descarga el canvas del QR como PNG con el nombre indicado. */
+    function descargar(contenedor, nombre) {
+        var canvas = contenedor ? contenedor.querySelector('canvas') : null;
+        if (!canvas) { return; }
+        var enlace = document.createElement('a');
+        enlace.href = canvas.toDataURL('image/png');
+        enlace.download = nombre;
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -54,6 +66,14 @@
             // Texto opcional con la URL (para verificación o impresión).
             var etiqueta = document.querySelector('[data-qr-url="' + destino + '"]');
             if (etiqueta) { etiqueta.textContent = url; }
+
+            // Botón opcional para descargar el QR en PNG.
+            document.querySelectorAll('[data-qr-descarga="' + destino + '"]').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    descargar(caja, 'QR-' + destino.replace(/\.html$/, '') + '.png');
+                });
+            });
         });
 
         // Botón de impresión de la ficha/placa.

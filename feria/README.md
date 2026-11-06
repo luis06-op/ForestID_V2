@@ -11,9 +11,16 @@ Contiene tres fichas accesibles por QR:
 |---|---|---|
 | `ficha-mango.html` | `…/ficha-mango.html` | Mango (`Mangifera indica`) en el Polideportivo de El Bagre, coordenadas 7.5940938, -74.8028396 |
 | `ficha-guayacan.html` | `…/ficha-guayacan.html` | Guayacán Rosado `EBG-PARQ-001` (datos reales del volcado oficial) |
-| `qr-vacio.html` | `…/qr-vacio.html` | «Este QR está vacío» + acceso al login para operarios de Emincut |
+| `qr-vacio.html` | `…/qr-vacio.html` | Placa sin asignar + acceso al login para operarios de Emincut |
 
 La portada (`index.html`) muestra las tres con su QR.
+
+## Diseño fiel al aplicativo
+
+Las páginas replican el **mismo sistema visual** del portal: fondos `#FAFAF7`, tarjetas
+`forest-card`, barra de navegación `emi-navbar` (verde + amarillo), botones `emi-btn-sol`,
+tipografía Poppins/Inter, iconos Lucide, mapa Leaflet y pie institucional. Solo se añade un
+sobre de feria (mensajes de «por registrar», pendientes) sin inventar datos.
 
 ## Los QR se generan solos
 

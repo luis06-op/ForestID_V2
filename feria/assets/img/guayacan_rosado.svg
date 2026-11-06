@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="100%" stop-color="#F0FDF4" />
+    </linearGradient>
+    <linearGradient id="pinkFlowers" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F472B6" />
+      <stop offset="50%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#BE185D" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#skyGrad)"/>
+  <!-- Grass ground -->
+  <path d="M0 320 Q 150 300, 300 320 T 600 320 L 600 400 L 0 400 Z" fill="#4ADE80" opacity="0.8"/>
+  <path d="M0 340 Q 200 320, 400 345 T 600 330 L 600 400 L 0 400 Z" fill="#16A34A"/>
+  <!-- Trunk -->
+  <path d="M285 350 L 290 190 L 260 140 L 275 140 L 295 180 L 315 140 L 330 140 L 305 190 L 315 350 Z" fill="#5D4037"/>
+  <!-- Pink Blossom Canopy -->
+  <circle cx="240" cy="140" r="60" fill="url(#pinkFlowers)" opacity="0.95"/>
+  <circle cx="360" cy="140" r="60" fill="url(#pinkFlowers)" opacity="0.95"/>
+  <circle cx="300" cy="100" r="70" fill="url(#pinkFlowers)" opacity="0.95"/>
+  <circle cx="300" cy="150" r="65" fill="#DB2777" opacity="0.9"/>
+  <!-- Badge label -->
+  <rect x="20" y="20" width="230" height="38" rx="8" fill="#FFFFFF" fill-opacity="0.9" stroke="#DB2777" stroke-width="1.5"/>
+  <text x="35" y="44" font-family="'Poppins', sans-serif" font-weight="700" font-size="14" fill="#831843">Guayacán Rosado</text>
+</svg>

@@ -1,106 +1,435 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-[#FAFAF7]">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guayacán Rosado (EBG-PARQ-001) — Ficha ForestID</title>
     <meta name="description" content="Ficha pública del Guayacán Rosado del Parque Principal de El Bagre, Antioquia. Emincut S.A.S. — ForestID.">
+    <meta name="author" content="Emincut S.A.S.">
+    <title>Guayacán Rosado (EBG-PARQ-001) — Ficha ForestID</title>
+
+    <!-- Google Fonts: Poppins (Títulos) & Inter (Lectura) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="assets/img/logo_emincut_oficial.svg" type="image/svg+xml">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            50: '#F0FDF4', 100: '#DCFCE7', 200: '#BBF7D0', 300: '#86EFAC',
+                            400: '#4ADE80', 500: '#22C55E', 600: '#16A34A', 700: '#15803D',
+                            800: '#166534', 900: '#14532D', 950: '#052E16',
+                            dark: '#1B5E20', primary: '#2E7D32', light: '#E8F5E9'
+                        },
+                        earth: { 500: '#6D4C41', 700: '#4E342E', 900: '#3E2723' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Leaflet CSS & JS (Mapas OpenStreetMap sin costos) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Identidad visual Emincut (misma que el aplicativo) -->
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/emincut.css">
     <link rel="stylesheet" href="assets/feria.css">
 </head>
-<body>
+<body class="min-h-full flex flex-col antialiased text-gray-800 bg-[#FAFAF7]">
+<header class="emi-navbar sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
 
-<div class="contenedor miga">
-    <a href="index.html">← Volver a las fichas de la feria</a>
+            <!-- Marca y Logo -->
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="flex items-center gap-2.5 group">
+                    <span class="bg-white rounded-xl p-1.5 shadow-md shadow-black/20 group-hover:scale-105 transition-transform block w-[54px] h-[40px] flex items-center justify-center">
+                        <img src="assets/img/logo_emincut_oficial.svg" alt="Emincut" class="w-full h-full object-contain">
+                    </span>
+                    <div class="flex flex-col">
+                        <span class="emi-display font-bold text-xl tracking-wide text-white leading-tight">
+                            Forest<span style="color:var(--emi-amarillo)">ID</span>
+                        </span>
+                        <span class="text-[10px] font-semibold uppercase tracking-widest -mt-0.5" style="color:rgba(255,255,255,.55)">
+                            Emincut • El Bagre
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Navegación en Desktop -->
+                <nav class="hidden md:flex items-center gap-1 pl-4 border-l" style="border-color:rgba(255,255,255,.15)">
+                    <a href="index.html" class="px-3 py-1.5 text-sm font-medium rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                        Inicio
+                    </a>
+                    <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="px-3 py-1.5 text-sm font-medium rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                        Inventario Forestal
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Zona de Usuario / Accesos -->
+            <div class="flex items-center gap-3">
+                <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-xl transition-all text-white/85 hover:bg-white/10 border" style="border-color:rgba(255,255,255,.2)">
+                    <i data-lucide="search" class="w-4 h-4" style="color:var(--emi-amarillo)"></i> Buscar Árbol
+                </a>
+                <a href="https://forestid.cfmasoft.com/auth/login.php" class="emi-btn emi-btn-sol text-xs sm:text-sm py-2 px-4">
+                    <span class="inline-flex items-center gap-1.5"><i data-lucide="lock" class="w-4 h-4"></i> Iniciar Sesión</span>
+                </a>
+
+                <!-- Toggle Móvil -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-white hover:bg-white/10" aria-label="Abrir menú">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú Móvil Desplegable -->
+    <div id="mobile-menu" class="hidden md:hidden border-t px-4 pt-3 pb-4 space-y-2" style="border-color:rgba(255,255,255,.1); background:var(--emi-verde-noche)">
+        <a href="index.html" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Inicio
+        </a>
+        <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Inventario Forestal
+        </a>
+        <a href="https://forestid.cfmasoft.com/auth/login.php" class="block px-3 py-2 rounded-lg text-sm font-medium text-white/85 hover:bg-white/10">
+            Iniciar Sesión
+        </a>
+    </div>
+</header>
+
+<script>
+(function () {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+        btn.addEventListener('click', function () { menu.classList.toggle('hidden'); });
+    }
+})();
+</script>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Encabezado de la Ficha Técnica (Tarjeta de Identidad) -->
+    <div class="forest-card overflow-hidden mb-6">
+
+        <!-- Banner superior verde con metadatos -->
+        <div class="bg-gradient-to-r from-emerald-950 via-forest-dark to-emerald-900 text-white p-6 sm:p-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-md text-xs font-extrabold bg-white text-emerald-900 tracking-wider shadow-sm">
+                            EBG-PARQ-001
+                        </span>
+                        <span class="text-xs font-medium text-emerald-200">
+                            Árbol
+                        </span>
+                    </div>
+                    <h1 class="font-heading font-extrabold text-2xl sm:text-4xl text-white tracking-tight">
+                        Guayacán Rosado
+                    </h1>
+                    <p class="text-emerald-200/90 text-sm sm:text-base italic font-serif">
+                        Handroanthus chrysanthus
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:items-end gap-2">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border-emerald-300 border shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Sano
+                        </span>
+                    </div>
+                    <span class="text-[11px] text-emerald-200/70">
+                        Familia: <strong>Bignoniaceae</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuerpo principal: Ilustración + Métricas Dasométricas -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8">
+
+            <!-- Columna Izquierda: Ilustración del Espécimen -->
+            <div class="md:col-span-5 space-y-4">
+                <div class="h-64 sm:h-80 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 relative group shadow-sm">
+                    <img src="assets/img/guayacan_rosado.svg" alt="Guayacán Rosado" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+
+                <!-- Código QR de la ficha en la feria -->
+                <div class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200/60 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="qr-caja w-12 h-12 p-1 rounded-lg border border-emerald-300 shrink-0 shadow-sm" data-qr="ficha-guayacan.html" aria-label="Código QR de esta ficha"></div>
+                        <div>
+                            <span class="block text-xs font-bold text-emerald-950">Placa QR de la feria</span>
+                            <span class="text-[11px] text-emerald-700">Apunta a esta ficha</span>
+                        </div>
+                    </div>
+                    <a href="#" data-qr-descarga="ficha-guayacan.html" class="p-2 rounded-lg bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-100 text-xs font-semibold" title="Descargar código QR">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Datos Dasométricos y Diagnóstico -->
+            <div class="md:col-span-7 space-y-6">
+
+                <!-- Tarjetas Dasométricas -->
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+                        Mediciones Dasométricas
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-xl">
+                                <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                    <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    <span class="font-medium">DAP (1.30 m)</span>
+                                </div>
+                                <span class="text-xl font-heading font-extrabold text-gray-900">
+                                    38.5 cm                                </span>
+                            </div>                            <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-xl">
+                                <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                    <i data-lucide="arrow-up" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    <span class="font-medium">Altura Total</span>
+                                </div>
+                                <span class="text-xl font-heading font-extrabold text-gray-900">
+                                    14.2 m                                </span>
+                            </div>                            <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-xl">
+                                <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+                                    <i data-lucide="maximize" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                    <span class="font-medium">Diám. Copa</span>
+                                </div>
+                                <span class="text-xl font-heading font-extrabold text-gray-900">
+                                    9.5 m                                </span>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- Diagnóstico Fitosanitario -->
+                <div class="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-heading font-bold text-sm text-emerald-950 flex items-center gap-2">
+                            <i data-lucide="stethoscope" class="w-4 h-4"></i>
+                            Diagnóstico de Salud Fitosanitaria
+                        </h3>
+                        <span class="text-[11px] text-emerald-700 font-medium">
+                            5 de Noviembre, 2026
+                        </span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                        Follaje verde vigoroso, sin signos de ataque de barrenadores ni necrosis en tronco. Estructura balanceada.
+                    </p>
+                    <div class="pt-2 border-t border-emerald-200/60 text-xs text-emerald-900">
+                        <strong>Recomendación Técnica:</strong> Continuar con monitoreo semestral regular y fertilización orgánica al inicio del periodo de lluvias.
+                    </div>
+                </div>
+
+                <!-- Descripción General -->
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                        Observaciones Dendrológicas
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed bg-gray-50 p-3.5 rounded-xl border border-gray-200">
+                        Espécimen maduro ubicado en el costado noroccidental del parque principal. Floración abundante y fuste recto con buen desarrollo de dosel.
+                    </p>
+                </div>
+
+                <!-- Acciones -->
+                <div class="pt-2 flex flex-col sm:flex-row gap-2 no-imprimir">
+                    <a href="https://forestid.cfmasoft.com/publico/reportar_novedad.php?codigo=EBG-PARQ-001" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs shadow-md transition-colors">
+                        <i data-lucide="alert-triangle" class="w-4 h-4"></i> Reportar Novedad sobre este Árbol
+                    </a>
+                    <button type="button" data-imprimir class="boton-imprimir w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold text-xs transition-colors">
+                        <i data-lucide="printer" class="w-4 h-4"></i> Imprimir ficha
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Ubicación en Mapa y Zona -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+
+        <div class="md:col-span-7 forest-card p-5 space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Ubicación Geográfica</span>
+                    <h3 class="font-heading font-bold text-lg text-gray-900">
+                        Parque Principal El Bagre
+                    </h3>
+                </div>
+                <span class="text-xs text-gray-500">
+                    El Bagre, Antioquia
+                </span>
+            </div>
+
+            <div id="mapa-individuo" class="w-full h-64 rounded-xl border border-gray-200 z-0"></div>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 pt-1 gap-3 flex-wrap">
+                <span>Lat: 7.604 | Lng: -74.809</span>
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=7.604,-74.809" target="_blank" rel="noopener" class="text-emerald-700 hover:underline inline-flex items-center gap-1 font-medium">
+                    Abrir en Google Maps <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="md:col-span-5 forest-card p-5 space-y-4">
+            <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Empresa Responsable</span>
+            <h3 class="font-heading font-bold text-lg text-gray-900">
+                Emincut S.A.S. — Soluciones Ambientales y Forestales
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Emincut S.A.S. es responsable del cuidado, poda técnica, fertilización y protección legal de este individuo forestal en el municipio de El Bagre.
+            </p>
+            <div class="pt-3 border-t border-gray-100 space-y-2 text-xs text-gray-600">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Calle 50 # 45-20, Barrio Bijao — El Bagre, Antioquia</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
+                    <span>+57 312 856 9421</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Línea de Tiempo de Intervenciones y Mantenimientos -->
+    <div class="forest-card p-6 sm:p-8">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Historial de Cuidados</span>
+                <h3 class="font-heading font-bold text-xl text-gray-900">
+                    Intervenciones y Mantenimiento
+                </h3>
+            </div>
+            <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium">
+                1 evento registrado
+            </span>
+        </div>
+        <div class="space-y-4 border-l-2 border-emerald-300 pl-4 sm:pl-6 ml-2 sm:ml-4">
+            <div class="relative">
+                <span class="absolute -left-[25px] sm:-left-[33px] top-1.5 w-4 h-4 rounded-full bg-forest-primary border-4 border-white shadow-xs"></span>
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider">
+                            Fertilización
+                        </span>
+                        <span class="text-[11px] text-gray-400">
+                            21 de Septiembre, 2026 (08:38 PM)
+                        </span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-700 leading-snug">
+                        Aplicación de abono orgánico compuesto (humus y compost) e incorporación de fósforo y potasio en corona.
+                    </p>
+                    <span class="block text-[11px] text-gray-400 pt-1">
+                        Registrado por: Gabriel Jaime Correa Correa
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<main class="contenedor">
-    <article class="ficha">
+<!-- Inicialización del mapa -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const lat = 7.604;
+    const lng = -74.809;
 
-        <header class="ficha__cabecera">
-            <div>
-                <span class="ficha__codigo">EBG-PARQ-001</span>
-                <h1 class="ficha__titulo">Guayacán Rosado</h1>
-                <p class="ficha__cientifico">Handroanthus chrysanthus</p>
-            </div>
-            <div class="ficha__qr">
-                <div class="qr-caja" data-qr="ficha-guayacan.html" aria-label="Código QR de esta ficha"></div>
-                <small>ESCANEA ESTA FICHA</small>
-            </div>
-        </header>
+    const mapIndiv = L.map('mapa-individuo').setView([lat, lng], 16);
 
-        <div class="ficha__cuerpo">
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(mapIndiv);
 
-            <section aria-labelledby="datos">
-                <h2 class="seccion-titulo" id="datos" style="margin-top:0;">Datos del individuo</h2>
-                <dl class="datos">
-                    <div><dt>Nombre común</dt><dd>Guayacán Rosado</dd></div>
-                    <div><dt>Nombre científico</dt><dd><em>Handroanthus chrysanthus</em></dd></div>
-                    <div><dt>Familia</dt><dd>Bignoniaceae</dd></div>
-                    <div><dt>Tipo</dt><dd>Árbol</dd></div>
-                    <div><dt>Zona</dt><dd>Parque Principal El Bagre</dd></div>
-                    <div><dt>Municipio</dt><dd>El Bagre, Antioquia</dd></div>
-                    <div><dt>Fecha de siembra</dt><dd>22 de abril de 2018</dd></div>
-                    <div><dt>DAP</dt><dd>38,50 cm</dd></div>
-                    <div><dt>Altura total</dt><dd>14,20 m</dd></div>
-                    <div><dt>Diámetro de copa</dt><dd>9,50 m</dd></div>
-                    <div><dt>Latitud</dt><dd>7.6044500</dd></div>
-                    <div><dt>Longitud</dt><dd>-74.8092100</dd></div>
-                </dl>
+    L.marker([lat, lng])
+        .addTo(mapIndiv)
+        .bindPopup("<strong>Guayacán Rosado</strong><br>EBG-PARQ-001")
+        .openPopup();
+});
+</script>
 
-                <h2 class="seccion-titulo">Descripción general</h2>
-                <p class="texto">
-                    Espécimen maduro ubicado en el costado noroccidental del Parque Principal de
-                    El Bagre. Presenta floración abundante y fuste recto, con buen desarrollo de dosel.
-                    Es uno de los individuos de referencia del inventario forestal de Emincut.
-                </p>
-
-                <h2 class="seccion-titulo">Estado fitosanitario</h2>
-                <p class="texto">Sin novedades reportadas en la última revisión.</p>
-
-                <h2 class="seccion-titulo">Actividades de mantenimiento</h2>
-                <p class="texto">Sin actividades registradas para este individuo en el periodo actual.</p>
-            </section>
-
-            <aside>
-                <h2 class="seccion-titulo" style="margin-top:0;">Ubicación</h2>
-                <div class="mapa">
-                    <div class="mapa__respaldo" aria-hidden="true">
-                        <strong>Parque Principal El Bagre</strong>
-                        <span>Costado noroccidental · El Bagre, Antioquia</span>
-                        <span>7.6044500, -74.8092100</span>
+    <!-- Pie de página Institucional — fondo sólido, paleta Emincut -->
+    <footer class="mt-auto border-t-4" style="background-color:#22371C; border-color:#E9A22E; color:#FFFFFF">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="bg-white rounded-2xl p-2.5 shadow-lg shadow-black/20 w-[150px] h-[74px] flex items-center justify-center">
+                        <img src="assets/img/logo_emincut_oficial.svg" alt="Emincut" class="w-full h-full object-contain">
                     </div>
-                    <iframe
-                        title="Mapa de la ubicación del Guayacán Rosado en el Parque Principal de El Bagre"
-                        src="https://www.openstreetmap.org/export/embed.html?bbox=-74.8172%2C7.6003%2C-74.8012%2C7.6083&amp;layer=mapnik&amp;marker=7.6044500%2C-74.8092100"
-                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <p class="text-sm leading-relaxed text-white/75 max-w-md">
+                        <strong style="color:#F2B632">ForestID</strong> es la aplicación web de <strong class="text-white">Emincut S.A.S.</strong> para gestionar el inventario forestal de la empresa —árboles y plantas ornamentales— en <strong class="text-white">Antioquia, Colombia</strong>.
+                    </p>
+                    <p class="text-sm leading-relaxed text-white/75 max-w-md">
+                        Cada árbol cuenta con una placa física con <strong style="color:#F2B632">código QR</strong> que cualquier persona puede escanear para consultar su ficha, <span class="text-white/90">sin necesidad de iniciar sesión</span>.
+                    </p>
+                    <div class="flex items-center gap-2 text-xs text-white/60 font-medium">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5" style="color:#F2B632"></i>
+                        <span>El Bagre, Antioquia, Colombia — Sede Principal Emincut</span>
+                    </div>
                 </div>
-                <p class="texto" style="margin-top:.8rem;font-size:.85rem;">
-                    Parque Principal El Bagre — El Bagre, Antioquia.<br>
-                    <a href="https://www.google.com/maps?q=7.60445,-74.80921" target="_blank" rel="noopener" style="color:var(--emi-ambar);font-weight:600;">Abrir en Google Maps →</a>
-                </p>
 
-                <a class="boton" style="margin-top:1.2rem;width:100%;" href="https://forestid.cfmasoft.com/auth/login.php" rel="noopener">
-                    Acceso funcionarios Emincut
-                </a>
-                <button class="boton boton--fantasma" style="margin-top:.6rem;width:100%;" data-imprimir type="button">
-                    Imprimir ficha
-                </button>
-            </aside>
+                <div class="space-y-3">
+                    <h4 class="font-heading font-semibold text-sm uppercase tracking-wider" style="color:#F2B632">Equipo de Proyecto</h4>
+                    <ul class="text-xs text-white/75 space-y-1">
+                        <li>• <strong class="text-white">Luis Angel Muñoz M.</strong> (Arquitectura)</li>
+                        <li>• <strong class="text-white">Gabriel Jaime Correa C.</strong> (Backend)</li>
+                        <li>• <strong class="text-white">Valentina Hernández Zapata</strong> (Verificación Calidad)</li>
+                    </ul>
+                    <p class="text-[11px] text-white/45 leading-relaxed">
+                        Desarrollado por aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, en etapa productiva con Emincut.
+                    </p>
 
+                    <div class="mt-3 pt-3 border-t space-y-1.5" style="border-color:rgba(255,255,255,.15)">
+                        <div class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style="color:#F2B632">
+                            <i data-lucide="star" class="w-3 h-3"></i> In memoriam
+                        </div>
+                        <p class="text-xs leading-relaxed text-white/85">
+                            <strong class="text-white">Michael Rodríguez L.</strong> (UI / QA)<br>
+                            <span style="color:#E9A22E">2008 &ndash; 2026</span>
+                        </p>
+                        <p class="text-[11px] italic text-white/50">
+                            Parte de este equipo para siempre. En agradecido recuerdo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-3" style="border-color:rgba(255,255,255,.15)">
+                <div>
+                    &copy; 2026 <strong class="text-white">Emincut S.A.S.</strong> — Todos los derechos reservados.
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Inicio Público</a>
+                    <span class="text-white/30">•</span>
+                    <a href="https://forestid.cfmasoft.com/publico/buscar.php" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Buscador QR</a>
+                    <span class="text-white/30">•</span>
+                    <a href="https://forestid.cfmasoft.com/auth/login.php" class="hover:opacity-80 transition-opacity" style="color:#F2B632">Acceso Restringido</a>
+                </div>
+            </div>
         </div>
-    </article>
-</main>
+    </footer>
 
-<footer class="contenedor pie">
-    <p><strong>Emincut S.A.S.</strong> — El Bagre, Antioquia, Colombia</p>
-    <p>ForestID · Ficha generada para la feria FISAD 2026</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="assets/qr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="assets/qr.js"></script>
+    <script>
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+    </script>
 </body>
 </html>
