@@ -1,5 +1,9 @@
 # ForestID — Modo Feria FISAD (sitio estático)
 
+**Publicado en <https://forestid-feria.vercel.app/>** (proyecto `forestid-feria` del equipo
+`cfma2`, conectado a este repositorio con *Root Directory* = `feria` y rama de producción
+`main`: cada `push` a `main` vuelve a desplegar).
+
 Sitio **sin PHP y sin base de datos**, pensado para publicarse en Vercel durante la feria.
 Contiene tres fichas accesibles por QR:
 
@@ -20,12 +24,18 @@ los QR impresos desde la página siguen siendo correctos.
 
 ## Publicar en Vercel (desde GitHub)
 
+Ya está creado el proyecto `forestid-feria`. Para recrearlo desde cero o revisar la
+configuración:
+
 1. En Vercel: **Add New → Project → Import Git Repository** y elige este repositorio.
 2. En **Root Directory** selecciona **`feria`** (importante: así no se publica el código PHP,
    ni `docs/`, ni los `.sql` del repositorio).
 3. Framework Preset: **Other**. Build Command: vacío. Output Directory: vacío (o `.`).
 4. **Deploy**.
 5. Abre la URL resultante y comprueba que aparecen los tres QR.
+
+> La protección de despliegues está en **solo previews**: la URL de producción es pública
+> (necesario para que los QR funcionen en la feria) y los previews siguen privados.
 
 > No subas el repositorio completo como sitio estático: expondría `database/*.sql`, `docs/`
 > y el código fuente. El directorio raíz del proyecto en Vercel debe ser `feria/`.
