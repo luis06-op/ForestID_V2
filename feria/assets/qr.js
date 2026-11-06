@@ -48,12 +48,27 @@
     function descargar(contenedor, nombre) {
         var canvas = contenedor ? contenedor.querySelector('canvas') : null;
         if (!canvas) { return; }
-        var enlace = document.createElement('a');
-        enlace.href = canvas.toDataURL('image/png');
-        enlace.download = nombre;
-        document.body.appendChild(enlace);
-        enlace.click();
-        document.body.removeChild(enlace);
+        try {
+            canvas.toBlob(function (blob) {
+                if (!blob) { return; }
+                var url = URL.createObjectURL(blob);
+                var enlace = document.createElement('a');
+                enlace.href = url;
+                enlace.download = nombre;
+                document.body.appendChild(enlace);
+                enlace.click();
+                document.body.removeChild(enlace);
+                setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+            }, 'image/png');
+        } catch (e) {
+            // Fallback: data URL (por si toBlob no está disponible).
+            var enlace2 = document.createElement('a');
+            enlace2.href = canvas.toDataURL('image/png');
+            enlace2.download = nombre;
+            document.body.appendChild(enlace2);
+            enlace2.click();
+            document.body.removeChild(enlace2);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
