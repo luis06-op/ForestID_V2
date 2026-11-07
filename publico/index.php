@@ -1,360 +1,679 @@
 <?php
 /**
- * ForestID — Página de entrada (diseño v3, sistema PRIVADO de Emincut)
- * Emincut | El Bagre, Antioquia
- * Desarrollado por aprendices del SENA – Centro de Formación Minero Ambiental, El Bagre
+ * ForestID — Portada pública (rediseño editorial)
+ * Emincut S.A.S. | El Bagre, Antioquia
  *
- * Esta página no consulta la base de datos ni muestra información de árboles:
- * solo presenta el sistema y lleva al login. Si ya hay sesión, redirige al panel.
- *
- * Imágenes opcionales en assets/img/ (si faltan, se ve un fondo verde):
- *   hero-bosque.jpg  -> fondo del hero, horizontal, mín. 1600px (ideal: área reforestada de Emincut)
- *   emincut.jpg      -> foto de la sección del equipo
+ * Esta página no consulta la base de datos ni muestra datos reales de árboles.
+ * Presenta el sistema y lleva al acceso. Si hay sesión de administrador u
+ * operario, redirige al panel correspondiente.
  */
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/auth_check.php';
 
-// Solo los paneles internos se redirigen: un UsuarioPublico (o un rol sin panel)
-// debe ver esta portada. Si se redirige a sí mismo se produce un bucle infinito.
+// Solo los paneles internos se redirigen. Un UsuarioPublico (o un rol sin
+// panel) debe ver esta portada; redirigirlo a sí mismo crearía un bucle.
 if (esta_autenticado() && (es_admin() || es_operario())) {
     redirigir_segun_rol();
     exit;
 }
 
-$titulo_pagina = 'ForestID — Control de siembra y hectáreas forestadas | Emincut';
-require_once __DIR__ . '/../includes/header.php';
+$titulo_pagina = 'ForestID — Cada árbol sembrado queda registrado | Emincut';
+$meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento de los árboles sembrados por Emincut después de la minería en El Bagre, Antioquia.';
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($titulo_pagina) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($meta_descripcion) ?>">
+    <meta name="author" content="Emincut S.A.S.">
+    <meta name="theme-color" content="#1F3519">
 
-<style>
-    /* ================= Fondo del hero: amanecer dorado sobre colinas ================= */
-    .hero-sol {
-        position: relative;
-        background-color: #E9A22E;
-        background-image:
-            radial-gradient(60% 55% at 76% 26%, rgba(242,182,50,.98) 0%, rgba(242,182,50,0) 62%),
-            radial-gradient(85% 70% at 20% 100%, rgba(91,124,58,.95) 0%, rgba(91,124,58,0) 65%),
-            radial-gradient(110% 80% at 60% 125%, rgba(34,55,28,1) 0%, rgba(34,55,28,0) 70%),
-            linear-gradient(160deg, #F2B632 0%, #E9A22E 45%, #C9861D 100%);
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="ForestID — Cada árbol sembrado queda registrado">
+    <meta property="og:description" content="Registro, ubicación y seguimiento del inventario forestal de Emincut en El Bagre, Antioquia.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CO">
 
-    /* ---- Sol animado con rayos girando ---- */
-    .sol-rayos {
-        position: absolute;
-        top: 6%; right: 8%;
-        width: 340px; height: 340px;
-        pointer-events: none;
-        opacity: .55;
-    }
-    .sol-rayos .disco {
-        position: absolute; inset: 32%;
-        border-radius: 50%;
-        background: radial-gradient(circle, #FFF3CE 0%, #F2B632 65%, rgba(242,182,50,0) 72%);
-        animation: pulso-sol 5s ease-in-out infinite;
-    }
-    .sol-rayos .rayo {
-        position: absolute; top: 50%; left: 50%;
-        width: 10px; height: 46%;
-        margin-left: -5px;
-        border-radius: 999px;
-        background: linear-gradient(to top, rgba(255,243,206,.9), rgba(255,243,206,0));
-        transform-origin: 50% 0%;
-    }
-    .sol-rayos .girar {
-        position: absolute; inset: 0;
-        animation: girar-sol 36s linear infinite;
-    }
-    @keyframes girar-sol { to { transform: rotate(360deg); } }
-    @keyframes pulso-sol {
-        0%, 100% { transform: scale(1); filter: blur(0); }
-        50%      { transform: scale(1.12); filter: blur(2px); }
-    }
-    @media (max-width: 640px) { .sol-rayos { width: 200px; height: 200px; opacity: .4; } }
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231F3519'/%3E%3Ccircle cx='42' cy='20' r='11' fill='%23F4B72E'/%3E%3Cpath d='M6 46c12-10 28-12 52-3v9H6z' fill='%235B7C3A'/%3E%3Cpath d='M6 54c16-4 34-3 52 2v2H6z' fill='%23FBFAF5'/%3E%3C/svg%3E">
 
-    /* ---- Hojas flotantes ---- */
-    .hoja {
-        position: absolute;
-        color: rgba(53, 80, 43, .5);
-        animation-name: caer;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-    }
-    @keyframes caer {
-        0%   { transform: translateY(-8%) rotate(0deg); opacity: 0; }
-        10%  { opacity: .8; }
-        90%  { opacity: .5; }
-        100% { transform: translateY(560px) rotate(300deg); opacity: 0; }
-    }
+    <!-- Tipografía editorial: Bricolage Grotesque + Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    /* ---- Reveal al hacer scroll ---- */
-    .al-scroll {
-        opacity: 0;
-        transform: translateY(34px);
-        transition: opacity .8s cubic-bezier(.22,.68,.32,1), transform .8s cubic-bezier(.22,.68,.32,1);
-        will-change: opacity, transform;
-    }
-    .al-scroll.visible { opacity: 1; transform: translateY(0); }
-    .al-scroll.d1 { transition-delay: .12s; }
-    .al-scroll.d2 { transition-delay: .24s; }
-    .al-scroll.d3 { transition-delay: .36s; }
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/publico-inicio.css?v=20261107">
+    <script>document.documentElement.classList.add('fid-js');</script>
+</head>
+<body class="fid-inicio">
+<a class="fid-skip" href="#contenido">Saltar al contenido</a>
 
-    /* ---- Contador animado ---- */
-    .cifra { font-variant-numeric: tabular-nums; }
-
-    /* ---- Subrayado que se dibuja en los títulos ---- */
-    .linea-sol {
-        height: 5px;
-        width: 88px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, var(--emi-amarillo), var(--emi-ambar));
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform .9s cubic-bezier(.22,.68,.32,1) .2s;
-    }
-    .visible .linea-sol, .linea-sol.visible { transform: scaleX(1); }
-
-    /* ---- Numerales de pasos ---- */
-    .paso-num {
-        font-family: 'Chakra Petch', sans-serif;
-        background-image: linear-gradient(135deg, var(--emi-ambar) 10%, var(--emi-amarillo) 60%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        transition: transform .45s cubic-bezier(.34,1.56,.64,1);
-    }
-    .emi-card:hover .paso-num { transform: scale(1.18) rotate(-3deg); }
-
-    /* ---- Brillo que barre el botón CTA ---- */
-    .barra-brillo { position: relative; overflow: hidden; }
-    .barra-brillo::after {
-        content: '';
-        position: absolute; top: 0; left: -80%;
-        width: 55%; height: 100%;
-        background: linear-gradient(105deg, transparent, rgba(255,255,255,.55), transparent);
-        transform: skewX(-20deg);
-        animation: brillo 4.5s ease-in-out infinite;
-    }
-    @keyframes brillo {
-        0%, 55%  { left: -80%; }
-        75%, 100% { left: 130%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .sol-rayos .girar, .sol-rayos .disco, .hoja, .barra-brillo::after { animation: none !important; }
-        .al-scroll { opacity: 1; transform: none; transition: none; }
-        .linea-sol { transform: scaleX(1); transition: none; }
-    }
-</style>
-
-<!-- HERO -->
-<section class="hero-sol relative text-white block overflow-hidden">
-    <div class="absolute inset-0 z-0">
-        <img src="<?= BASE_URL ?>assets/img/hero-bosque.jpg" alt="" class="w-full h-full object-cover opacity-35 mix-blend-multiply" onerror="this.remove()">
-        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(26,43,21,.85) 0%, rgba(34,55,28,.25) 45%, rgba(233,162,46,.08) 100%)"></div>
-    </div>
-
-    <!-- Sol con rayos girando -->
-    <div class="sol-rayos z-0" aria-hidden="true">
-        <div class="girar">
-            <span class="rayo" style="transform:rotate(0deg)"></span>
-            <span class="rayo" style="transform:rotate(30deg)"></span>
-            <span class="rayo" style="transform:rotate(60deg)"></span>
-            <span class="rayo" style="transform:rotate(90deg)"></span>
-            <span class="rayo" style="transform:rotate(120deg)"></span>
-            <span class="rayo" style="transform:rotate(150deg)"></span>
-            <span class="rayo" style="transform:rotate(180deg)"></span>
-            <span class="rayo" style="transform:rotate(210deg)"></span>
-            <span class="rayo" style="transform:rotate(240deg)"></span>
-            <span class="rayo" style="transform:rotate(270deg)"></span>
-            <span class="rayo" style="transform:rotate(300deg)"></span>
-            <span class="rayo" style="transform:rotate(330deg)"></span>
-        </div>
-        <div class="disco"></div>
-    </div>
-
-    <!-- Hojas cayendo -->
-    <div class="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-        <i data-lucide="leaf" class="hoja w-5 h-5" style="left:12%; animation-duration:11s; animation-delay:0s"></i>
-        <i data-lucide="leaf" class="hoja w-4 h-4" style="left:30%; animation-duration:14s; animation-delay:3s"></i>
-        <i data-lucide="leaf" class="hoja w-6 h-6" style="left:52%; animation-duration:12s; animation-delay:6s"></i>
-        <i data-lucide="leaf" class="hoja w-4 h-4" style="left:68%; animation-duration:16s; animation-delay:1.5s"></i>
-        <i data-lucide="leaf" class="hoja w-5 h-5" style="left:85%; animation-duration:13s; animation-delay:5s"></i>
-    </div>
-
-    <!-- Barra superior: logo oficial Emincut y acceso -->
-    <header class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
-        <a href="<?= BASE_URL ?>" class="flex items-center gap-3 group">
-            <span class="bg-white rounded-2xl p-2 shadow-lg shadow-black/20 group-hover:scale-105 transition-transform block w-[78px] h-[56px]">
-                <img src="<?= BASE_URL ?>assets/img/logo_emincut_oficial.svg" alt="Emincut" class="w-full h-full object-contain">
+<!-- ════════════════════════════════════════════════════
+     NAVEGACIÓN
+     ════════════════════════════════════════════════════ -->
+<header class="fid-nav" id="fid-nav">
+    <div class="fid-shell fid-nav__inner">
+        <a class="fid-brand" href="<?= BASE_URL ?>publico/index.php" aria-label="ForestID — Inicio">
+            <span class="fid-brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 48 48">
+                    <circle cx="33" cy="13" r="8" fill="#F4B72E"/>
+                    <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#5B7C3A"/>
+                    <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#1F3519"/>
+                </svg>
             </span>
-            <span class="leading-tight">
-                <span class="emi-display block font-bold text-xl tracking-wide text-[#22371C]">Forest<span style="color:#fff">ID</span></span>
-                <span class="block text-xs text-[#22371C]/70">Emincut · El Bagre</span>
+            <span class="fid-brand__text">
+                <strong>Forest<span>ID</span></strong>
+                <small>Emincut · El Bagre</small>
             </span>
         </a>
-        <a href="<?= BASE_URL ?>auth/login.php" class="emi-btn rounded-full px-5 py-2.5 text-sm shadow-lg" style="background:#22371C; color:var(--emi-amarillo)">
-            <span class="inline-flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i> Iniciar sesión</span>
-        </a>
-    </header>
 
-    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <p class="emi-rise emi-d1 text-sm sm:text-base font-semibold mb-4 emi-display uppercase tracking-[.18em] text-[#22371C]">
-            Sistema de control de restauración forestal posminería
-        </p>
+        <nav class="fid-nav__links" aria-label="Secciones de la portada">
+            <a href="#sistema">El sistema</a>
+            <a href="#proceso">El proceso</a>
+            <a href="#territorio">Territorio</a>
+            <a href="#equipo">Equipo</a>
+        </nav>
 
-        <h1 class="emi-rise emi-d2 font-heading font-extrabold text-4xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-tight max-w-4xl text-[#22371C]">
-            Cada árbol cuenta, ahora <span class="text-white" style="text-shadow:0 4px 18px rgba(34,55,28,.35)">también se cuenta</span>.
-        </h1>
-
-        <p class="emi-rise emi-d3 mt-6 text-lg max-w-2xl leading-relaxed text-[#22371C]/85">
-            ForestID le permite a Emincut llevar el registro de los árboles que siembra y de las hectáreas forestadas después de la minería.
-        </p>
-
-        <div class="mt-8 flex flex-wrap items-center gap-4 emi-rise emi-d4">
-            <a href="<?= BASE_URL ?>auth/login.php" class="emi-btn barra-brillo rounded-full px-8 py-3.5 text-sm shadow-xl" style="background:#22371C; color:var(--emi-amarillo)">
-                <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="log-in" class="w-4 h-4"></i> Ingresar al sistema</span>
+        <div class="fid-nav__actions">
+            <a class="fid-btn fid-btn--small fid-btn--forest" href="<?= BASE_URL ?>auth/login.php">
+                Ingresar
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </a>
         </div>
-        <p class="mt-4 text-xs text-[#22371C]/65 emi-rise emi-d4">Acceso solo para personal autorizado de Emincut.</p>
+
+        <button class="fid-nav__toggle" id="fid-menu-btn" type="button" aria-expanded="false" aria-controls="fid-menu" aria-label="Abrir menú de navegación">
+            <span></span><span></span><span></span>
+        </button>
     </div>
+</header>
 
-    <!-- Franja de cifras con contadores animados -->
-    <div class="relative z-10 border-t border-[#22371C]/20" style="background:rgba(34,55,28,.55); backdrop-filter:blur(6px)">
-        <dl class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-            <div class="px-4 sm:px-6 lg:px-8 py-5">
-                <dt class="emi-display font-bold text-3xl cifra" style="color:var(--emi-amarillo)"><span data-contador="1250">0</span>+</dt>
-                <dd class="text-sm text-white/75">árboles registrados</dd>
-            </div>
-            <div class="px-4 sm:px-6 lg:px-8 py-5">
-                <dt class="emi-display font-bold text-3xl cifra" style="color:var(--emi-amarillo)"><span data-contador="18">0</span></dt>
-                <dd class="text-sm text-white/75">hectáreas forestadas</dd>
-            </div>
-            <div class="px-4 sm:px-6 lg:px-8 py-5">
-                <dt class="emi-display font-bold text-3xl cifra" style="color:var(--emi-amarillo)"><span data-contador="42">0</span></dt>
-                <dd class="text-sm text-white/75">especies catalogadas</dd>
-            </div>
-            <div class="px-4 sm:px-6 lg:px-8 py-5">
-                <dt class="emi-display font-bold text-3xl cifra" style="color:var(--emi-amarillo)">100<span class="text-xl">%</span></dt>
-                <dd class="text-sm text-white/75">trazabilidad verificable</dd>
-            </div>
-        </dl>
+<div class="fid-menu" id="fid-menu" hidden>
+    <div class="fid-shell fid-menu__inner">
+        <a href="#sistema">El sistema</a>
+        <a href="#proceso">El proceso</a>
+        <a href="#territorio">Territorio</a>
+        <a href="#equipo">Equipo</a>
+        <a class="fid-btn fid-btn--forest" href="<?= BASE_URL ?>auth/login.php">
+            Ingresar al sistema
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
     </div>
-</section>
+</div>
 
-<!-- QUÉ HACE -->
-<section id="que-hace" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="max-w-2xl al-scroll">
-        <h2 class="font-heading font-extrabold text-3xl sm:text-4xl leading-tight" style="color:var(--emi-tinta)">Lo que antes se contaba a mano, ahora queda registrado</h2>
-        <div class="linea-sol mt-3"></div>
-        <p class="mt-4" style="color:var(--emi-tinta-suave)">Después de la minería, Emincut debe poder demostrar cuánto sembró y cómo está. ForestID reúne esa información en un solo lugar.</p>
-    </div>
+<main id="contenido">
 
-    <ul class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <li class="emi-card p-6 al-scroll">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-amarillo-suave); color:var(--emi-ambar)">
-                <i data-lucide="tree-pine" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Registro de cada árbol</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Especie, fecha de siembra, diámetro, altura y fotos. Cada individuo tiene su ficha y su placa con código QR.</p>
-        </li>
-        <li class="emi-card p-6 al-scroll d1">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
-                <i data-lucide="layers" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Hectáreas forestadas</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Los árboles se agrupan por zona, para saber qué área ya está sembrada y cuál falta.</p>
-        </li>
-        <li class="emi-card p-6 al-scroll d2">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-amarillo-suave); color:var(--emi-ambar)">
-                <i data-lucide="map-pinned" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Ubicación exacta</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Cada árbol queda georreferenciado en el mapa, con sus coordenadas.</p>
-        </li>
-        <li class="emi-card p-6 al-scroll">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
-                <i data-lucide="clipboard-check" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Verificación en campo</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Los operarios revisan el estado de salud y registran riegos, podas y fertilizaciones. Así se sabe cuántos árboles siguen vivos.</p>
-        </li>
-        <li class="emi-card p-6 al-scroll d1">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-amarillo-suave); color:var(--emi-ambar)">
-                <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Reportes de avance</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Gráficos y cifras del total sembrado, el estado de los árboles y las zonas, listos para presentar.</p>
-        </li>
-        <li class="emi-card p-6 al-scroll d2">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style="background:var(--emi-verde-suave); color:var(--emi-verde)">
-                <i data-lucide="shield-check" class="w-6 h-6"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl" style="color:var(--emi-tinta)">Información privada</h3>
-            <p class="mt-2 text-sm leading-relaxed" style="color:var(--emi-tinta-suave)">Solo entra personal autorizado, con usuario y contraseña. Administración y operarios ven lo que les corresponde.</p>
-        </li>
-    </ul>
-</section>
+    <!-- ════════════════════════════════════════════════════
+         HERO
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-hero" aria-labelledby="fid-hero-title">
+        <div class="fid-shell fid-hero__grid">
+            <div class="fid-hero__copy">
+                <p class="fid-kicker fid-reveal">Restauración forestal · El Bagre, Antioquia</p>
 
-<!-- CÓMO SE TRABAJA -->
-<section class="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style="background:#22371C">
-    <!-- brillo de fondo -->
-    <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl pointer-events-none" style="background:radial-gradient(circle, rgba(242,182,50,.28) 0%, transparent 70%)"></div>
-    <div class="max-w-7xl mx-auto relative">
-        <h2 class="font-heading font-extrabold text-3xl sm:text-4xl max-w-2xl leading-tight text-white al-scroll">Del vivero a la verificación</h2>
-        <div class="linea-sol mt-3"></div>
-        <ol class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <li class="p-8 rounded-3xl border border-white/10 al-scroll" style="background:rgba(255,255,255,.05)">
-                <span class="paso-num font-bold text-6xl">01</span>
-                <h3 class="font-heading font-bold text-xl mt-3 text-white">Se siembra y se registra</h3>
-                <p class="mt-2 text-sm leading-relaxed text-white/70">El operario registra el árbol en campo: especie, ubicación y medidas iniciales.</p>
-            </li>
-            <li class="p-8 rounded-3xl border border-white/10 al-scroll d1" style="background:rgba(255,255,255,.05)">
-                <span class="paso-num font-bold text-6xl">02</span>
-                <h3 class="font-heading font-bold text-xl mt-3 text-white">Se marca con su placa</h3>
-                <p class="mt-2 text-sm leading-relaxed text-white/70">El árbol recibe una placa con código QR para identificarlo en los recorridos de seguimiento.</p>
-            </li>
-            <li class="p-8 rounded-3xl border border-white/10 al-scroll d2" style="background:rgba(255,255,255,.05)">
-                <span class="paso-num font-bold text-6xl">03</span>
-                <h3 class="font-heading font-bold text-xl mt-3 text-white">Se verifica y se reporta</h3>
-                <p class="mt-2 text-sm leading-relaxed text-white/70">Administración revisa conteos, hectáreas y estado de salud, y genera los reportes de avance.</p>
-            </li>
-        </ol>
-    </div>
-</section>
+                <h1 class="fid-hero__title fid-reveal" id="fid-hero-title">
+                    Sembrar es el comienzo.
+                    <span class="fid-mark">Registrar</span> es cómo lo demostramos.
+                </h1>
 
-<!-- EQUIPO -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="al-scroll relative h-80 lg:h-[420px] rounded-3xl overflow-hidden flex items-center justify-center emi-card"
-             style="background:linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-ambar) 55%, var(--emi-verde) 130%)">
-            <i data-lucide="trees" class="w-24 h-24" style="color:rgba(255,255,255,.5)"></i>
-            <img src="<?= BASE_URL ?>assets/img/emincut.jpg" alt="Equipo de desarrollo de ForestID" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+                <p class="fid-hero__lead fid-reveal">
+                    ForestID reúne cada árbol sembrado por Emincut después de la minería:
+                    especie, coordenada, estado y seguimiento. La restauración deja de ser
+                    una cifra y se vuelve verificable.
+                </p>
+
+                <div class="fid-hero__actions fid-reveal">
+                    <a class="fid-btn fid-btn--forest" href="<?= BASE_URL ?>auth/login.php">
+                        Ingresar al sistema
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a class="fid-link" href="#sistema">
+                        Conocer el sistema
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M8 2v11M3.5 9 8 13.5 12.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <p class="fid-hero__note fid-reveal">
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                        <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                    Acceso exclusivo para personal autorizado de Emincut.
+                </p>
+            </div>
+
+            <div class="fid-hero__art" aria-hidden="true">
+                <span class="fid-hero__sun"></span>
+
+                <svg class="fid-contours" viewBox="0 0 560 560" fill="none">
+                    <g stroke="currentColor" stroke-width="1">
+                        <path d="M280 48c126 0 222 76 222 182 0 112-94 190-222 190S58 342 58 230 154 48 280 48Z"/>
+                        <path d="M280 83c105 0 187 64 187 151s-82 158-187 158S93 334 93 234 175 83 280 83Z"/>
+                        <path d="M280 118c85 0 151 52 151 121s-66 126-151 126-151-57-151-126 66-121 151-121Z"/>
+                        <path d="M280 154c64 0 113 39 113 90s-49 94-113 94-113-43-113-94 49-90 113-90Z"/>
+                        <path d="M280 190c43 0 76 26 76 60s-33 62-76 62-76-28-76-62 33-60 76-60Z"/>
+                        <path d="M280 226c22 0 38 13 38 30s-16 30-38 30-38-13-38-30 16-30 38-30Z"/>
+                    </g>
+                    <path d="M67 380c38-24 62-7 91-29s60-44 104-28 57 12 90-9 73-16 112 10" stroke="#F4B72E" stroke-width="1.4" opacity=".65"/>
+                    <path d="M37 430c46-20 79-4 111-25s68-38 111-18 70 5 108-15 74-7 120 19" stroke="currentColor" stroke-width="1"/>
+                </svg>
+
+                <figure class="fid-specimen">
+                    <div class="fid-specimen__top">
+                        <span>ForestID · Ficha de campo</span>
+                        <span>N.º 001</span>
+                    </div>
+
+                    <div class="fid-specimen__art">
+                        <svg class="fid-specimen__rings" viewBox="0 0 260 190" fill="none">
+                            <ellipse cx="132" cy="94" rx="90" ry="82" stroke="#2C4524" stroke-width="1" opacity=".45"/>
+                            <ellipse cx="129" cy="96" rx="81" ry="74" stroke="#2C4524" stroke-width="1" opacity=".55"/>
+                            <ellipse cx="131" cy="95" rx="72" ry="66" stroke="#2C4524" stroke-width="1" opacity=".65"/>
+                            <ellipse cx="128" cy="97" rx="62" ry="57" stroke="#2C4524" stroke-width="1" opacity=".7"/>
+                            <ellipse cx="130" cy="96" rx="52" ry="48" stroke="#E39A24" stroke-width="1.1" opacity=".85"/>
+                            <ellipse cx="129" cy="96" rx="43" ry="40" stroke="#2C4524" stroke-width="1" opacity=".7"/>
+                            <ellipse cx="130" cy="95" rx="34" ry="31" stroke="#2C4524" stroke-width="1" opacity=".75"/>
+                            <ellipse cx="130" cy="96" rx="24" ry="22" stroke="#2C4524" stroke-width="1" opacity=".8"/>
+                            <ellipse cx="130" cy="95" rx="14" ry="13" stroke="#2C4524" stroke-width="1" opacity=".9"/>
+                            <circle cx="130" cy="96" r="5" fill="#1F3519"/>
+                            <path d="M130 96 207 48M130 96 66 151M130 96V18" stroke="#1F3519" stroke-width=".8" opacity=".5"/>
+                            <g transform="translate(191 137) rotate(-12)" stroke="#5B7C3A" stroke-width="1.2">
+                                <path d="M0 0c13-10 28-10 39 1-13 10-28 10-39-1Z"/>
+                                <path d="M3 0h33"/>
+                            </g>
+                        </svg>
+                        <span class="fid-specimen__stamp">Trazable</span>
+                    </div>
+
+                    <figcaption class="fid-specimen__body">
+                        <div class="fid-specimen__species">
+                            <span>Especie</span>
+                            <strong>Ceiba pentandra</strong>
+                        </div>
+                        <dl class="fid-specimen__data">
+                            <div>
+                                <dt>Zona</dt>
+                                <dd>Z-04 · El Bagre</dd>
+                            </div>
+                            <div>
+                                <dt>Estado</dt>
+                                <dd>En seguimiento</dd>
+                            </div>
+                        </dl>
+                        <div class="fid-specimen__qr">
+                            <svg viewBox="0 0 48 48">
+                                <rect width="48" height="48" fill="#FFFFFF"/>
+                                <g fill="#1F3519">
+                                    <rect x="2" y="2" width="14" height="14"/>
+                                    <rect x="5" y="5" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="7" y="7" width="4" height="4"/>
+                                    <rect x="32" y="2" width="14" height="14"/>
+                                    <rect x="35" y="5" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="37" y="7" width="4" height="4"/>
+                                    <rect x="2" y="32" width="14" height="14"/>
+                                    <rect x="5" y="35" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="7" y="37" width="4" height="4"/>
+                                    <rect x="20" y="2" width="3" height="3"/>
+                                    <rect x="25" y="5" width="4" height="3"/>
+                                    <rect x="20" y="10" width="3" height="5"/>
+                                    <rect x="24" y="12" width="5" height="3"/>
+                                    <rect x="20" y="19" width="4" height="4"/>
+                                    <rect x="27" y="20" width="3" height="3"/>
+                                    <rect x="33" y="19" width="4" height="4"/>
+                                    <rect x="39" y="21" width="3" height="3"/>
+                                    <rect x="2" y="20" width="4" height="4"/>
+                                    <rect x="9" y="21" width="3" height="3"/>
+                                    <rect x="14" y="19" width="4" height="5"/>
+                                    <rect x="19" y="27" width="5" height="3"/>
+                                    <rect x="27" y="26" width="3" height="4"/>
+                                    <rect x="33" y="27" width="5" height="3"/>
+                                    <rect x="40" y="26" width="3" height="4"/>
+                                    <rect x="20" y="33" width="4" height="4"/>
+                                    <rect x="26" y="39" width="3" height="4"/>
+                                    <rect x="33" y="33" width="4" height="3"/>
+                                    <rect x="40" y="34" width="3" height="4"/>
+                                    <rect x="36" y="40" width="5" height="3"/>
+                                </g>
+                            </svg>
+                            <span>Placa física<br>Escanear para abrir la ficha</span>
+                        </div>
+                    </figcaption>
+                </figure>
+
+                <div class="fid-hero__meta">
+                    <span class="fid-hero__tag">Muestra ilustrativa</span>
+                    <span class="fid-hero__coords">7°59′ N · 74°52′ O</span>
+                </div>
+            </div>
         </div>
 
-        <div class="space-y-5 al-scroll d1">
-            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl leading-tight" style="color:var(--emi-tinta)">Hecho a la medida de Emincut</h2>
-            <div class="linea-sol visible"></div>
-            <p class="leading-relaxed" style="color:var(--emi-tinta-suave)">
-                Emincut es una empresa minera legal y certificada de El Bagre, Antioquia. Su reto era contar, sembrar y verificar las hectáreas forestadas después de la minería. ForestID se construyó para resolverlo.
-            </p>
-            <p class="leading-relaxed" style="color:var(--emi-tinta-suave)">
-                Lo desarrollamos <strong style="color:var(--emi-ambar)">Luis Ángel Muñoz, Gabriel Correa y Valentina Hernández</strong>, aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, durante nuestra etapa productiva en las instalaciones de Emincut.
-            </p>
+        <div class="fid-shell">
+            <dl class="fid-stats fid-reveal">
+                <div class="fid-stat">
+                    <dt>1.250<span>+</span></dt>
+                    <dd>Árboles registrados</dd>
+                </div>
+                <div class="fid-stat">
+                    <dt>18</dt>
+                    <dd>Hectáreas en restauración</dd>
+                </div>
+                <div class="fid-stat">
+                    <dt>42</dt>
+                    <dd>Especies catalogadas</dd>
+                </div>
+                <div class="fid-stat">
+                    <dt>100<span>%</span></dt>
+                    <dd>Trazabilidad por QR</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         EL SISTEMA
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-section fid-section--paper" id="sistema" aria-labelledby="fid-sistema-title">
+        <div class="fid-shell">
+            <header class="fid-section__head">
+                <div class="fid-reveal">
+                    <p class="fid-kicker">El sistema</p>
+                    <h2 id="fid-sistema-title">Lo que no se registra, no se puede cuidar.</h2>
+                </div>
+                <p class="fid-section__lead fid-reveal">
+                    Cada individuo tiene una ficha, una placa y un historial. Así el trabajo
+                    de campo se convierte en información que se puede revisar, cruzar y presentar.
+                </p>
+            </header>
+
+            <div class="fid-system">
+                <aside class="fid-note fid-reveal" aria-label="Nota de campo">
+                    <span class="fid-note__label">Nota de campo</span>
+                    <p>En campo se registra la especie, la ubicación y las medidas. En oficina se revisan conteos, hectáreas y estado de salud. La misma información, dos miradas.</p>
+                    <span class="fid-note__sign">Equipo ForestID</span>
+                </aside>
+
+                <ol class="fid-features">
+                    <li class="fid-feature fid-reveal">
+                        <span class="fid-feature__num">01</span>
+                        <div>
+                            <h3>Ficha por individuo</h3>
+                            <p>Especie, fecha de siembra, altura, diámetro y fotografías. Cada árbol tiene su propio registro y su placa con código QR.</p>
+                        </div>
+                    </li>
+                    <li class="fid-feature fid-reveal">
+                        <span class="fid-feature__num">02</span>
+                        <div>
+                            <h3>Seguimiento de campo</h3>
+                            <p>Riegos, podas, fertilizaciones y estado fitosanitario quedan asociados a cada visita del operario.</p>
+                        </div>
+                    </li>
+                    <li class="fid-feature fid-reveal">
+                        <span class="fid-feature__num">03</span>
+                        <div>
+                            <h3>Zonas y coordenadas</h3>
+                            <p>Los individuos se agrupan por área de siembra y quedan georreferenciados para saber qué se plantó y dónde.</p>
+                        </div>
+                    </li>
+                    <li class="fid-feature fid-reveal">
+                        <span class="fid-feature__num">04</span>
+                        <div>
+                            <h3>Reportes de restauración</h3>
+                            <p>Conteos, hectáreas y estado de salud organizados para revisar el avance y presentarlo ante la autoridad ambiental.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         EL PROCESO
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-section fid-section--forest" id="proceso" aria-labelledby="fid-proceso-title">
+        <div class="fid-shell">
+            <header class="fid-section__head">
+                <div class="fid-reveal">
+                    <p class="fid-kicker fid-kicker--light">El proceso</p>
+                    <h2 id="fid-proceso-title">Del vivero al reporte, sin perder el hilo.</h2>
+                </div>
+                <p class="fid-section__lead fid-reveal">
+                    Tres momentos sostienen la trazabilidad: lo que se registra al sembrar,
+                    lo que se marca en campo y lo que se verifica después.
+                </p>
+            </header>
+
+            <ol class="fid-steps">
+                <li class="fid-step fid-reveal">
+                    <span class="fid-step__num">01</span>
+                    <h3>Siembra y registro</h3>
+                    <p>El operario registra la especie, la ubicación y las medidas iniciales directamente desde el campo.</p>
+                </li>
+                <li class="fid-step fid-reveal">
+                    <span class="fid-step__num">02</span>
+                    <h3>Placa y código QR</h3>
+                    <p>Cada individuo recibe una placa física con un código que abre su ficha pública desde cualquier teléfono.</p>
+                </li>
+                <li class="fid-step fid-reveal">
+                    <span class="fid-step__num">03</span>
+                    <h3>Verificación y reporte</h3>
+                    <p>Administración revisa el avance, el estado de los árboles y genera los reportes de restauración.</p>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         TERRITORIO
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-section fid-section--white" id="territorio" aria-labelledby="fid-territorio-title">
+        <div class="fid-shell fid-territory">
+            <div class="fid-territory__copy">
+                <p class="fid-kicker fid-reveal">Territorio</p>
+                <h2 class="fid-reveal" id="fid-territorio-title">El territorio también se puede leer.</h2>
+                <p class="fid-reveal">
+                    Las zonas de siembra se dibujan, se agrupan y se cruzan con las coordenadas
+                    de cada árbol. Así se sabe qué área está intervenida, cuántos individuos
+                    la componen y cómo evoluciona la restauración.
+                </p>
+
+                <ul class="fid-data-list fid-reveal">
+                    <li><span>Zonas</span><strong>Polígonos de siembra</strong></li>
+                    <li><span>Ubicación</span><strong>Coordenadas por individuo</strong></li>
+                    <li><span>Cobertura</span><strong>Hectáreas en restauración</strong></li>
+                    <li><span>Consulta</span><strong>Ficha pública por QR</strong></li>
+                </ul>
+            </div>
+
+            <figure class="fid-map fid-reveal">
+                <div class="fid-map__frame">
+                    <svg viewBox="0 0 600 450" role="img" aria-label="Plano esquemático de zonas de siembra y ríos en El Bagre, Antioquia">
+                        <rect width="600" height="450" fill="#1F3519"/>
+
+                        <!-- Retícula de plano -->
+                        <g stroke="rgba(251,250,245,.07)" stroke-width="1">
+                            <path d="M60 0v450M120 0v450M180 0v450M240 0v450M300 0v450M360 0v450M420 0v450M480 0v450M540 0v450"/>
+                            <path d="M0 50h600M0 100h600M0 150h600M0 200h600M0 250h600M0 300h600M0 350h600M0 400h600"/>
+                        </g>
+
+                        <!-- Curvas de nivel -->
+                        <g fill="none" stroke="rgba(251,250,245,.13)" stroke-width="1">
+                            <path d="M-20 95c82-46 132 19 213-8s102-68 194-45 132 4 233-40"/>
+                            <path d="M-20 130c88-44 136 21 218-7s100-64 192-42 132 3 230-38"/>
+                            <path d="M-20 168c92-41 139 23 222-5s98-60 188-38 132 2 228-35"/>
+                            <path d="M-20 360c72-24 122 8 188-18s118-54 195-22 132 24 255-14"/>
+                            <path d="M-20 398c76-24 124 8 190-17s116-50 193-19 132 23 255-12"/>
+                        </g>
+
+                        <!-- Río Nechí -->
+                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#8FA676" stroke-width="24" opacity=".32"/>
+                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#FBFAF5" stroke-width="1.3" stroke-dasharray="3 6" opacity=".55"/>
+                        <text x="408" y="300" fill="rgba(251,250,245,.5)" font-family="Manrope, sans-serif" font-size="9" font-weight="700" letter-spacing="3" transform="rotate(9 408 300)">RÍO NECHÍ</text>
+
+                        <!-- Zonas de siembra -->
+                        <g fill="rgba(244,183,46,.12)" stroke="#F4B72E" stroke-width="1.2" stroke-dasharray="5 4">
+                            <path d="M389 105l76 14 27 62-43 48-77-9-21-58z"/>
+                            <path d="M139 292l66-19 47 39-13 58-65 18-45-36z"/>
+                        </g>
+
+                        <!-- Individuos georreferenciados -->
+                        <g>
+                            <g fill="#F4B72E">
+                                <circle cx="425" cy="168" r="5"/>
+                                <circle cx="452" cy="191" r="4"/>
+                                <circle cx="404" cy="205" r="4"/>
+                                <circle cx="172" cy="336" r="5"/>
+                                <circle cx="204" cy="360" r="4"/>
+                            </g>
+                            <g fill="none" stroke="#F4B72E" stroke-width="1" opacity=".55">
+                                <circle cx="425" cy="168" r="12"/>
+                                <circle cx="172" cy="336" r="12"/>
+                            </g>
+                        </g>
+
+                        <!-- Rótulos del plano -->
+                        <g fill="#FBFAF5" font-family="Manrope, sans-serif">
+                            <text x="34" y="40" font-size="11" font-weight="800" letter-spacing="3.4">EL BAGRE</text>
+                            <text x="34" y="57" font-size="6.5" font-weight="700" letter-spacing="2.2" opacity=".5">ANTIOQUIA · COLOMBIA</text>
+                            <text x="398" y="160" font-size="6.5" font-weight="700" letter-spacing="1.8" opacity=".6">Z-04</text>
+                            <text x="146" y="329" font-size="6.5" font-weight="700" letter-spacing="1.8" opacity=".6">Z-07</text>
+                        </g>
+
+                        <!-- Escala y norte -->
+                        <g stroke="rgba(251,250,245,.4)" stroke-width="1">
+                            <path d="M520 382v36M512 390l8-8 8 8"/>
+                            <path d="M512 410h16M512 418h16"/>
+                        </g>
+                        <text x="505" y="432" fill="rgba(251,250,245,.45)" font-family="Manrope, sans-serif" font-size="6" font-weight="700" letter-spacing="2">N</text>
+                    </svg>
+
+                    <div class="fid-map__legend">
+                        <span><i></i> Individuo registrado</span>
+                        <span><i class="is-zone"></i> Zona de siembra</span>
+                    </div>
+                </div>
+                <figcaption>
+                    <span>Plano esquemático</span>
+                    <span>No a escala</span>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         EQUIPO
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-section fid-section--paper" id="equipo" aria-labelledby="fid-equipo-title">
+        <div class="fid-shell fid-team">
+            <div class="fid-team__seal-wrap fid-reveal">
+                <div class="fid-seal" aria-hidden="true">
+                    <span>Hecho en</span>
+                    <strong>El Bagre</strong>
+                    <span>Antioquia · Colombia</span>
+                    <small>SENA · Emincut · 2026</small>
+                </div>
+                <p class="fid-team__seal-note">Un proyecto formativo que terminó resolviendo una necesidad real de operación.</p>
+            </div>
+
+            <div class="fid-team__copy">
+                <p class="fid-kicker fid-reveal">Quién lo hizo</p>
+                <h2 class="fid-reveal" id="fid-equipo-title">Un proyecto de aprendices. Un compromiso de empresa.</h2>
+                <p class="fid-reveal">
+                    ForestID nació durante la etapa productiva de tres aprendices del SENA,
+                    Centro de Formación Minero Ambiental de El Bagre, dentro de Emincut S.A.S.
+                    La empresa necesitaba demostrar lo que siembra; el equipo construyó la
+                    herramienta para hacerlo.
+                </p>
+
+                <ul class="fid-team__list fid-reveal">
+                    <li>
+                        <span>01</span>
+                        <div>
+                            <strong>Luis Ángel Muñoz M.</strong>
+                            <small>Arquitectura y desarrollo</small>
+                        </div>
+                    </li>
+                    <li>
+                        <span>02</span>
+                        <div>
+                            <strong>Gabriel Jaime Correa C.</strong>
+                            <small>Backend y base de datos</small>
+                        </div>
+                    </li>
+                    <li>
+                        <span>03</span>
+                        <div>
+                            <strong>Valentina Hernández Z.</strong>
+                            <small>Verificación y calidad</small>
+                        </div>
+                    </li>
+                </ul>
+
+                <p class="fid-team__memory fid-reveal">
+                    En memoria de <strong>Michael Rodríguez L.</strong> (2008–2026), parte de este equipo.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         LLAMADO FINAL
+         ════════════════════════════════════════════════════ -->
+    <section class="fid-cta" aria-labelledby="fid-cta-title">
+        <div class="fid-shell fid-cta__inner">
+            <div class="fid-cta__copy">
+                <p class="fid-kicker fid-reveal">Acceso al sistema</p>
+                <h2 class="fid-reveal" id="fid-cta-title">¿Haces parte del equipo de Emincut?</h2>
+                <p class="fid-reveal">
+                    Ingresa con tu usuario para registrar, verificar o consultar los árboles
+                    de la empresa.
+                </p>
+            </div>
+
+            <div class="fid-cta__actions fid-reveal">
+                <a class="fid-btn fid-btn--forest fid-btn--lg" href="<?= BASE_URL ?>auth/login.php">
+                    Ingresar al sistema
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a class="fid-link" href="<?= BASE_URL ?>publico/buscar.php">
+                    Buscar un árbol por su código QR
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <span class="fid-cta__note">Acceso restringido a personal autorizado</span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════
+     PIE
+     ════════════════════════════════════════════════════ -->
+<footer class="fid-footer">
+    <div class="fid-shell">
+        <div class="fid-footer__grid">
+            <div>
+                <a class="fid-brand fid-brand--light" href="<?= BASE_URL ?>publico/index.php" aria-label="ForestID — Inicio">
+                    <span class="fid-brand__mark" aria-hidden="true">
+                        <svg viewBox="0 0 48 48">
+                            <circle cx="33" cy="13" r="8" fill="#F4B72E"/>
+                            <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#5B7C3A"/>
+                            <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#FBFAF5"/>
+                        </svg>
+                    </span>
+                    <span class="fid-brand__text">
+                        <strong>Forest<span>ID</span></strong>
+                        <small>Emincut · El Bagre</small>
+                    </span>
+                </a>
+                <p class="fid-footer__desc">
+                    Aplicación de Emincut S.A.S. para el registro, seguimiento y trazabilidad
+                    del inventario forestal en El Bagre, Antioquia.
+                </p>
+            </div>
+
+            <div>
+                <h3>Navegación</h3>
+                <div class="fid-footer__links">
+                    <a href="<?= BASE_URL ?>publico/index.php">Inicio público</a>
+                    <a href="<?= BASE_URL ?>publico/buscar.php">Buscador QR</a>
+                    <a href="<?= BASE_URL ?>auth/login.php">Acceso restringido</a>
+                </div>
+            </div>
+
+            <div class="fid-footer__project">
+                <h3>Proyecto</h3>
+                <p>
+                    Desarrollado por aprendices del SENA, Centro de Formación Minero Ambiental
+                    de El Bagre, en etapa productiva con <strong>Emincut S.A.S.</strong>
+                </p>
+                <p>
+                    En memoria de <strong>Michael Rodríguez L.</strong> (2008–2026),
+                    parte de este equipo.
+                </p>
+            </div>
+        </div>
+
+        <div class="fid-footer__bottom">
+            <span>&copy; <?= date('Y') ?> Emincut S.A.S. — Todos los derechos reservados.</span>
+            <span>Hecho en El Bagre, Antioquia</span>
         </div>
     </div>
-</section>
+</footer>
 
-<!-- LLAMADO FINAL -->
-<section class="relative overflow-hidden py-20 px-4 text-center"
-         style="background:linear-gradient(135deg, var(--emi-amarillo) 0%, var(--emi-ambar) 100%)">
-    <!-- rayos tenues de fondo -->
-    <div class="absolute inset-0 opacity-25 pointer-events-none" style="background:repeating-conic-gradient(from 0deg at 50% 120%, rgba(255,255,255,.5) 0deg 6deg, transparent 6deg 18deg)"></div>
-    <h2 class="font-heading font-extrabold text-3xl sm:text-4xl relative z-10 text-[#22371C]">¿Eres parte del equipo de Emincut?</h2>
-    <p class="mt-3 relative z-10 text-[#22371C]/80">Ingresa con tu usuario para registrar o consultar los árboles.</p>
-    <a href="<?= BASE_URL ?>auth/login.php" class="emi-btn barra-brillo rounded-full px-8 py-3.5 text-sm mt-8 inline-flex relative z-10 shadow-xl" style="background:#22371C; color:var(--emi-amarillo)">
-        <span class="inline-flex items-center gap-2 relative z-10"><i data-lucide="log-in" class="w-4 h-4"></i> Iniciar sesión</span>
-    </a>
-</section>
+<script>
+(function () {
+    'use strict';
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+    var nav = document.getElementById('fid-nav');
+    var toggle = document.getElementById('fid-menu-btn');
+    var menu = document.getElementById('fid-menu');
+
+    function marcarScroll() {
+        if (!nav) return;
+        nav.classList.toggle('is-scrolled', window.scrollY > 8);
+    }
+    marcarScroll();
+    window.addEventListener('scroll', marcarScroll, { passive: true });
+
+    function abrirMenu(abierto) {
+        if (!toggle || !menu) return;
+        toggle.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+        toggle.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+        toggle.classList.toggle('is-open', abierto);
+        menu.hidden = !abierto;
+    }
+
+    if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+            abrirMenu(toggle.getAttribute('aria-expanded') !== 'true');
+        });
+
+        menu.querySelectorAll('a').forEach(function (enlace) {
+            enlace.addEventListener('click', function () { abrirMenu(false); });
+        });
+
+        document.addEventListener('keydown', function (evento) {
+            if (evento.key === 'Escape') abrirMenu(false);
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 900) abrirMenu(false);
+        });
+    }
+
+    var reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var elementos = document.querySelectorAll('.fid-reveal');
+
+    if (reducirMovimiento || !('IntersectionObserver' in window)) {
+        elementos.forEach(function (elemento) { elemento.classList.add('is-visible'); });
+        return;
+    }
+
+    var observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+            if (entrada.isIntersecting) {
+                entrada.target.classList.add('is-visible');
+                observador.unobserve(entrada.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+    elementos.forEach(function (elemento) { observador.observe(elemento); });
+})();
+</script>
+</body>
+</html>
