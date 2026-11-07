@@ -4,6 +4,9 @@ config/config.local.php
 .env
 .env.*
 
+# Diagnóstico temporal (eliminar tras resolver el error 500)
+diagnostico_temporal.php
+
 # Logs y respaldos
 *.log
 *.bak
@@ -15,11 +18,3 @@ Thumbs.db
 .vscode/
 .idea/
 .aider*
-
-# Archivos de agentes de IA (no necesarios en producción)
-.opencode/
-AGENTS.md
-CLAUDE.md
-AI.md
-*ai_skills*
-*.mcp*
