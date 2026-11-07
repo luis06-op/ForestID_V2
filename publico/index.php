@@ -38,7 +38,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_CO">
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232C5C3D'/%3E%3Ccircle cx='42' cy='20' r='11' fill='%23F5CC43'/%3E%3Cpath d='M6 46c12-10 28-12 52-3v9H6z' fill='%23467F36'/%3E%3Cpath d='M6 54c16-4 34-3 52 2v2H6z' fill='%23FBFAF5'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232C5C3D'/%3E%3Ccircle cx='42' cy='20' r='11' fill='%23F5CC43'/%3E%3Cpath d='M6 46c12-10 28-12 52-3v9H6z' fill='%23467F36'/%3E%3Cpath d='M6 54c16-4 34-3 52 2v2H6z' fill='%23F5CC43'/%3E%3C/svg%3E">
 
     <!-- Tipografía editorial: Bricolage Grotesque + Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -212,16 +212,16 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         </dl>
                         <div class="fid-specimen__qr">
                             <svg viewBox="0 0 48 48">
-                                <rect width="48" height="48" fill="#FFFFFF"/>
+                                <rect width="48" height="48" fill="#F5CC43"/>
                                 <g fill="#2C5C3D">
                                     <rect x="2" y="2" width="14" height="14"/>
-                                    <rect x="5" y="5" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="5" y="5" width="8" height="8" fill="#F5CC43"/>
                                     <rect x="7" y="7" width="4" height="4"/>
                                     <rect x="32" y="2" width="14" height="14"/>
-                                    <rect x="35" y="5" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="35" y="5" width="8" height="8" fill="#F5CC43"/>
                                     <rect x="37" y="7" width="4" height="4"/>
                                     <rect x="2" y="32" width="14" height="14"/>
-                                    <rect x="5" y="35" width="8" height="8" fill="#FFFFFF"/>
+                                    <rect x="5" y="35" width="8" height="8" fill="#F5CC43"/>
                                     <rect x="7" y="37" width="4" height="4"/>
                                     <rect x="20" y="2" width="3" height="3"/>
                                     <rect x="25" y="5" width="4" height="3"/>
@@ -416,7 +416,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
 
                         <!-- Río Nechí -->
                         <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#467F36" stroke-width="24" opacity=".48"/>
-                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#FBFAF5" stroke-width="1.3" stroke-dasharray="3 6" opacity=".55"/>
+                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#F5CC43" stroke-width="1.3" stroke-dasharray="3 6" opacity=".55"/>
                         <text x="408" y="300" fill="rgba(251,250,245,.5)" font-family="Manrope, sans-serif" font-size="9" font-weight="700" letter-spacing="3" transform="rotate(9 408 300)">RÍO NECHÍ</text>
 
                         <!-- Zonas de siembra -->
@@ -441,7 +441,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         </g>
 
                         <!-- Rótulos del plano -->
-                        <g fill="#FBFAF5" font-family="Manrope, sans-serif">
+                        <g fill="#F5CC43" font-family="Manrope, sans-serif">
                             <text x="34" y="40" font-size="11" font-weight="800" letter-spacing="3.4">EL BAGRE</text>
                             <text x="34" y="57" font-size="6.5" font-weight="700" letter-spacing="2.2" opacity=".5">ANTIOQUIA · COLOMBIA</text>
                             <text x="398" y="160" font-size="6.5" font-weight="700" letter-spacing="1.8" opacity=".6">Z-04</text>
@@ -571,7 +571,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         <svg viewBox="0 0 48 48">
                             <circle cx="33" cy="13" r="8" fill="#F5CC43"/>
                             <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#467F36"/>
-                            <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#FBFAF5"/>
+                            <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#F5CC43"/>
                         </svg>
                     </span>
                     <span class="fid-brand__text">
