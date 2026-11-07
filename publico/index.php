@@ -30,7 +30,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
     <title><?= htmlspecialchars($titulo_pagina) ?></title>
     <meta name="description" content="<?= htmlspecialchars($meta_descripcion) ?>">
     <meta name="author" content="Emincut S.A.S.">
-    <meta name="theme-color" content="#1F3519">
+    <meta name="theme-color" content="#2C5C3D">
 
     <!-- Open Graph -->
     <meta property="og:title" content="ForestID — Cada árbol sembrado queda registrado">
@@ -38,7 +38,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_CO">
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231F3519'/%3E%3Ccircle cx='42' cy='20' r='11' fill='%23F4B72E'/%3E%3Cpath d='M6 46c12-10 28-12 52-3v9H6z' fill='%235B7C3A'/%3E%3Cpath d='M6 54c16-4 34-3 52 2v2H6z' fill='%23FBFAF5'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232C5C3D'/%3E%3Ccircle cx='42' cy='20' r='11' fill='%23F5CC43'/%3E%3Cpath d='M6 46c12-10 28-12 52-3v9H6z' fill='%23467F36'/%3E%3Cpath d='M6 54c16-4 34-3 52 2v2H6z' fill='%23FBFAF5'/%3E%3C/svg%3E">
 
     <!-- Tipografía editorial: Bricolage Grotesque + Manrope -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,9 +59,9 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
         <a class="fid-brand" href="<?= BASE_URL ?>publico/index.php" aria-label="ForestID — Inicio">
             <span class="fid-brand__mark" aria-hidden="true">
                 <svg viewBox="0 0 48 48">
-                    <circle cx="33" cy="13" r="8" fill="#F4B72E"/>
-                    <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#5B7C3A"/>
-                    <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#1F3519"/>
+                    <circle cx="33" cy="13" r="8" fill="#F5CC43"/>
+                    <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#467F36"/>
+                    <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#2C5C3D"/>
                 </svg>
             </span>
             <span class="fid-brand__text">
@@ -164,7 +164,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         <path d="M280 190c43 0 76 26 76 60s-33 62-76 62-76-28-76-62 33-60 76-60Z"/>
                         <path d="M280 226c22 0 38 13 38 30s-16 30-38 30-38-13-38-30 16-30 38-30Z"/>
                     </g>
-                    <path d="M67 380c38-24 62-7 91-29s60-44 104-28 57 12 90-9 73-16 112 10" stroke="#F4B72E" stroke-width="1.4" opacity=".65"/>
+                    <path d="M67 380c38-24 62-7 91-29s60-44 104-28 57 12 90-9 73-16 112 10" stroke="#F49B14" stroke-width="1.4" opacity=".65"/>
                     <path d="M37 430c46-20 79-4 111-25s68-38 111-18 70 5 108-15 74-7 120 19" stroke="currentColor" stroke-width="1"/>
                 </svg>
 
@@ -176,18 +176,18 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
 
                     <div class="fid-specimen__art">
                         <svg class="fid-specimen__rings" viewBox="0 0 260 190" fill="none">
-                            <ellipse cx="132" cy="94" rx="90" ry="82" stroke="#2C4524" stroke-width="1" opacity=".45"/>
-                            <ellipse cx="129" cy="96" rx="81" ry="74" stroke="#2C4524" stroke-width="1" opacity=".55"/>
-                            <ellipse cx="131" cy="95" rx="72" ry="66" stroke="#2C4524" stroke-width="1" opacity=".65"/>
-                            <ellipse cx="128" cy="97" rx="62" ry="57" stroke="#2C4524" stroke-width="1" opacity=".7"/>
-                            <ellipse cx="130" cy="96" rx="52" ry="48" stroke="#E39A24" stroke-width="1.1" opacity=".85"/>
-                            <ellipse cx="129" cy="96" rx="43" ry="40" stroke="#2C4524" stroke-width="1" opacity=".7"/>
-                            <ellipse cx="130" cy="95" rx="34" ry="31" stroke="#2C4524" stroke-width="1" opacity=".75"/>
-                            <ellipse cx="130" cy="96" rx="24" ry="22" stroke="#2C4524" stroke-width="1" opacity=".8"/>
-                            <ellipse cx="130" cy="95" rx="14" ry="13" stroke="#2C4524" stroke-width="1" opacity=".9"/>
-                            <circle cx="130" cy="96" r="5" fill="#1F3519"/>
-                            <path d="M130 96 207 48M130 96 66 151M130 96V18" stroke="#1F3519" stroke-width=".8" opacity=".5"/>
-                            <g transform="translate(191 137) rotate(-12)" stroke="#5B7C3A" stroke-width="1.2">
+                            <ellipse cx="132" cy="94" rx="90" ry="82" stroke="#2C5C3D" stroke-width="1" opacity=".45"/>
+                            <ellipse cx="129" cy="96" rx="81" ry="74" stroke="#2C5C3D" stroke-width="1" opacity=".55"/>
+                            <ellipse cx="131" cy="95" rx="72" ry="66" stroke="#2C5C3D" stroke-width="1" opacity=".65"/>
+                            <ellipse cx="128" cy="97" rx="62" ry="57" stroke="#2C5C3D" stroke-width="1" opacity=".7"/>
+                            <ellipse cx="130" cy="96" rx="52" ry="48" stroke="#F49B14" stroke-width="1.1" opacity=".85"/>
+                            <ellipse cx="129" cy="96" rx="43" ry="40" stroke="#2C5C3D" stroke-width="1" opacity=".7"/>
+                            <ellipse cx="130" cy="95" rx="34" ry="31" stroke="#2C5C3D" stroke-width="1" opacity=".75"/>
+                            <ellipse cx="130" cy="96" rx="24" ry="22" stroke="#2C5C3D" stroke-width="1" opacity=".8"/>
+                            <ellipse cx="130" cy="95" rx="14" ry="13" stroke="#2C5C3D" stroke-width="1" opacity=".9"/>
+                            <circle cx="130" cy="96" r="5" fill="#2C5C3D"/>
+                            <path d="M130 96 207 48M130 96 66 151M130 96V18" stroke="#2C5C3D" stroke-width=".8" opacity=".5"/>
+                            <g transform="translate(191 137) rotate(-12)" stroke="#467F36" stroke-width="1.2">
                                 <path d="M0 0c13-10 28-10 39 1-13 10-28 10-39-1Z"/>
                                 <path d="M3 0h33"/>
                             </g>
@@ -213,7 +213,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         <div class="fid-specimen__qr">
                             <svg viewBox="0 0 48 48">
                                 <rect width="48" height="48" fill="#FFFFFF"/>
-                                <g fill="#1F3519">
+                                <g fill="#2C5C3D">
                                     <rect x="2" y="2" width="14" height="14"/>
                                     <rect x="5" y="5" width="8" height="8" fill="#FFFFFF"/>
                                     <rect x="7" y="7" width="4" height="4"/>
@@ -397,7 +397,7 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
             <figure class="fid-map fid-reveal">
                 <div class="fid-map__frame">
                     <svg viewBox="0 0 600 450" role="img" aria-label="Plano esquemático de zonas de siembra y ríos en El Bagre, Antioquia">
-                        <rect width="600" height="450" fill="#1F3519"/>
+                        <rect width="600" height="450" fill="#2C5C3D"/>
 
                         <!-- Retícula de plano -->
                         <g stroke="rgba(251,250,245,.07)" stroke-width="1">
@@ -415,26 +415,26 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                         </g>
 
                         <!-- Río Nechí -->
-                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#8FA676" stroke-width="24" opacity=".32"/>
+                        <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#467F36" stroke-width="24" opacity=".48"/>
                         <path d="M-30 322c84-18 132-64 218-66s130 48 216 16 128-16 226 30" fill="none" stroke="#FBFAF5" stroke-width="1.3" stroke-dasharray="3 6" opacity=".55"/>
                         <text x="408" y="300" fill="rgba(251,250,245,.5)" font-family="Manrope, sans-serif" font-size="9" font-weight="700" letter-spacing="3" transform="rotate(9 408 300)">RÍO NECHÍ</text>
 
                         <!-- Zonas de siembra -->
-                        <g fill="rgba(244,183,46,.12)" stroke="#F4B72E" stroke-width="1.2" stroke-dasharray="5 4">
+                        <g fill="rgba(244,155,20,.16)" stroke="#F49B14" stroke-width="1.2" stroke-dasharray="5 4">
                             <path d="M389 105l76 14 27 62-43 48-77-9-21-58z"/>
                             <path d="M139 292l66-19 47 39-13 58-65 18-45-36z"/>
                         </g>
 
                         <!-- Individuos georreferenciados -->
                         <g>
-                            <g fill="#F4B72E">
+                            <g fill="#F5CC43">
                                 <circle cx="425" cy="168" r="5"/>
                                 <circle cx="452" cy="191" r="4"/>
                                 <circle cx="404" cy="205" r="4"/>
                                 <circle cx="172" cy="336" r="5"/>
                                 <circle cx="204" cy="360" r="4"/>
                             </g>
-                            <g fill="none" stroke="#F4B72E" stroke-width="1" opacity=".55">
+                            <g fill="none" stroke="#F5CC43" stroke-width="1" opacity=".55">
                                 <circle cx="425" cy="168" r="12"/>
                                 <circle cx="172" cy="336" r="12"/>
                             </g>
@@ -569,8 +569,8 @@ $meta_descripcion = 'ForestID reúne el registro, la ubicación y el seguimiento
                 <a class="fid-brand fid-brand--light" href="<?= BASE_URL ?>publico/index.php" aria-label="ForestID — Inicio">
                     <span class="fid-brand__mark" aria-hidden="true">
                         <svg viewBox="0 0 48 48">
-                            <circle cx="33" cy="13" r="8" fill="#F4B72E"/>
-                            <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#5B7C3A"/>
+                            <circle cx="33" cy="13" r="8" fill="#F5CC43"/>
+                            <path d="M3 33c9-7 20-9 42-2v7H3z" fill="#467F36"/>
                             <path d="M3 39c12-3 27-2 42 2v4H3z" fill="#FBFAF5"/>
                         </svg>
                     </span>

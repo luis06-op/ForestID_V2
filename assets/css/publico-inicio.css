@@ -1,22 +1,22 @@
 /* ============================================================
    ForestID — Portada pública
    Sistema visual aislado: solo se aplica dentro de .fid-inicio
-   Paleta Emincut: blanco hueso, verde bosque y amarillo sol.
+   Paleta Emincut: Verde Bosque, Verde Selva, Naranja Energía y
+   Amarillo Sol sobre blanco hueso.
    ============================================================ */
 
 .fid-inicio {
-    --fid-forest: #1F3519;
-    --fid-forest-deep: #15240F;
-    --fid-olive: #5B7C3A;
-    --fid-olive-soft: #E9EDDF;
-    --fid-sun: #F4B72E;
-    --fid-amber: #E39A24;
-    --fid-amber-ink: #9A620C;
+    --fid-forest: #2C5C3D;       /* Verde Selva */
+    --fid-forest-deep: #2C5C3D;  /* Verde Selva */
+    --fid-olive: #467F36;        /* Verde Bosque */
+    --fid-olive-soft: #E8F0DF;
+    --fid-sun: #F5CC43;          /* Amarillo Sol */
+    --fid-amber: #F49B14;        /* Naranja Energía */
     --fid-paper: #FBFAF5;
     --fid-white: #FFFFFF;
     --fid-ink: #20261B;
-    --fid-muted: #5F6856;
-    --fid-line: #DDE2D2;
+    --fid-muted: #5B6758;
+    --fid-line: #DCE4D6;
     --fid-line-dark: rgba(251, 250, 245, .16);
     --fid-display: 'Bricolage Grotesque', Georgia, serif;
     --fid-body: 'Manrope', system-ui, sans-serif;
@@ -130,7 +130,7 @@ html:has(.fid-inicio) {
     content: '';
     width: 1.8rem;
     height: 2px;
-    background: var(--fid-sun);
+    background: var(--fid-amber);
     flex: 0 0 auto;
 }
 
@@ -187,10 +187,10 @@ html:has(.fid-inicio) {
 }
 
 .fid-btn--forest:hover {
-    background: var(--fid-forest-deep);
-    border-color: var(--fid-forest-deep);
+    background: var(--fid-olive);
+    border-color: var(--fid-olive);
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px -14px rgba(21, 36, 15, .8);
+    box-shadow: 0 12px 24px -14px rgba(44, 92, 61, .7);
 }
 
 .fid-btn--sun {
@@ -203,7 +203,7 @@ html:has(.fid-inicio) {
     background: var(--fid-amber);
     border-color: var(--fid-amber);
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px -12px rgba(227, 154, 36, .8);
+    box-shadow: 0 12px 24px -12px rgba(244, 155, 20, .7);
 }
 
 .fid-btn--small {
@@ -280,7 +280,7 @@ html:has(.fid-inicio) {
 
 .fid-nav.is-scrolled {
     background: var(--fid-paper);
-    box-shadow: 0 10px 34px -24px rgba(21, 36, 15, .55);
+    box-shadow: 0 10px 34px -24px rgba(44, 92, 61, .55);
 }
 
 .fid-nav__inner {
@@ -442,7 +442,7 @@ html:has(.fid-inicio) {
     position: relative;
     padding: clamp(3.5rem, 7vw, 6.5rem) 0 0;
     background:
-        radial-gradient(rgba(31, 53, 25, .07) 1px, transparent 1px) 0 0 / 24px 24px,
+        radial-gradient(rgba(44, 92, 61, .07) 1px, transparent 1px) 0 0 / 24px 24px,
         var(--fid-paper);
     overflow: hidden;
 }
@@ -552,7 +552,7 @@ html:has(.fid-inicio) {
     inset: -8% -12% -6% -8%;
     width: 120%;
     height: 114%;
-    color: rgba(31, 53, 25, .17);
+    color: rgba(44, 92, 61, .17);
     pointer-events: none;
 }
 
@@ -567,14 +567,14 @@ html:has(.fid-inicio) {
     width: min(100%, var(--fid-card-w));
     background: var(--fid-white);
     border: 1px solid var(--fid-forest);
-    box-shadow: 14px 14px 0 rgba(31, 53, 25, .09);
+    box-shadow: 14px 14px 0 rgba(44, 92, 61, .09);
     transform: rotate(-2deg);
     transition: transform .45s var(--fid-ease), box-shadow .45s var(--fid-ease);
 }
 
 .fid-specimen:hover {
     transform: rotate(-.6deg) translateY(-4px);
-    box-shadow: 18px 20px 0 rgba(31, 53, 25, .11);
+    box-shadow: 18px 20px 0 rgba(44, 92, 61, .11);
 }
 
 .fid-specimen__top {
@@ -615,14 +615,14 @@ html:has(.fid-inicio) {
     height: 56px;
     border: 1px solid var(--fid-forest);
     border-radius: 50%;
-    background: var(--fid-sun);
+    background: var(--fid-amber);
     font-size: .45rem;
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: .1em;
     text-align: center;
     text-transform: uppercase;
-    color: var(--fid-forest);
+    color: var(--fid-ink);
     transform: rotate(9deg);
 }
 
@@ -770,7 +770,14 @@ html:has(.fid-inicio) {
 }
 
 .fid-stat dt span {
-    color: var(--fid-amber-ink);
+    display: inline-block;
+    padding: .02em .16em .06em;
+    background: var(--fid-amber);
+    color: var(--fid-ink);
+    font-size: .72em;
+    line-height: 1;
+    vertical-align: .16em;
+    border-radius: 2px;
 }
 
 .fid-stat dd {
@@ -813,7 +820,7 @@ html:has(.fid-inicio) {
     top: -32%;
     width: 46rem;
     height: 46rem;
-    border: 1px solid rgba(244, 183, 46, .13);
+    border: 1px solid rgba(244, 155, 20, .13);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -867,10 +874,10 @@ html:has(.fid-inicio) {
     top: 110px;
     padding: 1.8rem 1.7rem;
     background:
-        radial-gradient(rgba(31, 53, 25, .1) 1px, transparent 1px) 0 0 / 18px 18px,
+        radial-gradient(rgba(44, 92, 61, .1) 1px, transparent 1px) 0 0 / 18px 18px,
         var(--fid-white);
     border: 1px solid var(--fid-line);
-    border-left: 5px solid var(--fid-sun);
+    border-left: 5px solid var(--fid-amber);
 }
 
 .fid-note__label {
@@ -917,12 +924,18 @@ html:has(.fid-inicio) {
 }
 
 .fid-feature__num {
-    padding-top: .2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: var(--fid-amber);
+    color: var(--fid-ink);
+    border-radius: 2px;
     font-family: var(--fid-display);
-    font-size: .72rem;
+    font-size: .66rem;
     font-weight: 700;
-    letter-spacing: .14em;
-    color: var(--fid-amber-ink);
+    letter-spacing: .04em;
 }
 
 .fid-feature h3 {
@@ -987,7 +1000,7 @@ html:has(.fid-inicio) {
     line-height: .8;
     letter-spacing: -.06em;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(251, 250, 245, .38);
+    -webkit-text-stroke: 1px rgba(251, 250, 245, .46);
 }
 
 .fid-step h3 {
@@ -1109,7 +1122,7 @@ html:has(.fid-inicio) {
     flex-direction: column;
     gap: .4rem;
     padding: .7rem .8rem;
-    background: rgba(21, 36, 15, .82);
+    background: rgba(44, 92, 61, .82);
     border: 1px solid rgba(251, 250, 245, .18);
 }
 
@@ -1135,7 +1148,7 @@ html:has(.fid-inicio) {
 
 .fid-map__legend i.is-zone {
     border-radius: 0;
-    background: rgba(244, 183, 46, .35);
+    background: rgba(244, 155, 20, .35);
     border: 1px solid var(--fid-sun);
 }
 
@@ -1169,14 +1182,14 @@ html:has(.fid-inicio) {
     color: var(--fid-forest);
     text-align: center;
     transform: rotate(-7deg);
-    box-shadow: 10px 10px 0 rgba(31, 53, 25, .08);
+    box-shadow: 10px 10px 0 rgba(44, 92, 61, .08);
 }
 
 .fid-seal::before {
     content: '';
     position: absolute;
     inset: 10px;
-    border: 1px dashed rgba(31, 53, 25, .55);
+    border: 1px dashed rgba(44, 92, 61, .55);
     border-radius: 50%;
 }
 
@@ -1244,11 +1257,19 @@ html:has(.fid-inicio) {
 }
 
 .fid-team__list li > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    flex: 0 0 auto;
+    background: var(--fid-amber);
+    color: var(--fid-ink);
+    border-radius: 2px;
     font-family: var(--fid-display);
-    font-size: .65rem;
+    font-size: .6rem;
     font-weight: 700;
-    letter-spacing: .12em;
-    color: var(--fid-amber-ink);
+    letter-spacing: .04em;
 }
 
 .fid-team__list strong {
@@ -1273,7 +1294,7 @@ html:has(.fid-inicio) {
     max-width: 50ch;
     margin-top: 1.5rem !important;
     padding-left: 1rem;
-    border-left: 2px solid var(--fid-sun);
+    border-left: 2px solid var(--fid-amber);
     font-size: .8rem !important;
     line-height: 1.65 !important;
     color: var(--fid-muted) !important;
@@ -1296,7 +1317,7 @@ html:has(.fid-inicio) {
 .fid-cta::after {
     content: '';
     position: absolute;
-    border: 1px solid rgba(31, 53, 25, .16);
+    border: 1px solid rgba(44, 92, 61, .16);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -1348,7 +1369,7 @@ html:has(.fid-inicio) {
     margin-top: 1rem;
     font-size: .98rem;
     line-height: 1.7;
-    color: rgba(21, 36, 15, .75);
+    color: rgba(44, 92, 61, .75);
 }
 
 .fid-cta__actions {
@@ -1372,7 +1393,7 @@ html:has(.fid-inicio) {
     font-weight: 700;
     letter-spacing: .08em;
     text-transform: uppercase;
-    color: rgba(21, 36, 15, .58);
+    color: rgba(44, 92, 61, .58);
 }
 
 /* ============================================================
@@ -1382,7 +1403,12 @@ html:has(.fid-inicio) {
 .fid-footer {
     padding-block: 3.5rem 1.5rem;
     background: var(--fid-forest-deep);
+    border-top: 3px solid var(--fid-amber);
     color: var(--fid-paper);
+}
+
+.fid-footer :focus-visible {
+    outline-color: var(--fid-sun);
 }
 
 .fid-footer__grid {
@@ -1509,7 +1535,7 @@ html:has(.fid-inicio) {
         z-index: 79;
         max-height: calc(100svh - 70px);
         overflow-y: auto;
-        box-shadow: 0 18px 28px -22px rgba(21, 36, 15, .7);
+        box-shadow: 0 18px 28px -22px rgba(44, 92, 61, .7);
     }
 
     .fid-hero__grid,
