@@ -1148,6 +1148,13 @@ body {
     margin-top: 46px;
 }
 
+.v2-contact-grid--single {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+}
+
+.v2-contact-tile--wide { min-height: 170px; }
+
 .v2-contact-tile {
     position: relative;
     display: flex;

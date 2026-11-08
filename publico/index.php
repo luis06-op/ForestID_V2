@@ -51,10 +51,6 @@ $img = static function (string $archivo) use ($base) : string {
     return $base . 'assets/uploads/emincut_siembra/' . rawurlencode($archivo);
 };
 
-$mapa_url = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(
-    EMINCUT_DIRECCION . ', ' . EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', Colombia'
-);
-
 $titulo_pagina = 'ForestID — Restauración forestal de Emincut | El Bagre, Antioquia';
 $meta_descripcion = 'ForestID es el sistema de Emincut para registrar, ubicar y verificar cada árbol sembrado. Cada individuo tiene su placa con código QR y su ficha pública.';
 $css_extra = [BASE_URL . 'assets/css/diseno-v2.css'];
@@ -472,41 +468,17 @@ require_once __DIR__ . '/../includes/header.php';
     <section class="v2-section v2-contact" id="contacto">
         <div class="v2-wrap">
             <div class="v2-contact-head">
-                <span class="v2-kicker">Contáctanos</span>
-                <h2 class="v2-title">Hablemos del<br>territorio</h2>
+                <span class="v2-kicker">Consulta pública</span>
+                <h2 class="v2-title">Busca un árbol<br>por su código de placa</h2>
                 <div class="v2-rule"></div>
                 <p class="v2-lead">
-                    Estamos en El Bagre, Antioquia. Escríbenos, llámanos o visítanos
-                    para conocer el proyecto y la restauración que estamos midiendo.
+                    Cualquier persona puede consultar la ficha de un árbol escaneando su placa
+                    o ingresando su código. Sin cuenta y sin intermediarios.
                 </p>
             </div>
 
-            <div class="v2-contact-grid">
-                <a class="v2-contact-tile" href="<?= htmlspecialchars($mapa_url, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
-                    <span class="v2-contact-ico"><i data-lucide="map-pin"></i></span>
-                    <span class="v2-contact-label">Dirección</span>
-                    <strong>
-                        <?= htmlspecialchars(EMINCUT_DIRECCION, ENT_QUOTES, 'UTF-8') ?>
-                        <span><?= htmlspecialchars(EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', ' . EMINCUT_PAIS, ENT_QUOTES, 'UTF-8') ?></span>
-                    </strong>
-                    <span class="v2-contact-action">Ver en el mapa <i data-lucide="arrow-up-right"></i></span>
-                </a>
-
-                <a class="v2-contact-tile" href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', EMINCUT_TELEFONO), ENT_QUOTES, 'UTF-8') ?>">
-                    <span class="v2-contact-ico"><i data-lucide="phone"></i></span>
-                    <span class="v2-contact-label">Teléfono</span>
-                    <strong><?= htmlspecialchars(EMINCUT_TELEFONO, ENT_QUOTES, 'UTF-8') ?></strong>
-                    <span class="v2-contact-action">Llamar <i data-lucide="arrow-up-right"></i></span>
-                </a>
-
-                <a class="v2-contact-tile" href="mailto:<?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?>">
-                    <span class="v2-contact-ico"><i data-lucide="mail"></i></span>
-                    <span class="v2-contact-label">Correo</span>
-                    <strong><?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?></strong>
-                    <span class="v2-contact-action">Escribir <i data-lucide="arrow-up-right"></i></span>
-                </a>
-
-                <a class="v2-contact-tile v2-contact-tile--search" href="<?= $base ?>publico/buscar.php">
+            <div class="v2-contact-grid v2-contact-grid--single">
+                <a class="v2-contact-tile v2-contact-tile--search v2-contact-tile--wide" href="<?= $base ?>publico/buscar.php">
                     <span class="v2-contact-ico"><i data-lucide="scan-search"></i></span>
                     <span class="v2-contact-label">Consulta pública</span>
                     <strong>Buscar un árbol por su código de placa</strong>
