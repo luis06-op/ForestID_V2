@@ -12,6 +12,9 @@ diagnostico_temporal.php
 *.bak
 *.sql.gz
 
+# Fotografías internas de Emincut (material clasificado, no versionar)
+assets/uploads/emincut_siembra/
+
 # Sistema / editor
 Thumbs.db
 .DS_Store

@@ -1,0 +1,1117 @@
+/**
+ * ForestID — Diseño v2
+ * Portada pública inspirada en la plantilla editorial de Oranssi.
+ * Paleta: acento #FFC700 · fondo #F5F5F3 · oscuro #383838 · negro/blanco.
+ *
+ * Este archivo se carga SOLO en publico/index.php para no alterar los paneles.
+ */
+
+body {
+    background: #F5F5F3 !important;
+    color: #111111;
+}
+
+.v2-page {
+    --v2-accent: #FFC700;
+    --v2-accent-dark: #E5B300;
+    --v2-bg: #F5F5F3;
+    --v2-dark: #383838;
+    --v2-dark-deep: #2A2A2A;
+    --v2-black: #111111;
+    --v2-white: #FFFFFF;
+    --v2-muted: #6C6C68;
+    --v2-line: #DCDCD7;
+    --v2-max: 1240px;
+    --v2-radius: 6px;
+
+    font-family: 'Asap', 'Segoe UI', sans-serif;
+    background: var(--v2-bg);
+    color: var(--v2-black);
+    overflow-x: hidden;
+}
+
+.v2-page *,
+.v2-page *::before,
+.v2-page *::after {
+    box-sizing: border-box;
+}
+
+.v2-wrap {
+    width: min(var(--v2-max), calc(100% - 48px));
+    margin-inline: auto;
+}
+
+/* ============================================================
+   Tipografía y utilidades
+   ============================================================ */
+.v2-page h1,
+.v2-page h2,
+.v2-page h3,
+.v2-page h4,
+.v2-display {
+    font-family: 'Chakra Petch', 'Trebuchet MS', sans-serif;
+}
+
+.v2-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--v2-muted);
+}
+
+.v2-kicker::before {
+    content: '';
+    width: 36px;
+    height: 2px;
+    background: var(--v2-accent);
+    flex: none;
+}
+
+.v2-title {
+    margin: 16px 0 0;
+    font-size: clamp(2rem, 4.2vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -.015em;
+    text-transform: uppercase;
+}
+
+.v2-lead {
+    max-width: 660px;
+    margin: 20px 0 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--v2-muted);
+}
+
+.v2-rule {
+    width: 64px;
+    height: 4px;
+    margin-top: 24px;
+    background: var(--v2-accent);
+}
+
+.al-scroll {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s cubic-bezier(.22, .68, .32, 1), transform .7s cubic-bezier(.22, .68, .32, 1);
+    will-change: opacity, transform;
+}
+
+.al-scroll.visible {
+    opacity: 1;
+    transform: none;
+}
+
+.al-scroll.d1 { transition-delay: .10s; }
+.al-scroll.d2 { transition-delay: .20s; }
+.al-scroll.d3 { transition-delay: .30s; }
+
+/* ============================================================
+   Botones
+   ============================================================ */
+.v2-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    padding: 16px 26px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.v2-btn:hover { transform: translateY(-2px); }
+
+.v2-btn-accent {
+    background: var(--v2-accent);
+    color: var(--v2-black);
+}
+
+.v2-btn-accent:hover {
+    background: var(--v2-black);
+    color: var(--v2-accent);
+}
+
+.v2-btn-dark {
+    background: var(--v2-black);
+    color: var(--v2-white);
+}
+
+.v2-btn-dark:hover {
+    background: var(--v2-accent);
+    color: var(--v2-black);
+}
+
+.v2-btn-ghost {
+    border-color: rgba(255, 255, 255, .55);
+    color: var(--v2-white);
+    background: transparent;
+}
+
+.v2-btn-ghost:hover {
+    background: var(--v2-white);
+    border-color: var(--v2-white);
+    color: var(--v2-black);
+}
+
+/* ============================================================
+   Navegación
+   ============================================================ */
+.v2-nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: rgba(245, 245, 243, .94);
+    border-bottom: 1px solid var(--v2-line);
+    backdrop-filter: blur(10px);
+}
+
+.v2-nav .v2-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 78px;
+}
+
+.v2-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--v2-black);
+    text-decoration: none;
+    flex: none;
+}
+
+.v2-brand img {
+    width: auto;
+    height: 42px;
+    display: block;
+}
+
+.v2-brand-text strong {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+    letter-spacing: .04em;
+}
+
+.v2-brand-text strong span { color: var(--v2-accent-dark); }
+
+.v2-brand-text small {
+    display: block;
+    margin-top: 4px;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--v2-muted);
+}
+
+.v2-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.v2-links a {
+    position: relative;
+    display: inline-block;
+    padding: 8px 0;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--v2-black);
+    text-decoration: none;
+}
+
+.v2-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background: var(--v2-accent);
+    transition: width .3s ease;
+}
+
+.v2-links a:hover::after { width: 100%; }
+
+.v2-nav .v2-btn {
+    padding: 12px 20px;
+    font-size: .7rem;
+    flex: none;
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.v2-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 680px;
+    background: var(--v2-dark);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.v2-hero-media,
+.v2-hero-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.v2-hero-media img {
+    object-fit: cover;
+    object-position: 50% 32%;
+}
+
+.v2-hero-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(17, 17, 17, .90) 0%, rgba(17, 17, 17, .62) 46%, rgba(17, 17, 17, .12) 100%),
+        linear-gradient(0deg, rgba(17, 17, 17, .62) 0%, rgba(17, 17, 17, 0) 48%);
+}
+
+.v2-hero-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 110px 0 76px;
+}
+
+.v2-hero .v2-kicker {
+    color: var(--v2-accent);
+}
+
+.v2-hero h1 {
+    max-width: 1180px;
+    margin: 20px 0 0;
+    font-size: clamp(2.35rem, 5.5vw, 4.8rem);
+    font-weight: 700;
+    line-height: .98;
+    letter-spacing: -.025em;
+    text-transform: uppercase;
+    color: var(--v2-white);
+}
+
+.v2-hero h1 .v2-marca { color: var(--v2-accent); }
+
+.v2-hero p {
+    max-width: 620px;
+    margin: 26px 0 0;
+    font-size: 1.08rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, .84);
+}
+
+.v2-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 36px;
+}
+
+.v2-hero-note {
+    margin: 18px 0 0;
+    font-size: .74rem;
+    letter-spacing: .04em;
+    color: rgba(255, 255, 255, .60);
+}
+
+/* Marca de agua vertical */
+.v2-hero-tag {
+    position: absolute;
+    right: 26px;
+    bottom: 96px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--v2-accent);
+    color: var(--v2-black);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+}
+
+/* ============================================================
+   Franja de cifras
+   ============================================================ */
+.v2-stats {
+    background: var(--v2-accent);
+    color: var(--v2-black);
+}
+
+.v2-stats .v2-wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.v2-stat {
+    padding: 28px 24px;
+    border-left: 1px solid rgba(17, 17, 17, .18);
+}
+
+.v2-stat:first-child { border-left: 0; }
+
+.v2-stat strong {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.02em;
+}
+
+.v2-stat span {
+    display: block;
+    margin-top: 9px;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+/* ============================================================
+   Secciones
+   ============================================================ */
+.v2-section {
+    padding: 104px 0;
+}
+
+.v2-section-alt { background: var(--v2-white); }
+
+.v2-section-dark {
+    background: var(--v2-dark);
+    color: var(--v2-white);
+}
+
+.v2-section-dark .v2-kicker { color: var(--v2-accent); }
+.v2-section-dark .v2-lead { color: rgba(255, 255, 255, .72); }
+
+.v2-section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+/* Servicios */
+.v2-services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 58px;
+    border-top: 1px solid var(--v2-line);
+    border-left: 1px solid var(--v2-line);
+}
+
+.v2-service {
+    position: relative;
+    padding: 30px 26px 34px;
+    border-right: 1px solid var(--v2-line);
+    border-bottom: 1px solid var(--v2-line);
+    transition: background-color .25s ease;
+}
+
+.v2-service:hover { background: var(--v2-bg); }
+
+.v2-service-num {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    color: var(--v2-muted);
+}
+
+.v2-service-ico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin: 22px 0;
+    background: var(--v2-accent);
+    border-radius: 3px;
+    color: var(--v2-black);
+}
+
+.v2-service-ico svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.8;
+}
+
+.v2-service h3 {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: .005em;
+}
+
+.v2-service p {
+    margin: 12px 0 0;
+    font-size: .9rem;
+    line-height: 1.65;
+    color: var(--v2-muted);
+}
+
+/* Proceso en tres pasos */
+.v2-process {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 56px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgba(255, 255, 255, .18);
+}
+
+.v2-step {
+    padding: 38px 30px 40px;
+    border-right: 1px solid rgba(255, 255, 255, .18);
+}
+
+.v2-step:last-child { border-right: 0; }
+
+.v2-step-num {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(3rem, 5.6vw, 4.4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.03em;
+    color: var(--v2-accent);
+}
+
+.v2-step h3 {
+    margin: 18px 0 0;
+    font-size: 1.18rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--v2-white);
+}
+
+.v2-step p {
+    margin: 10px 0 0;
+    font-size: .92rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, .72);
+}
+
+/* Párrafos de contenido */
+.v2-text {
+    margin: 16px 0 0;
+    font-size: .96rem;
+    line-height: 1.7;
+    color: var(--v2-muted);
+}
+
+.v2-text strong { color: var(--v2-black); }
+
+/* ============================================================
+   Banda de llamada
+   ============================================================ */
+.v2-band {
+    position: relative;
+    overflow: hidden;
+    padding: 76px 0;
+    background: var(--v2-accent);
+    color: var(--v2-black);
+}
+
+.v2-band::after {
+    content: 'FORESTID';
+    position: absolute;
+    right: -20px;
+    bottom: -46px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(6rem, 18vw, 15rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.04em;
+    color: rgba(17, 17, 17, .07);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.v2-band-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 36px;
+    flex-wrap: wrap;
+}
+
+.v2-band h2 {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(1.8rem, 3.8vw, 3rem);
+    font-weight: 700;
+    line-height: 1.03;
+    text-transform: uppercase;
+}
+
+.v2-band p {
+    margin: 12px 0 0;
+    font-size: .95rem;
+    color: rgba(17, 17, 17, .72);
+}
+
+/* ============================================================
+   Galería de campo
+   ============================================================ */
+.v2-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 54px;
+}
+
+.v2-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: var(--v2-radius);
+    background: var(--v2-dark);
+    color: var(--v2-white);
+    text-decoration: none;
+    isolation: isolate;
+}
+
+.v2-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .65s cubic-bezier(.2, .7, .3, 1);
+}
+
+.v2-card:hover img { transform: scale(1.06); }
+
+.v2-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .82) 0%, rgba(0, 0, 0, .12) 56%, rgba(0, 0, 0, 0) 100%);
+    z-index: 1;
+}
+
+.v2-card-info {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2;
+}
+
+.v2-card-info small {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--v2-accent);
+}
+
+.v2-card-info strong {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.18rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.v2-card-info span {
+    display: block;
+    margin-top: 8px;
+    font-size: .8rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, .74);
+}
+
+/* ============================================================
+   Sección QR
+   ============================================================ */
+.v2-qr {
+    display: grid;
+    grid-template-columns: .92fr 1.08fr;
+    gap: 64px;
+    align-items: center;
+    margin-top: 52px;
+}
+
+.v2-qr-photo {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--v2-radius);
+    background: var(--v2-dark-deep);
+}
+
+.v2-qr-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.v2-qr-photo figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .86), rgba(0, 0, 0, 0));
+    font-size: .78rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, .86);
+}
+
+.v2-qr-photo figcaption strong {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .64rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--v2-accent);
+    margin-bottom: 4px;
+}
+
+.v2-qr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.v2-qr-card {
+    padding: 16px 14px 18px;
+    background: var(--v2-white);
+    color: var(--v2-black);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.v2-qr-card svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 180px;
+    margin: 0 auto;
+}
+
+.v2-qr-card strong {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.v2-qr-card span {
+    display: block;
+    margin-top: 4px;
+    font-size: .64rem;
+    line-height: 1.4;
+    color: var(--v2-muted);
+}
+
+.v2-qr-note {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 22px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-left: 3px solid var(--v2-accent);
+    font-size: .8rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, .72);
+}
+
+.v2-qr-note svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    margin-top: 2px;
+    color: var(--v2-accent);
+}
+
+/* ============================================================
+   Proyecto / acerca de
+   ============================================================ */
+.v2-about {
+    display: grid;
+    grid-template-columns: 1fr 1.02fr;
+    gap: 68px;
+    align-items: center;
+}
+
+.v2-about-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    min-height: 320px;
+    background: var(--v2-dark);
+    border-radius: var(--v2-radius);
+}
+
+.v2-about-media img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--v2-radius);
+}
+
+.v2-about-media img:first-child { margin-top: 38px; }
+
+.v2-about-list {
+    display: grid;
+    gap: 14px;
+    margin: 30px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.v2-about-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: .94rem;
+    line-height: 1.55;
+}
+
+.v2-about-list li::before {
+    content: '';
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background: var(--v2-accent);
+    box-shadow: inset 0 0 0 5px var(--v2-bg);
+}
+
+.v2-about-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 32px;
+    padding-top: 26px;
+    border-top: 1px solid var(--v2-line);
+}
+
+.v2-about-meta strong {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.v2-about-meta span {
+    display: block;
+    margin-top: 5px;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--v2-muted);
+}
+
+/* ============================================================
+   Equipo
+   ============================================================ */
+.v2-team {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 52px;
+}
+
+.v2-member {
+    padding: 28px 24px;
+    background: var(--v2-bg);
+    border: 1px solid var(--v2-line);
+    border-radius: var(--v2-radius);
+}
+
+.v2-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--v2-accent);
+    color: var(--v2-black);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+.v2-member h3 {
+    margin: 20px 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.v2-member p {
+    margin: 7px 0 0;
+    font-size: .78rem;
+    letter-spacing: .03em;
+    color: var(--v2-muted);
+}
+
+.v2-member--memoria {
+    background: var(--v2-dark);
+    border-color: var(--v2-dark);
+    color: var(--v2-white);
+}
+
+.v2-member--memoria .v2-avatar {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, .28);
+    color: var(--v2-accent);
+}
+
+.v2-member--memoria p { color: rgba(255, 255, 255, .62); }
+
+.v2-member--memoria .v2-in-memoriam {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--v2-accent);
+}
+
+.v2-member--memoria .v2-in-memoriam svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ============================================================
+   Cita
+   ============================================================ */
+.v2-quote {
+    padding: 86px 0;
+    background: var(--v2-accent);
+    color: var(--v2-black);
+    text-align: center;
+}
+
+.v2-quote blockquote {
+    max-width: 940px;
+    margin: 0 auto;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(1.35rem, 3vw, 2.35rem);
+    font-weight: 600;
+    line-height: 1.18;
+    text-transform: uppercase;
+    letter-spacing: -.01em;
+}
+
+.v2-quote cite {
+    display: block;
+    margin-top: 24px;
+    font-family: 'Asap', sans-serif;
+    font-style: normal;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgba(17, 17, 17, .66);
+}
+
+/* ============================================================
+   Contacto / acceso
+   ============================================================ */
+.v2-contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+}
+
+.v2-contact-list {
+    display: grid;
+    gap: 18px;
+    margin: 30px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.v2-contact-list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: .92rem;
+    line-height: 1.5;
+}
+
+.v2-contact-list svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    margin-top: 2px;
+    color: var(--v2-black);
+}
+
+.v2-contact-list strong {
+    display: block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--v2-muted);
+    margin-bottom: 3px;
+}
+
+.v2-contact-list a {
+    color: var(--v2-black);
+    text-decoration: none;
+    border-bottom: 1px solid var(--v2-line);
+}
+
+.v2-contact-list a:hover { border-color: var(--v2-accent); }
+
+.v2-contact-card {
+    padding: 42px 38px;
+    background: var(--v2-dark);
+    color: var(--v2-white);
+    border-radius: var(--v2-radius);
+}
+
+.v2-contact-card h3 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.08;
+    text-transform: uppercase;
+}
+
+.v2-contact-card p {
+    margin: 14px 0 0;
+    font-size: .92rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, .72);
+}
+
+.v2-contact-card .v2-btn { margin-top: 26px; }
+
+.v2-contact-card small {
+    display: block;
+    margin-top: 16px;
+    font-size: .7rem;
+    color: rgba(255, 255, 255, .52);
+}
+
+/* ============================================================
+   Footer global: adaptar a la paleta v2
+   ============================================================ */
+body > footer {
+    background-color: var(--v2-dark, #383838) !important;
+    border-color: #FFC700 !important;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1080px) {
+    .v2-services { grid-template-columns: repeat(2, 1fr); }
+    .v2-gallery { grid-template-columns: repeat(2, 1fr); }
+    .v2-team { grid-template-columns: repeat(2, 1fr); }
+    .v2-qr { grid-template-columns: 1fr; gap: 40px; }
+    .v2-about { grid-template-columns: 1fr; gap: 44px; }
+    .v2-contact { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 900px) {
+    .v2-links { display: none; }
+    .v2-hero-tag { display: none; }
+    .v2-process { grid-template-columns: 1fr; }
+    .v2-step {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, .18);
+    }
+    .v2-step:last-child { border-bottom: 0; }
+}
+
+@media (max-width: 640px) {
+    .v2-wrap { width: calc(100% - 32px); }
+    .v2-section { padding: 72px 0; }
+    .v2-hero { min-height: 620px; }
+    .v2-hero-inner { padding: 84px 0 60px; }
+    .v2-stats .v2-wrap { grid-template-columns: repeat(2, 1fr); }
+    .v2-stat:nth-child(odd) { border-left: 0; }
+    .v2-stat:nth-child(n + 3) { border-top: 1px solid rgba(17, 17, 17, .18); }
+    .v2-services { grid-template-columns: 1fr; }
+    .v2-gallery { grid-template-columns: 1fr; }
+    .v2-team { grid-template-columns: 1fr; }
+    .v2-qr-grid { grid-template-columns: 1fr; }
+    .v2-qr-card svg { max-width: 220px; }
+    .v2-band-inner { align-items: flex-start; }
+    .v2-about-media img:first-child { margin-top: 0; }
+    .v2-contact-card { padding: 32px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .al-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .v2-card img,
+    .v2-btn {
+        transition: none;
+    }
+}

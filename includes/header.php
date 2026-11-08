@@ -81,6 +81,11 @@ $meta_descripcion = $meta_descripcion ?? 'Sistema integral de gestión, identifi
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/custom.css">
     <!-- Identidad visual Emincut (paleta, componentes y paneles unificados) -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/emincut.css">
+<?php if (!empty($css_extra)): ?>
+<?php foreach ((array) $css_extra as $hoja_extra): ?>
+    <link rel="stylesheet" href="<?= htmlspecialchars((string) $hoja_extra, ENT_QUOTES, 'UTF-8') ?>">
+<?php endforeach; ?>
+<?php endif; ?>
 </head>
 <body class="min-h-full flex flex-col antialiased text-gray-800 bg-[#FAFAF7]">
     <?= render_flash() ?>
