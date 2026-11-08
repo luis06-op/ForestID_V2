@@ -154,23 +154,13 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(26,43,21,.85) 0%, rgba(34,55,28,.25) 45%, rgba(233,162,46,.08) 100%)"></div>
     </div>
 
-    <!-- Sol con rayos girando -->
-    <div class="sol-rayos z-0" aria-hidden="true">
-        <div class="girar">
-            <span class="rayo" style="transform:rotate(0deg)"></span>
-            <span class="rayo" style="transform:rotate(30deg)"></span>
-            <span class="rayo" style="transform:rotate(60deg)"></span>
-            <span class="rayo" style="transform:rotate(90deg)"></span>
-            <span class="rayo" style="transform:rotate(120deg)"></span>
-            <span class="rayo" style="transform:rotate(150deg)"></span>
-            <span class="rayo" style="transform:rotate(180deg)"></span>
-            <span class="rayo" style="transform:rotate(210deg)"></span>
-            <span class="rayo" style="transform:rotate(240deg)"></span>
-            <span class="rayo" style="transform:rotate(270deg)"></span>
-            <span class="rayo" style="transform:rotate(300deg)"></span>
-            <span class="rayo" style="transform:rotate(330deg)"></span>
+    <!-- Lupa animada -->
+    <div class="lupa-animada z-0" aria-hidden="true">
+        <div class="cuerpo">
+            <div class="lente"></div>
+            <div class="arco-superior"></div>
+            <div class="arco-inferior"></div>
         </div>
-        <div class="disco"></div>
     </div>
 
     <!-- Hojas cayendo -->

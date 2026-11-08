@@ -332,3 +332,44 @@ body.emi-theme,
     .linea-sol { transform: scaleX(1); transition: none; }
     .emi-sidebar, .emi-overlay { transition: none; }
 }
+
+/* ---- Lupa animada en el hero ---- */
+.lupa-animada {
+    position: absolute;
+    top: 3%;
+    right: -11%;
+    width: clamp(200px, 25vw, 300px);
+    aspect-ratio: 1;
+    background: var(--emi-amarillo);
+    border-radius: 50%;
+    animation: girar-lupa 24s linear infinite;
+    z-index: 10;
+}
+.lupa-animada .lente {
+    position: absolute;
+    inset: 25%;
+    background: var(--emi-blanco);
+    border-radius: 50%;
+}
+.lupa-animada .arco-superior,.lupa-animada .arco-inferior {
+    position: absolute;
+    width: 40%;
+    height: 8px;
+    background: var(--emi-blanco);
+    border-radius: 50%;
+    top: 20%;
+    left: 30%;
+    transform: rotate(-15deg);
+}
+.lupa-animada .arco-inferior {
+    transform: rotate(15deg);
+}
+@keyframes girar-lupa {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .lupa-animada {
+        animation: none;
+    }
+}
