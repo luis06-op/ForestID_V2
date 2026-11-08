@@ -51,6 +51,10 @@ $img = static function (string $archivo) use ($base) : string {
     return $base . 'assets/uploads/emincut_siembra/' . rawurlencode($archivo);
 };
 
+$mapa_url = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode(
+    EMINCUT_DIRECCION . ', ' . EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', Colombia'
+);
+
 $titulo_pagina = 'ForestID — Restauración forestal de Emincut | El Bagre, Antioquia';
 $meta_descripcion = 'ForestID es el sistema de Emincut para registrar, ubicar y verificar cada árbol sembrado. Cada individuo tiene su placa con código QR y su ficha pública.';
 $css_extra = [BASE_URL . 'assets/css/diseno-v2.css'];
@@ -147,63 +151,75 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
     </div>
 
-    <!-- ===================== QUÉ HACE ===================== -->
+    <!-- ===================== MÓDULOS ===================== -->
     <section class="v2-section" id="servicios">
         <div class="v2-wrap">
             <div class="v2-section-head">
                 <div>
-                    <span class="v2-kicker">Qué hace ForestID</span>
-                    <h2 class="v2-title">Lo que antes se contaba a mano,<br>ahora queda registrado</h2>
+                    <span class="v2-kicker">Módulos de ForestID</span>
+                    <h2 class="v2-title">Todo el bosque,<br>en seis módulos</h2>
                     <div class="v2-rule"></div>
                     <p class="v2-lead">
-                        Después de la minería, Emincut debe poder demostrar cuánto sembró
-                        y cómo está. ForestID reúne esa información en un solo lugar.
+                        Del registro en campo a la verificación en oficina: cada módulo
+                        cubre una parte del ciclo y todos comparten la misma placa QR.
                     </p>
                 </div>
-                <a href="#proceso" class="v2-btn v2-btn-dark">Ver los 3 pasos</a>
+                <a href="#proceso" class="v2-btn v2-btn-dark">Conoce el proceso</a>
             </div>
 
-            <div class="v2-services">
-                <article class="v2-service al-scroll">
-                    <span class="v2-service-num">01</span>
-                    <span class="v2-service-ico"><i data-lucide="tree-pine"></i></span>
+            <div class="v2-modules">
+                <article class="v2-module v2-module--wide al-scroll">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">01</span>
+                    <span class="v2-module-ico"><i data-lucide="tree-pine"></i></span>
                     <h3>Registro de cada árbol</h3>
                     <p>Especie, fecha de siembra, diámetro, altura y fotos. Cada individuo tiene su ficha y su placa con código QR.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
 
-                <article class="v2-service al-scroll d1">
-                    <span class="v2-service-num">02</span>
-                    <span class="v2-service-ico"><i data-lucide="layers"></i></span>
+                <article class="v2-module al-scroll d1">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">02</span>
+                    <span class="v2-module-ico"><i data-lucide="layers"></i></span>
                     <h3>Hectáreas forestadas</h3>
                     <p>Los árboles se agrupan por zona, para saber qué área ya está sembrada y cuál falta.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
 
-                <article class="v2-service al-scroll d2">
-                    <span class="v2-service-num">03</span>
-                    <span class="v2-service-ico"><i data-lucide="map-pinned"></i></span>
+                <article class="v2-module al-scroll d2">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">03</span>
+                    <span class="v2-module-ico"><i data-lucide="map-pinned"></i></span>
                     <h3>Ubicación exacta</h3>
                     <p>Cada árbol queda georreferenciado en el mapa, con sus coordenadas.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
 
-                <article class="v2-service al-scroll">
-                    <span class="v2-service-num">04</span>
-                    <span class="v2-service-ico"><i data-lucide="clipboard-check"></i></span>
+                <article class="v2-module al-scroll">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">04</span>
+                    <span class="v2-module-ico"><i data-lucide="clipboard-check"></i></span>
                     <h3>Verificación en campo</h3>
                     <p>Los operarios revisan el estado de salud y registran riegos, podas y fertilizaciones. Así se sabe cuántos árboles siguen vivos.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
 
-                <article class="v2-service al-scroll d1">
-                    <span class="v2-service-num">05</span>
-                    <span class="v2-service-ico"><i data-lucide="bar-chart-3"></i></span>
+                <article class="v2-module al-scroll d1">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">05</span>
+                    <span class="v2-module-ico"><i data-lucide="bar-chart-3"></i></span>
                     <h3>Reportes de avance</h3>
                     <p>Gráficos y cifras del total sembrado, el estado de los árboles y las zonas, listos para presentar.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
 
-                <article class="v2-service al-scroll d2">
-                    <span class="v2-service-num">06</span>
-                    <span class="v2-service-ico"><i data-lucide="shield-check"></i></span>
+                <article class="v2-module v2-module--wide v2-module--dark al-scroll d2">
+                    <span class="v2-module-glow" aria-hidden="true"></span>
+                    <span class="v2-module-num">06</span>
+                    <span class="v2-module-ico"><i data-lucide="shield-check"></i></span>
                     <h3>Información privada</h3>
                     <p>Solo entra personal autorizado, con usuario y contraseña. Administración y operarios ven lo que les corresponde.</p>
+                    <span class="v2-module-bar" aria-hidden="true"></span>
                 </article>
             </div>
         </div>
@@ -236,14 +252,22 @@ require_once __DIR__ . '/../includes/header.php';
         </div>
     </section>
 
-    <!-- ===================== BANDA CTA ===================== -->
-    <section class="v2-band">
+    <!-- ===================== TRAZABILIDAD PÚBLICA ===================== -->
+    <section class="v2-band" id="trazabilidad">
         <div class="v2-wrap v2-band-inner">
             <div>
-                <h2>¿Listo para demostrar<br>cada hectárea sembrada?</h2>
-                <p>ForestID convierte el trabajo de campo en información verificable.</p>
+                <span class="v2-band-kicker">
+                    <i data-lucide="scan-line"></i> Consulta pública
+                </span>
+                <h2>Un código,<br>toda la historia del árbol.</h2>
+                <p>Escanea la placa y consulta especie, siembra, ubicación y estado. Sin cuenta y sin intermediarios.</p>
             </div>
-            <a href="#contacto" class="v2-btn v2-btn-dark">Contáctanos</a>
+            <div class="v2-band-actions">
+                <a href="<?= $base ?>publico/buscar.php" class="v2-btn v2-btn-dark">Buscar un árbol</a>
+                <a href="#qr" class="v2-band-link">
+                    Ver los códigos QR <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -447,60 +471,66 @@ require_once __DIR__ . '/../includes/header.php';
     </section>
 
     <!-- ===================== CONTACTO / ACCESO ===================== -->
-    <section class="v2-section" id="contacto">
-        <div class="v2-wrap v2-contact">
-            <div>
+    <section class="v2-section v2-contact" id="contacto">
+        <div class="v2-wrap">
+            <div class="v2-contact-head">
                 <span class="v2-kicker">Contáctanos</span>
                 <h2 class="v2-title">Hablemos del<br>territorio</h2>
                 <div class="v2-rule"></div>
-
-                <ul class="v2-contact-list">
-                    <li>
-                        <i data-lucide="map-pin"></i>
-                        <span>
-                            <strong>Dirección</strong>
-                            <?= htmlspecialchars(EMINCUT_DIRECCION, ENT_QUOTES, 'UTF-8') ?><br>
-                            <?= htmlspecialchars(EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', ' . EMINCUT_PAIS, ENT_QUOTES, 'UTF-8') ?>
-                        </span>
-                    </li>
-                    <li>
-                        <i data-lucide="phone"></i>
-                        <span>
-                            <strong>Teléfono</strong>
-                            <a href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', EMINCUT_TELEFONO), ENT_QUOTES, 'UTF-8') ?>">
-                                <?= htmlspecialchars(EMINCUT_TELEFONO, ENT_QUOTES, 'UTF-8') ?>
-                            </a>
-                        </span>
-                    </li>
-                    <li>
-                        <i data-lucide="mail"></i>
-                        <span>
-                            <strong>Correo</strong>
-                            <a href="mailto:<?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?>">
-                                <?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?>
-                            </a>
-                        </span>
-                    </li>
-                    <li>
-                        <i data-lucide="search"></i>
-                        <span>
-                            <strong>Consulta pública</strong>
-                            <a href="<?= $base ?>publico/buscar.php">Buscar un árbol por su código de placa</a>
-                        </span>
-                    </li>
-                </ul>
+                <p class="v2-lead">
+                    Estamos en El Bagre, Antioquia. Escríbenos, llámanos o visítanos
+                    para conocer el proyecto y la restauración que estamos midiendo.
+                </p>
             </div>
 
-            <div class="v2-contact-card" id="acceso">
-                <h3>¿Eres parte del equipo de Emincut?</h3>
-                <p>
-                    Ingresa con tu usuario para registrar o consultar los árboles.
-                    Administración y operarios ven lo que les corresponde.
-                </p>
-                <a href="<?= $base ?>auth/login.php" class="v2-btn v2-btn-accent">
-                    Iniciar sesión
+            <div class="v2-contact-grid">
+                <a class="v2-contact-tile" href="<?= htmlspecialchars($mapa_url, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">
+                    <span class="v2-contact-ico"><i data-lucide="map-pin"></i></span>
+                    <span class="v2-contact-label">Dirección</span>
+                    <strong>
+                        <?= htmlspecialchars(EMINCUT_DIRECCION, ENT_QUOTES, 'UTF-8') ?>
+                        <span><?= htmlspecialchars(EMINCUT_MUNICIPIO . ', ' . EMINCUT_DEPARTAMENTO . ', ' . EMINCUT_PAIS, ENT_QUOTES, 'UTF-8') ?></span>
+                    </strong>
+                    <span class="v2-contact-action">Ver en el mapa <i data-lucide="arrow-up-right"></i></span>
                 </a>
-                <small>Acceso exclusivo para personal autorizado.</small>
+
+                <a class="v2-contact-tile" href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', EMINCUT_TELEFONO), ENT_QUOTES, 'UTF-8') ?>">
+                    <span class="v2-contact-ico"><i data-lucide="phone"></i></span>
+                    <span class="v2-contact-label">Teléfono</span>
+                    <strong><?= htmlspecialchars(EMINCUT_TELEFONO, ENT_QUOTES, 'UTF-8') ?></strong>
+                    <span class="v2-contact-action">Llamar <i data-lucide="arrow-up-right"></i></span>
+                </a>
+
+                <a class="v2-contact-tile" href="mailto:<?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?>">
+                    <span class="v2-contact-ico"><i data-lucide="mail"></i></span>
+                    <span class="v2-contact-label">Correo</span>
+                    <strong><?= htmlspecialchars(EMINCUT_CORREO, ENT_QUOTES, 'UTF-8') ?></strong>
+                    <span class="v2-contact-action">Escribir <i data-lucide="arrow-up-right"></i></span>
+                </a>
+
+                <a class="v2-contact-tile v2-contact-tile--search" href="<?= $base ?>publico/buscar.php">
+                    <span class="v2-contact-ico"><i data-lucide="scan-search"></i></span>
+                    <span class="v2-contact-label">Consulta pública</span>
+                    <strong>Buscar un árbol por su código de placa</strong>
+                    <span class="v2-contact-action">Buscar ahora <i data-lucide="arrow-right"></i></span>
+                </a>
+            </div>
+
+            <div class="v2-contact-access" id="acceso">
+                <div>
+                    <span class="v2-access-kicker">Acceso al sistema</span>
+                    <h3>¿Eres parte del equipo de Emincut?</h3>
+                    <p>
+                        Ingresa con tu usuario para registrar o consultar los árboles.
+                        Administración y operarios ven lo que les corresponde.
+                    </p>
+                </div>
+                <div class="v2-access-actions">
+                    <a href="<?= $base ?>auth/login.php" class="v2-btn v2-btn-accent">
+                        Iniciar sesión
+                    </a>
+                    <small>Acceso exclusivo para personal autorizado.</small>
+                </div>
             </div>
         </div>
     </section>
