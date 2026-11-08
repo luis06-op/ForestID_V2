@@ -388,9 +388,7 @@ require_once __DIR__ . '/../includes/header.php';
                     de la minería. ForestID se construyó para resolverlo.
                 </p>
                 <p class="v2-text">
-                    Lo desarrollamos <strong>Luis Ángel Muñoz, Gabriel Correa y Valentina Hernández</strong>,
-                    aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre,
-                    durante nuestra etapa productiva en las instalaciones de Emincut.
+                    Lo desarrollamos <strong>Luis Ángel Muñoz, Gabriel Correa y Valentina Hernández</strong>.
                 </p>
 
                 <ul class="v2-about-list">
@@ -403,7 +401,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="v2-about-meta">
                     <div>
                         <strong>3</strong>
-                        <span>Aprendices SENA</span>
+                        <span>Integrantes del equipo</span>
                     </div>
                     <div>
                         <strong>100%</strong>
@@ -425,8 +423,8 @@ require_once __DIR__ . '/../includes/header.php';
             <h2 class="v2-title">Quiénes construyeron ForestID</h2>
             <div class="v2-rule"></div>
             <p class="v2-lead">
-                Aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre,
-                durante su etapa productiva en Emincut.
+                El equipo que diseñó y construyó ForestID, con roles de arquitectura,
+                backend y verificación de calidad.
             </p>
 
             <div class="v2-team">
@@ -466,7 +464,7 @@ require_once __DIR__ . '/../includes/header.php';
             <blockquote>
                 «La trazabilidad no es un requisito: es la forma de demostrar que lo sembrado sigue vivo.»
             </blockquote>
-            <cite>Equipo ForestID · SENA El Bagre</cite>
+            <cite>Equipo ForestID · El Bagre, Antioquia</cite>
         </div>
     </section>
 

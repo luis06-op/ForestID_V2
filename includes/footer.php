@@ -34,9 +34,6 @@
                         <li>• <strong class="text-white">Gabriel Jaime Correa C.</strong> (Backend)</li>
                         <li>• <strong class="text-white">Valentina Hernández Zapata</strong> (Verificación Calidad)</li>
                     </ul>
-                    <p class="text-[11px] text-white/45 leading-relaxed">
-                        Desarrollado por aprendices del SENA, Centro de Formación Minero Ambiental de El Bagre, en etapa productiva con Emincut.
-                    </p>
 
                     <!-- Conmemoración: Michael Rodríguez L. -->
                     <div class="mt-3 pt-3 border-t space-y-1.5" style="border-color:rgba(255,255,255,.15)">
