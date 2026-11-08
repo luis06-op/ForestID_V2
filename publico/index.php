@@ -3,8 +3,9 @@
  * ForestID — Portada pública · Diseño v2
  * Emincut S.A.S. | El Bagre, Antioquia
  *
- * Reinterpretación de la plantilla editorial de Oranssi con la paleta
- * acento #FFC700 / fondo #F5F5F3 / oscuro #383838.
+ * Reinterpretación de la plantilla editorial de Oranssi con la paleta de marca
+ * de Emincut: verde bosque #467F36, verde selva #2C5C3D, naranja energía
+ * #F49B14 y amarillo sol #F5CC43.
  *
  * Las fotografías de siembra viven en assets/uploads/emincut_siembra/
  * (material interno de Emincut, excluido de Git mediante .gitignore).
@@ -33,10 +34,10 @@ $url_portada = rtrim(APP_URL_EFECTIVA, '/') . '/publico/index.php';
  */
 $generar_qr = static function (string $url) : string {
     try {
-        return QRCodeGenerator::generarSvg($url, 220, '#111111', '#FFFFFF');
+        return QRCodeGenerator::generarSvg($url, 220, '#101A0D', '#FFFFFF');
     } catch (Throwable $e) {
         error_log('ForestID · QR portada v2: ' . $e->getMessage());
-        return '<p style="font-size:.7rem;color:#6C6C68;padding:24px 0">QR no disponible</p>';
+        return '<p style="font-size:.7rem;color:#5F6B5A;padding:24px 0">QR no disponible</p>';
     }
 };
 

@@ -1,26 +1,37 @@
 /**
  * ForestID — Diseño v2
  * Portada pública inspirada en la plantilla editorial de Oranssi.
- * Paleta: acento #FFC700 · fondo #F5F5F3 · oscuro #383838 · negro/blanco.
+ * Paleta Emincut:
+ *   Verde Bosque     #467F36  (acentos naturales)
+ *   Verde Selva      #2C5C3D  (bloques oscuros)
+ *   Naranja Energía  #F49B14  (acciones y llamados)
+ *   Amarillo Sol     #F5CC43  (cifras y destellos)
+ *   Fondo claro      #F5F5F3 · casi negro #101A0D · blanco.
  *
  * Este archivo se carga SOLO en publico/index.php para no alterar los paneles.
  */
 
 body {
     background: #F5F5F3 !important;
-    color: #111111;
+    color: #101A0D;
 }
 
 .v2-page {
-    --v2-accent: #FFC700;
-    --v2-accent-dark: #E5B300;
+    /* Paleta de marca */
+    --v2-forest: #467F36;
+    --v2-jungle: #2C5C3D;
+    --v2-orange: #F49B14;
+    --v2-sun: #F5CC43;
+
+    /* Roles */
+    --v2-accent: var(--v2-orange);
     --v2-bg: #F5F5F3;
-    --v2-dark: #383838;
-    --v2-dark-deep: #2A2A2A;
-    --v2-black: #111111;
+    --v2-dark: var(--v2-jungle);
+    --v2-dark-deep: #234A31;
+    --v2-black: #101A0D;
     --v2-white: #FFFFFF;
-    --v2-muted: #6C6C68;
-    --v2-line: #DCDCD7;
+    --v2-muted: #5F6B5A;
+    --v2-line: #D8DDD2;
     --v2-max: 1240px;
     --v2-radius: 6px;
 
@@ -68,7 +79,7 @@ body {
     content: '';
     width: 36px;
     height: 2px;
-    background: var(--v2-accent);
+    background: var(--v2-forest);
     flex: none;
 }
 
@@ -141,12 +152,12 @@ body {
 }
 
 .v2-btn-accent:hover {
-    background: var(--v2-black);
-    color: var(--v2-accent);
+    background: var(--v2-jungle);
+    color: var(--v2-white);
 }
 
 .v2-btn-dark {
-    background: var(--v2-black);
+    background: var(--v2-jungle);
     color: var(--v2-white);
 }
 
@@ -210,7 +221,7 @@ body {
     letter-spacing: .04em;
 }
 
-.v2-brand-text strong span { color: var(--v2-accent-dark); }
+.v2-brand-text strong span { color: var(--v2-forest); }
 
 .v2-brand-text small {
     display: block;
@@ -251,7 +262,7 @@ body {
     bottom: 0;
     width: 0;
     height: 2px;
-    background: var(--v2-accent);
+    background: var(--v2-forest);
     transition: width .3s ease;
 }
 
@@ -294,8 +305,8 @@ body {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(90deg, rgba(17, 17, 17, .90) 0%, rgba(17, 17, 17, .62) 46%, rgba(17, 17, 17, .12) 100%),
-        linear-gradient(0deg, rgba(17, 17, 17, .62) 0%, rgba(17, 17, 17, 0) 48%);
+        linear-gradient(90deg, rgba(16, 26, 13, .92) 0%, rgba(16, 26, 13, .64) 46%, rgba(44, 92, 61, .18) 100%),
+        linear-gradient(0deg, rgba(16, 26, 13, .66) 0%, rgba(16, 26, 13, 0) 48%);
 }
 
 .v2-hero-inner {
@@ -306,7 +317,11 @@ body {
 }
 
 .v2-hero .v2-kicker {
-    color: var(--v2-accent);
+    color: var(--v2-sun);
+}
+
+.v2-hero .v2-kicker::before {
+    background: var(--v2-sun);
 }
 
 .v2-hero h1 {
@@ -320,7 +335,7 @@ body {
     color: var(--v2-white);
 }
 
-.v2-hero h1 .v2-marca { color: var(--v2-accent); }
+.v2-hero h1 .v2-marca { color: var(--v2-sun); }
 
 .v2-hero p {
     max-width: 620px;
@@ -368,7 +383,7 @@ body {
    Franja de cifras
    ============================================================ */
 .v2-stats {
-    background: var(--v2-accent);
+    background: var(--v2-sun);
     color: var(--v2-black);
 }
 
@@ -379,7 +394,7 @@ body {
 
 .v2-stat {
     padding: 28px 24px;
-    border-left: 1px solid rgba(17, 17, 17, .18);
+    border-left: 1px solid rgba(16, 26, 13, .20);
 }
 
 .v2-stat:first-child { border-left: 0; }
@@ -393,7 +408,7 @@ body {
     letter-spacing: -.02em;
 }
 
-.v2-stat span {
+.v2-stat > span {
     display: block;
     margin-top: 9px;
     font-size: .68rem;
@@ -416,7 +431,8 @@ body {
     color: var(--v2-white);
 }
 
-.v2-section-dark .v2-kicker { color: var(--v2-accent); }
+.v2-section-dark .v2-kicker { color: var(--v2-sun); }
+.v2-section-dark .v2-kicker::before { background: var(--v2-sun); }
 .v2-section-dark .v2-lead { color: rgba(255, 255, 255, .72); }
 
 .v2-section-head {
@@ -465,12 +481,18 @@ body {
     background: var(--v2-accent);
     border-radius: 3px;
     color: var(--v2-black);
+    transition: background-color .25s ease, color .25s ease;
 }
 
 .v2-service-ico svg {
     width: 24px;
     height: 24px;
     stroke-width: 1.8;
+}
+
+.v2-service:hover .v2-service-ico {
+    background: var(--v2-jungle);
+    color: var(--v2-white);
 }
 
 .v2-service h3 {
@@ -563,7 +585,7 @@ body {
     font-weight: 700;
     line-height: 1;
     letter-spacing: -.04em;
-    color: rgba(17, 17, 17, .07);
+    color: rgba(16, 26, 13, .08);
     pointer-events: none;
     white-space: nowrap;
 }
@@ -590,7 +612,7 @@ body {
 .v2-band p {
     margin: 12px 0 0;
     font-size: .95rem;
-    color: rgba(17, 17, 17, .72);
+    color: rgba(16, 26, 13, .74);
 }
 
 /* ============================================================
@@ -647,7 +669,7 @@ body {
     font-weight: 700;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--v2-accent);
+    color: var(--v2-sun);
 }
 
 .v2-card-info strong {
@@ -712,7 +734,7 @@ body {
     font-size: .64rem;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--v2-accent);
+    color: var(--v2-sun);
     margin-bottom: 4px;
 }
 
@@ -829,7 +851,7 @@ body {
     height: 18px;
     margin-top: 2px;
     border-radius: 50%;
-    background: var(--v2-accent);
+    background: var(--v2-forest);
     box-shadow: inset 0 0 0 5px var(--v2-bg);
 }
 
@@ -915,10 +937,10 @@ body {
 .v2-member--memoria .v2-avatar {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, .28);
-    color: var(--v2-accent);
+    color: var(--v2-sun);
 }
 
-.v2-member--memoria p { color: rgba(255, 255, 255, .62); }
+.v2-member--memoria p { color: rgba(255, 255, 255, .75); }
 
 .v2-member--memoria .v2-in-memoriam {
     display: inline-flex;
@@ -930,7 +952,7 @@ body {
     font-weight: 700;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: var(--v2-accent);
+    color: var(--v2-sun);
 }
 
 .v2-member--memoria .v2-in-memoriam svg {
@@ -943,8 +965,8 @@ body {
    ============================================================ */
 .v2-quote {
     padding: 86px 0;
-    background: var(--v2-accent);
-    color: var(--v2-black);
+    background: var(--v2-forest);
+    color: var(--v2-white);
     text-align: center;
 }
 
@@ -968,7 +990,7 @@ body {
     font-weight: 700;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: rgba(17, 17, 17, .66);
+    color: rgba(255, 255, 255, .95);
 }
 
 /* ============================================================
@@ -1002,7 +1024,7 @@ body {
     height: 18px;
     flex: none;
     margin-top: 2px;
-    color: var(--v2-black);
+    color: var(--v2-forest);
 }
 
 .v2-contact-list strong {
@@ -1052,15 +1074,15 @@ body {
     display: block;
     margin-top: 16px;
     font-size: .7rem;
-    color: rgba(255, 255, 255, .52);
+    color: rgba(255, 255, 255, .75);
 }
 
 /* ============================================================
    Footer global: adaptar a la paleta v2
    ============================================================ */
 body > footer {
-    background-color: var(--v2-dark, #383838) !important;
-    border-color: #FFC700 !important;
+    background-color: var(--v2-dark, #2C5C3D) !important;
+    border-color: #F49B14 !important;
 }
 
 /* ============================================================
@@ -1093,7 +1115,7 @@ body > footer {
     .v2-hero-inner { padding: 84px 0 60px; }
     .v2-stats .v2-wrap { grid-template-columns: repeat(2, 1fr); }
     .v2-stat:nth-child(odd) { border-left: 0; }
-    .v2-stat:nth-child(n + 3) { border-top: 1px solid rgba(17, 17, 17, .18); }
+    .v2-stat:nth-child(n + 3) { border-top: 1px solid rgba(16, 26, 13, .20); }
     .v2-services { grid-template-columns: 1fr; }
     .v2-gallery { grid-template-columns: 1fr; }
     .v2-team { grid-template-columns: 1fr; }
